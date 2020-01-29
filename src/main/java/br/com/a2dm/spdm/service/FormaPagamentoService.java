@@ -196,4 +196,42 @@ public class FormaPagamentoService extends A2DMHbNgc<FormaPagamento>
 	{
 		return filtroPropriedade;
 	}
+	
+	public void atualizarIdExterno(FormaPagamento formaPagamento) throws Exception
+	{
+		Session sessao = HibernateUtil.getSession();
+		sessao.setFlushMode(FlushMode.COMMIT);
+		Transaction tx = sessao.beginTransaction();
+		try
+		{
+			atualizarIdExterno(sessao, formaPagamento);
+			tx.commit();
+		}
+		catch (Exception e)
+		{
+			tx.rollback();
+			throw e;
+		}
+		finally
+		{
+			sessao.close();
+		}
+	}
+
+	public void atualizarIdExterno(Session sessao, FormaPagamento formaPagamento) throws Exception 
+	{
+		FormaPagamento formaPagamentoBD = new FormaPagamento();
+		formaPagamentoBD.setIdFormaPagamento(formaPagamento.getIdFormaPagamento());
+		
+		formaPagamentoBD = super.get(sessao, formaPagamentoBD, 0);
+		
+		if (formaPagamentoBD != null) 
+		{
+			formaPagamentoBD.setIdExterno(formaPagamento.getIdExterno());
+			formaPagamentoBD.setIdUsuarioAlt(util.getUsuarioLogado().getIdUsuario());
+			formaPagamentoBD.setDatAlteracao(new Date());
+			
+			super.alterar(sessao, formaPagamentoBD);
+		}
+	}
 }

@@ -69,6 +69,12 @@ public class FormaPagamento implements Serializable
 	@Column(name = "flg_ativo")
 	private String flgAtivo;
 	
+	@Column(name = "id_externo")
+	private BigInteger idExterno;
+	
+	@Column(name = "flg_sinc")
+	private String flgSinc;
+	
 	@Transient
 	private HashMap<String, Object> filtroMap;
 
@@ -150,5 +156,21 @@ public class FormaPagamento implements Serializable
 
 	public void setFiltroMap(HashMap<String, Object> filtroMap) {
 		this.filtroMap = filtroMap;
+	}
+
+	public BigInteger getIdExterno() {
+		return idExterno;
+	}
+
+	public void setIdExterno(BigInteger idExterno) {
+		this.idExterno = idExterno;
+	}
+
+	public String getFlgSinc() {
+		return flgSinc;
+	}
+
+	public void setFlgSinc(String flgSinc) {
+		this.flgSinc = flgSinc;
 	}
 }

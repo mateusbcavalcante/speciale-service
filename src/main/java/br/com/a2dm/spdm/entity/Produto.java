@@ -25,6 +25,8 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Proxy;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import br.com.a2dm.brcmn.entity.Usuario;
 
 /**
@@ -52,6 +54,7 @@ public class Produto implements Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_receita", insertable = false, updatable = false)
+	@JsonIgnore
 	private Receita receita;
 
 	@Column(name = "qtd_lot_minimo")
@@ -69,6 +72,7 @@ public class Produto implements Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_usuario_cad", insertable = false, updatable = false)
+	@JsonIgnore
 	private Usuario usuarioCad;
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -80,6 +84,7 @@ public class Produto implements Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_usuario_alt", insertable = false, updatable = false)
+	@JsonIgnore
 	private Usuario usuarioAlt;
 
 	@Column(name = "flg_ativo")
@@ -93,11 +98,19 @@ public class Produto implements Serializable {
 
 	@OneToMany(mappedBy = "produto", fetch = FetchType.LAZY)
 	@Cascade(CascadeType.ALL)
+	@JsonIgnore
 	private List<ClienteProduto> listaClienteProduto;
 
 	@OneToMany(mappedBy = "produto", fetch = FetchType.LAZY)
 	@Cascade(CascadeType.ALL)
+	@JsonIgnore
 	private List<PedidoProduto> listaPedidoProduto;
+	
+	@Column(name = "id_externo")
+	private BigInteger idExterno;
+	
+	@Column(name = "flg_sinc")
+	private String flgSinc;
 
 	@Transient
 	private HashMap<String, Object> filtroMap;
@@ -315,6 +328,22 @@ public class Produto implements Serializable {
 
 	public void setPrioridade2(BigInteger prioridade2) {
 		this.prioridade2 = prioridade2;
+	}
+	
+	public BigInteger getIdExterno() {
+		return idExterno;
+	}
+
+	public void setIdExterno(BigInteger idExterno) {
+		this.idExterno = idExterno;
+	}
+
+	public String getFlgSinc() {
+		return flgSinc;
+	}
+
+	public void setFlgSinc(String flgSinc) {
+		this.flgSinc = flgSinc;
 	}
 
 	public BigInteger getPrioridade3() {

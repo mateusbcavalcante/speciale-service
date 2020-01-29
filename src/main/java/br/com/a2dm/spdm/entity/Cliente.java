@@ -109,6 +109,12 @@ public class Cliente implements Serializable
 	@JoinColumn(name = "id_tipo", insertable = false, updatable = false)
 	private Tipo tipo;
 	
+	@Column(name = "id_externo")
+	private BigInteger idExterno;
+	
+	@Column(name = "flg_sinc")
+	private String flgSinc;
+	
 	@Transient
 	private List<Produto> listaProduto;
 	
@@ -276,5 +282,21 @@ public class Cliente implements Serializable
 
 	public void setVlrFreteFormatado(String vlrFreteFormatado) {
 		this.vlrFreteFormatado = vlrFreteFormatado;
+	}
+
+	public BigInteger getIdExterno() {
+		return idExterno;
+	}
+
+	public void setIdExterno(BigInteger idExterno) {
+		this.idExterno = idExterno;
+	}
+
+	public String getFlgSinc() {
+		return flgSinc;
+	}
+
+	public void setFlgSinc(String flgSinc) {
+		this.flgSinc = flgSinc;
 	}
 }

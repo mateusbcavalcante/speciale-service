@@ -517,4 +517,42 @@ public class ClienteService extends A2DMHbNgc<Cliente>
 			}
 		}
 	}
+	
+	public void atualizarIdExterno(Cliente cliente) throws Exception
+	{
+		Session sessao = HibernateUtil.getSession();
+		sessao.setFlushMode(FlushMode.COMMIT);
+		Transaction tx = sessao.beginTransaction();
+		try
+		{
+			atualizarIdExterno(sessao, cliente);
+			tx.commit();
+		}
+		catch (Exception e)
+		{
+			tx.rollback();
+			throw e;
+		}
+		finally
+		{
+			sessao.close();
+		}
+	}
+	
+	public void atualizarIdExterno(Session sessao, Cliente cliente) throws Exception 
+	{
+		Cliente clienteBD = new Cliente();
+		clienteBD.setIdCliente(cliente.getIdCliente());
+		
+		clienteBD = super.get(sessao, clienteBD, 0);
+		
+		if (clienteBD != null) 
+		{
+			clienteBD.setIdExterno(cliente.getIdExterno());
+			clienteBD.setIdUsuarioAlt(util.getUsuarioLogado().getIdUsuario());
+			clienteBD.setDatAlteracao(new Date());
+			
+			super.alterar(sessao, clienteBD);
+		}
+	}
 }

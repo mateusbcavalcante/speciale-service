@@ -372,4 +372,42 @@ public class ProdutoService extends A2DMHbNgc<Produto>
 	{
 		return filtroPropriedade;
 	}
+	
+	public void atualizarIdExterno(Produto produto) throws Exception
+	{
+		Session sessao = HibernateUtil.getSession();
+		sessao.setFlushMode(FlushMode.COMMIT);
+		Transaction tx = sessao.beginTransaction();
+		try
+		{
+			atualizarIdExterno(sessao, produto);
+			tx.commit();
+		}
+		catch (Exception e)
+		{
+			tx.rollback();
+			throw e;
+		}
+		finally
+		{
+			sessao.close();
+		}
+	}
+
+	public void atualizarIdExterno(Session sessao, Produto produto) throws Exception 
+	{
+		Produto produtoBD = new Produto();
+		produtoBD.setIdProduto(produto.getIdProduto());
+		
+		produtoBD = super.get(sessao, produtoBD, 0);
+		
+		if (produtoBD != null) 
+		{
+			produtoBD.setIdExterno(produto.getIdExterno());
+			produtoBD.setIdUsuarioAlt(util.getUsuarioLogado().getIdUsuario());
+			produtoBD.setDatAlteracao(new Date());
+			
+			super.alterar(sessao, produtoBD);
+		}
+	}
 }

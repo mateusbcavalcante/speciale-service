@@ -21,6 +21,8 @@ import javax.persistence.Transient;
 
 import org.hibernate.annotations.Proxy;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import br.com.a2dm.brcmn.entity.Usuario;
 
 /** 
@@ -46,6 +48,7 @@ public class PedidoProduto implements Serializable
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_pedido", insertable = false, updatable = false)
+	@JsonIgnore
 	private Pedido pedido;
 	
 	@Column(name = "id_produto")
@@ -67,6 +70,7 @@ public class PedidoProduto implements Serializable
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_usuario_cad", insertable = false, updatable = false)
+	@JsonIgnore
 	private Usuario usuarioCad;
 	
 	@Temporal(TemporalType.TIMESTAMP)
@@ -78,6 +82,7 @@ public class PedidoProduto implements Serializable
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_usuario_alt", insertable = false, updatable = false)
+	@JsonIgnore
 	private Usuario usuarioAlt;
 	
 	@Column(name = "flg_ativo")

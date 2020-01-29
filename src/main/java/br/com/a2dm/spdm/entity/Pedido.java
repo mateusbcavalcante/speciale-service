@@ -25,6 +25,8 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Proxy;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import br.com.a2dm.brcmn.entity.Usuario;
 
 /** 
@@ -50,6 +52,7 @@ public class Pedido implements Serializable
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_cliente", insertable = false, updatable = false)
+	@JsonIgnore
 	private Cliente cliente;
 	
 	@Temporal(TemporalType.DATE)
@@ -65,6 +68,7 @@ public class Pedido implements Serializable
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_usuario_cad", insertable = false, updatable = false)
+	@JsonIgnore
 	private Usuario usuarioCad;
 	
 	@Temporal(TemporalType.TIMESTAMP)
@@ -76,6 +80,7 @@ public class Pedido implements Serializable
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_usuario_alt", insertable = false, updatable = false)
+	@JsonIgnore
 	private Usuario usuarioAlt;
 	
 	@Column(name = "flg_ativo")
@@ -88,7 +93,8 @@ public class Pedido implements Serializable
 	private String plataforma;
 	
 	@OneToMany(mappedBy="pedido", fetch = FetchType.LAZY)
-    @Cascade(CascadeType.ALL)	
+    @Cascade(CascadeType.ALL)
+	@JsonIgnore
 	private List<PedidoProduto> listaPedidoProduto;
 	
 	@Transient
@@ -109,6 +115,7 @@ public class Pedido implements Serializable
 	@Transient
 	private Date dataPedido;
 	
+	@Transient
 	private String observacao;
 
 	public BigInteger getIdPedido() {

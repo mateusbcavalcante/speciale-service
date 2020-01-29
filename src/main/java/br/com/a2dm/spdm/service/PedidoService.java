@@ -84,9 +84,15 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 	@Override
 	protected void validarInserir(Session sessao, Pedido vo) throws Exception
 	{
+		BigInteger idCliente = vo.getIdCliente();
+		
+		if (util != null && util.getUsuarioLogado() != null) {
+			idCliente = util.getUsuarioLogado().getIdCliente();
+		}
+		
 		//VERIFICAR SE JA EXISTE PEDIDO ATIVO PARA O CLIENTE NA DATA ESCOLHIDA
 		Pedido pedido = new Pedido();
-		pedido.setIdCliente(util.getUsuarioLogado().getIdCliente());
+		pedido.setIdCliente(idCliente);
 		pedido.setDatPedido(vo.getDatPedido());
 		pedido.setFlgAtivo("S");
 		
@@ -94,7 +100,7 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 		
 		//VERIFICAR SE O PEDIDO ESTÁ DENTRO DO PRAZO DE PEDIDO
 		Cliente cliente = new Cliente();
-		cliente.setIdCliente(util.getUsuarioLogado().getIdCliente());
+		cliente.setIdCliente(idCliente);
 		
 		cliente = ClienteService.getInstancia().get(sessao, cliente, 0);
 		
@@ -130,6 +136,12 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 	@Override
 	public Pedido inserir(Session sessao, Pedido vo) throws Exception
 	{
+		BigInteger idUsuario = vo.getIdUsuarioCad();
+		
+		if (util != null && util.getUsuarioLogado() != null) {
+			idUsuario = util.getUsuarioLogado().getIdUsuario();
+		}
+		
 		validarInserir(sessao, vo);
 		sessao.save(vo);
 		
@@ -144,7 +156,7 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 				pedidoProduto.setQtdSolicitada(produto.getQtdSolicitada());
 				pedidoProduto.setFlgAtivo("S");
 				pedidoProduto.setDatCadastro(new Date());
-				pedidoProduto.setIdUsuarioCad(util.getUsuarioLogado().getIdUsuario());
+				pedidoProduto.setIdUsuarioCad(idUsuario);
 				
 				PedidoProdutoService.getInstancia().inserir(sessao, pedidoProduto);
 			}
@@ -156,9 +168,15 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 	@Override
 	protected void validarAlterar(Session sessao, Pedido vo) throws Exception
 	{
+		BigInteger idCliente = vo.getIdCliente();
+		
+		if (util != null && util.getUsuarioLogado() != null) {
+			idCliente = util.getUsuarioLogado().getIdCliente();
+		}
+		
 		//VERIFICAR SE O PEDIDO ESTA DENTRO DO PRAZO DE PEDIDO
 		Cliente cliente = new Cliente();
-		cliente.setIdCliente(util.getUsuarioLogado().getIdCliente());
+		cliente.setIdCliente(idCliente);
 		
 		cliente = ClienteService.getInstancia().get(sessao, cliente, 0);
 		
@@ -188,8 +206,25 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 	@Override
 	public Pedido alterar(Session sessao, Pedido vo) throws Exception
 	{
+		BigInteger idUsuario = vo.getIdUsuarioAlt();
+		
+		if (util != null && util.getUsuarioLogado() != null) {
+			idUsuario = util.getUsuarioLogado().getIdUsuario();
+		}
+		
 		validarAlterar(sessao, vo);
-		sessao.merge(vo);	
+		
+		Pedido pedido = new Pedido();
+		pedido.setIdPedido(vo.getIdPedido());
+		
+		pedido = super.get(sessao, pedido, 0);
+		
+		pedido.setDatAlteracao(new Date());
+		pedido.setDatPedido(vo.getDatPedido());
+		pedido.setObsPedido(vo.getObsPedido());
+		pedido.setPlataforma(vo.getPlataforma());
+		
+		sessao.merge(pedido);	
 				
 		if(vo.getListaProduto() != null
 				&& vo.getListaProduto().size() >= 0)
@@ -205,10 +240,10 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 					
 					pedidoProduto = PedidoProdutoService.getInstancia().get(sessao, pedidoProduto, 0);
 					
-					if(produto.getQtdSolicitada().intValue() != pedidoProduto.getQtdSolicitada().intValue())
+					if(pedidoProduto != null && produto.getQtdSolicitada().intValue() != pedidoProduto.getQtdSolicitada().intValue())
 					{
 						pedidoProduto.setQtdSolicitada(produto.getQtdSolicitada());
-						pedidoProduto.setIdUsuarioAlt(util.getUsuarioLogado().getIdUsuario());
+						pedidoProduto.setIdUsuarioAlt(idUsuario);
 						pedidoProduto.setDatAlteracao(new Date());
 						
 						PedidoProdutoService.getInstancia().alterar(sessao, pedidoProduto);
@@ -229,7 +264,7 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 						{
 							pedidoProduto.setQtdSolicitada(produto.getQtdSolicitada());
 							pedidoProduto.setFlgAtivo("S");
-							pedidoProduto.setIdUsuarioAlt(util.getUsuarioLogado().getIdUsuario());
+							pedidoProduto.setIdUsuarioAlt(idUsuario);
 							pedidoProduto.setDatAlteracao(new Date());
 							
 							PedidoProdutoService.getInstancia().alterar(sessao, pedidoProduto);
@@ -242,7 +277,7 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 							pedidoProduto.setQtdSolicitada(produto.getQtdSolicitada());
 							pedidoProduto.setFlgAtivo("S");
 							pedidoProduto.setDatCadastro(new Date());
-							pedidoProduto.setIdUsuarioCad(util.getUsuarioLogado().getIdUsuario());
+							pedidoProduto.setIdUsuarioCad(idUsuario);
 							
 							PedidoProdutoService.getInstancia().inserir(sessao, pedidoProduto);
 						}
@@ -259,7 +294,7 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 							pedidoProduto = PedidoProdutoService.getInstancia().get(sessao, pedidoProduto, 0);
 							
 							pedidoProduto.setFlgAtivo("N");
-							pedidoProduto.setIdUsuarioAlt(util.getUsuarioLogado().getIdUsuario());
+							pedidoProduto.setIdUsuarioAlt(idUsuario);
 							pedidoProduto.setDatAlteracao(new Date());
 							
 							PedidoProdutoService.getInstancia().alterar(sessao, pedidoProduto);
@@ -298,13 +333,21 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 
 	public Pedido inativar(Session sessao, Pedido vo) throws Exception
 	{
+		BigInteger idCliente = vo.getIdCliente();
+		BigInteger idUsuario = vo.getIdUsuarioAlt();
+		
+		if (util != null && util.getUsuarioLogado() != null) {
+			idCliente = util.getUsuarioLogado().getIdCliente();
+			idUsuario = util.getUsuarioLogado().getIdUsuario();
+		}
+		
 		Pedido pedido = new Pedido();
 		pedido.setIdPedido(vo.getIdPedido());
 		pedido = this.get(sessao, pedido, 0);
 		
 		//VERIFICAR SE O PEDIDO ESTA DENTRO DO PRAZO DE INATIVACAO
 		Cliente cliente = new Cliente();
-		cliente.setIdCliente(util.getUsuarioLogado().getIdCliente());
+		cliente.setIdCliente(idCliente);
 		
 		cliente = ClienteService.getInstancia().get(sessao, cliente, 0);
 		
@@ -327,11 +370,11 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 		
 		if(dataAtual.after(dataLimite))
 		{
-			throw new Exception("O pedido não pode ser inativado, pois o mesmo excedeu a hora limite de inativação! Hora limite: " + new SimpleDateFormat("dd/MM/yyyy HH:mm").format(dataLimite));
+			throw new Exception("O pedido não pode ser inativado, pois excedeu a hora limite de inativação! Hora limite: " + new SimpleDateFormat("dd/MM/yyyy HH:mm").format(dataLimite));
 		}
 				
 		pedido.setFlgAtivo("N");
-		pedido.setIdUsuarioAlt(util.getUsuarioLogado().getIdUsuario());
+		pedido.setIdUsuarioAlt(idUsuario);
 		pedido.setDatAlteracao(new Date());
 		
 		sessao.merge(pedido);
