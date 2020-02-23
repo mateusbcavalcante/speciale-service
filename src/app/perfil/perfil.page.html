@@ -1,0 +1,20 @@
+<ion-content fullscreen="true">
+  <div class="card">
+    <div class="header">
+      <div class="avatar">
+        <img src="assets/images/profile.png" alt="">
+      </div>
+    </div>
+    <div class="card-body">
+     
+      <div class="user-meta ion-text-center">
+        <h3 class="name">{{usuario.login}}</h3>
+        <h6 class="info">{{usuario.email}}</h6>
+      </div>
+
+      <ion-button expand="full" color="primary">Alterar Senha</ion-button>
+      <ion-button expand="full" color="secondary" (click)='logout()'>Sair</ion-button>
+
+    </div>
+  </div>
+</ion-content>

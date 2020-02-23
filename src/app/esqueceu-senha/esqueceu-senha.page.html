@@ -1,0 +1,36 @@
+<ion-header translucent>
+  <ion-toolbar>
+    <ion-title>Esqueceu Senha</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">Fechar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding" >
+
+  <form [formGroup]="esqueceuSenhaForm">
+    <ion-row>
+      <ion-col col-12>
+        <ion-item>
+          <ion-label position="stacked">Email:</ion-label>
+          <ion-input type="email" formControlName="email"></ion-input>
+        </ion-item>
+        <div class="form-field-invalido" *ngIf="esqueceuSenhaForm.get('email').hasError('required') && 
+        esqueceuSenhaForm.get('email').touched ">
+          Email é obrigatório
+        </div>
+        <div class="form-field-invalido" *ngIf="esqueceuSenhaForm.get('email').hasError('email') && 
+        esqueceuSenhaForm.get('email').touched ">
+          Email está inválido
+        </div>
+      </ion-col>
+    </ion-row>
+    
+    <ion-row>
+      <ion-col col-12>
+        <ion-button color="primary" expand="full" (click)="onSend()" [disabled]="!esqueceuSenhaForm.valid">Enviar</ion-button>
+      </ion-col>
+    </ion-row>
+  </form>
+
+</ion-content>

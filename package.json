@@ -1,8 +1,7 @@
 {
   "name": "speciale-app",
   "version": "0.0.1",
-  "author": "Ionic Framework",
-  "homepage": "https://ionicframework.com/",
+  "author": "A2DM",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -24,6 +23,7 @@
     "@ionic-native/status-bar": "^5.0.0",
     "@ionic/angular": "^5.0.0",
     "core-js": "^2.5.4",
+    "lodash": "^4.17.15",
     "rxjs": "~6.5.1",
     "tslib": "^1.9.0",
     "zone.js": "~0.9.1"
@@ -37,6 +37,7 @@
     "@ionic/angular-toolkit": "^2.1.1",
     "@types/jasmine": "~3.3.8",
     "@types/jasminewd2": "~2.0.3",
+    "@types/lodash": "^4.14.149",
     "@types/node": "~8.9.4",
     "codelyzer": "^5.0.0",
     "jasmine-core": "~3.4.0",
@@ -51,5 +52,5 @@
     "tslint": "~5.15.0",
     "typescript": "~3.4.3"
   },
-  "description": "An Ionic project"
+  "description": "Speciale App"
 }

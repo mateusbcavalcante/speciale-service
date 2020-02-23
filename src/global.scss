@@ -16,7 +16,7 @@
 @import "~@ionic/angular/css/normalize.css";
 @import "~@ionic/angular/css/structure.css";
 @import "~@ionic/angular/css/typography.css";
-@import '~@ionic/angular/css/display.css';
+@import "~@ionic/angular/css/display.css";
 
 /* Optional CSS utils that can be commented out */
 @import "~@ionic/angular/css/padding.css";
@@ -24,3 +24,25 @@
 @import "~@ionic/angular/css/text-alignment.css";
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
+
+ion-toolbar {
+  --background: url("assets/images/bg.png");
+  height: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: #3a1e14;
+}
+
+.form-field-invalido {
+  position: relative;
+  color: #f53d3d;
+  margin-top: 10px;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.modal-esqueceu-senha {
+  --width: 90%;
+  --height: 40%;
+}
