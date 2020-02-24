@@ -3,9 +3,8 @@ import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { QtdeProdutoComponentModule } from '../qtde-produto/qtde-produto.module';
-import { ProdutosService, NotificacaoService, StorageService, AuthService } from '../core';
 import { ProdutosPage } from './produtos.page';
+import { QtdeProdutoComponentModule } from '../shared/qtde-produto/qtde-produto.module';
 
 
 @NgModule({
@@ -18,12 +17,6 @@ import { ProdutosPage } from './produtos.page';
   ],
   declarations: [
     ProdutosPage
-  ],
-  providers: [
-    ProdutosService,
-    NotificacaoService,
-    StorageService,
-    AuthService
   ]
 })
 export class ProdutosPageModule { }

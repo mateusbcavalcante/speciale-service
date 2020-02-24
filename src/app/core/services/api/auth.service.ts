@@ -1,27 +1,27 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
-import { StorageService } from './storage.service';
-import { Usuario } from '../domain/usuario';
-import { LoginDto } from '../domain/login.dto';
 import { NavController } from '@ionic/angular';
+import { ApiService } from './api.service';
+import { StorageService } from '../utils';
+import { LoginDto, Usuario } from '../../domain';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class AuthService {
 
   constructor(
-    private http: HttpClient,
+    private apiService: ApiService,
     private navCtrl: NavController,
     private storageService: StorageService) {
   }
 
   login(login: LoginDto): Observable<Usuario> {
-    return this.http.post<Usuario>(`${environment.base_url}/seguranca/login`, login);
+    return this.apiService.post<Usuario>(`/seguranca/login`, login);
   }
 
   esqueceuSenha(formData: any): Observable<Usuario> {
-    return this.http.post<Usuario>(`${environment.base_url}/seguranca/recuperarSenha`, formData);
+    return this.apiService.post<Usuario>(`/seguranca/recuperarSenha`, formData);
   }
 
   getUsuarioLogado(): Usuario {

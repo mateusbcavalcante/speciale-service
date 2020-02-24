@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { LoadingController, ModalController } from '@ionic/angular';
+import { ModalController } from '@ionic/angular';
 import { NotificacaoService, AuthService } from '../core';
 
 @Component({
@@ -14,7 +14,6 @@ export class EsqueceuSenhaPage implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private notificacaoService: NotificacaoService,
-    private loadingCtrl: LoadingController,
     private modalCtrl: ModalController,
     private authService: AuthService
   ) { }
@@ -25,25 +24,21 @@ export class EsqueceuSenhaPage implements OnInit {
     });
   }
 
-  async close() {
-    await this.modalCtrl.dismiss();
+  close(message?: any) {
+    this.modalCtrl.dismiss().then(
+      async () => {
+        if (message) {
+          await this.notificacaoService.showInfoToaster(message);
+        }
+      }
+    );
   }
 
-  async onSend() {
+  onSend() {
 
-    const loading = await this.loadingCtrl.create({
-      message: 'Enviando...'
-    });
-    await loading.present();
     this.authService.esqueceuSenha(this.esqueceuSenhaForm.value).subscribe(
-      async usuario => {
-        await loading.dismiss();
-        await this.notificacaoService.showInfoToaster(`Um email foi enviado para ${usuario.email}. Acesse para redefinir sua senha`);
-        await this.close();
-      },
-      async error => {
-        await this.notificacaoService.showErrorToaster(error.error.message);
-        await loading.dismiss();
+      usuario => {
+        this.close(`Um email foi enviado para ${usuario.email}. Acesse para redefinir sua senha`);
       }
     );
   }

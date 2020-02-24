@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Produto } from '../core';
+import { Produto } from 'src/app/core/domain';
 
 @Component({
   selector: 'app-qtde-produto',

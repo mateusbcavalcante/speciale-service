@@ -1,24 +1,25 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
-import { StorageService } from './storage.service';
-import { AuthService } from './auth.service';
-import { Produto } from '../domain/produto';
 import { Observable } from 'rxjs';
+import { ApiService } from './api.service';
+import { AuthService } from './auth.service';
+import { StorageService } from '../utils';
+import { Produto, AppError } from '../../domain';
 import * as _ from 'lodash';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class ProdutosService {
 
   constructor(
-    private http: HttpClient,
+    private apiService: ApiService,
     private authService: AuthService,
     private storageService: StorageService) {
   }
 
   listarMeusProdutos(): Observable<Produto[]> {
     const usuario = this.authService.getUsuarioLogado();
-    return this.http.get<Produto[]>(`${environment.base_url}/produtos/clientes/${usuario.idCliente}`);
+    return this.apiService.get<Produto[]>(`/produtos/clientes/${usuario.idCliente}`);
   }
 
   listarMeusProdutosDisponiveis(todosProdutos: Produto[]) {
@@ -39,7 +40,23 @@ export class ProdutosService {
     return !(!produto.qtdSolicitada || produto.qtdSolicitada === 0);
   }
 
-  adicionarProdutoListaCarrinho(produto: Produto) {
+  adicionarProduto(produtos: Produto[], produto: Produto): boolean {
+    if (this.produtoJaAdicionadoCarrinho(produto)) {
+      throw new AppError('Produto já adicionado');
+
+    } else if (!this.qtdeSolicitadaValida(produto)) {
+      throw new AppError('Quantidade do produto está inválida');
+
+    } else {
+      this.adicionarProdutoListaPedido(produto);
+      this.removerProdutoLista(produtos, produto);
+      return true;
+    }
+  }
+
+
+
+  adicionarProdutoListaPedido(produto: Produto) {
     const listaProdutosPedido = this.getListaProdutosCarrinho();
     listaProdutosPedido.push(produto);
     this.storageService.setJson('lista_produtos_pedido', listaProdutosPedido);
@@ -59,7 +76,7 @@ export class ProdutosService {
     return this.storageService.getJson('lista_produtos_pedido', []);
   }
 
-  limparCarrinho(): void{
+  limparCarrinho(): void {
     this.storageService.removeItem('lista_produtos_pedido');
   }
 }

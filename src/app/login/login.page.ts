@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { LoadingController, NavController, ModalController } from '@ionic/angular';
-import { StorageService, NotificacaoService, AuthService } from '../core';
+import { NavController, ModalController } from '@ionic/angular';
+import { StorageService, AuthService } from '../core';
 import { EsqueceuSenhaPage } from '../esqueceu-senha/esqueceu-senha.page';
 
 @Component({
@@ -16,8 +16,6 @@ export class LoginPage implements OnInit {
     private navCtrl: NavController,
     private formBuilder: FormBuilder,
     private storageService: StorageService,
-    private notificacaoService: NotificacaoService,
-    private loadingCtrl: LoadingController,
     private authService: AuthService,
     private modalCtrl: ModalController
   ) { }
@@ -31,21 +29,12 @@ export class LoginPage implements OnInit {
     });
   }
 
-  async onLogin() {
+  onLogin() {
 
-    const loading = await this.loadingCtrl.create({
-      message: 'Enviando...'
-    });
-    await loading.present();
     this.authService.login(this.loginForm.value).subscribe(
-      async usuario => {
-        await loading.dismiss();
+      usuario => {
         this.storageService.setJson('usuario', usuario);
         this.navCtrl.navigateRoot('/tabs');
-      },
-      async error => {
-        await this.notificacaoService.showErrorToaster(error.error.message);
-        await loading.dismiss();
       }
     );
   }

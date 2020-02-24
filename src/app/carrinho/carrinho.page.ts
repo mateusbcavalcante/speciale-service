@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ProdutosService, NotificacaoService, PedidoService, AuthService, AlertService } from '../core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { LoadingController } from '@ionic/angular';
 
 @Component({
   selector: 'app-carrinho',
@@ -20,15 +19,14 @@ export class CarrinhoPage implements OnInit {
     private notificacaoService: NotificacaoService,
     private pedidoService: PedidoService,
     private authService: AuthService,
-    private alertServive: AlertService,
-    private loadingCtrl: LoadingController,
+    private alertServive: AlertService
   ) { }
 
   ngOnInit() {
     this.criarFormularioCarrinho();
   }
 
-  async ionViewWillEnter() {
+  ionViewWillEnter() {
     this.listarProdutosCarrinho();
   }
 
@@ -57,28 +55,17 @@ export class CarrinhoPage implements OnInit {
     this.produtos = this.produtosService.getListaProdutosCarrinho();
   }
 
-  async removerProdutoCarrinho(produto: any) {
+  removerProdutoCarrinho(produto: any) {
     this.produtosService.removerProdutoListaCarrinho(produto);
     this.listarProdutosCarrinho();
-    await this.notificacaoService.showInfoToaster('Produto removido do carrinho');
   }
 
-  async registrarPedido() {
-    const loading = await this.loadingCtrl.create({
-      message: 'Enviando...'
-    });
-    await loading.present();
-
+  registrarPedido() {
     this.pedidoService.cadastrarPedido(this.carrinhoForm.value, this.produtos).subscribe(
       async data => {
-        await loading.dismiss();
         await this.notificacaoService.showSuccessToaster(
           `Seu pedido de número: '${data.idPedido}' foi enviado para Speciale. Obrigado!!!`, 5000);
         this.limparCarrinho();
-      },
-      async error => {
-        await loading.dismiss();
-        await this.notificacaoService.showErrorToaster(error.error.message);
       }
     );
   }

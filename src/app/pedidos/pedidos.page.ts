@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { NotificacaoService, PedidoService, AuthService, Pedido, AlertService } from '../core';
+import { NotificacaoService, PedidoService, AuthService, AlertService } from '../core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { LoadingController } from '@ionic/angular';
+import { Pedido } from '../core/domain';
+
 
 @Component({
   selector: 'app-pedidos',
@@ -19,7 +20,6 @@ export class PedidosPage implements OnInit {
     private notificacaoService: NotificacaoService,
     private pedidoService: PedidoService,
     private authService: AuthService,
-    private loadingCtrl: LoadingController,
     private alertService: AlertService,
   ) { }
 
@@ -39,45 +39,33 @@ export class PedidosPage implements OnInit {
     });
   }
 
-  async obterPedidoParametrosPesquisa() {
-    const loading = await this.loadingCtrl.create({
-      message: 'Pesquisando...'
-    });
-    await loading.present();
-
+  obterPedidoParametrosPesquisa() {
     this.pedido = null;
-
     this.pedidoService.obterPedidoPorParametrosPesquisa(this.pedidosPesquisaForm.value).subscribe(
-      async pedido => {
-        await loading.dismiss();
+      pedido => {
         this.pedido = pedido;
-      },
-      async error => {
-        await loading.dismiss();
-        await this.notificacaoService.showErrorToaster(error.error.message);
       }
     );
   }
 
-  async pesquisarPedidos() {
-    await this.obterPedidoParametrosPesquisa();
+  pesquisarPedidos() {
+    this.obterPedidoParametrosPesquisa();
   }
 
-  async inativarPedido() {
+  inativarPedido() {
     this.pedidoService.inativarPedido(this.pedido).subscribe(
       async data => {
         await this.notificacaoService.showSuccessToaster('Pedido inativado com sucesso !!!');
         this.pedido = null;
-      },
-      async error => await this.notificacaoService.showErrorToaster(error.error.message)
+      }
     );
   }
 
-  async inativarPedidoConfirmacao() {
-    this.alertService.confirm('Confirmação', `Deseja realmente inativar o pedido: ${this.pedido.idPedido} ?`,
-      async () => {
-        await this.inativarPedido();
-      }
+  inativarPedidoConfirmacao() {
+    this.alertService.confirm(
+      'Confirmação',
+      `Deseja realmente inativar o pedido: ${this.pedido.idPedido} ?`,
+      () => this.inativarPedido()
     );
   }
 

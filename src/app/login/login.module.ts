@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 import { LoginPage } from './login.page';
-import { AuthService, NotificacaoService, StorageService } from '../core';
 import { EsqueceuSenhaPage } from '../esqueceu-senha/esqueceu-senha.page';
 
 const routes: Routes = [
@@ -26,13 +25,8 @@ const routes: Routes = [
     LoginPage,
     EsqueceuSenhaPage
   ],
-  providers: [
-    AuthService,
-    NotificacaoService,
-    StorageService
-  ],
-  entryComponents:[
+  entryComponents: [
     EsqueceuSenhaPage
   ]
 })
-export class LoginPageModule {}
+export class LoginPageModule { }
