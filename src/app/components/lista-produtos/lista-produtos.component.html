@@ -4,16 +4,22 @@
         <ion-card-title>{{produto.desProduto}}</ion-card-title>
     </ion-card-header>
 
+    <ion-list>
+
+        <ion-item>
+            <ion-label>Qtd. Lote Minimo</ion-label>
+            <ion-badge fill="outline" slot="end">{{produto.qtdLoteMinimo}}</ion-badge>
+        </ion-item>
+        <ion-item>
+            <ion-label>Qtd. Múltiplo</ion-label>
+            <ion-badge slot="end">{{produto.qtdMultiplo}}</ion-badge>
+        </ion-item>
+
+    </ion-list>
+
     <ion-card-content>
 
-        <ion-row>
-            <ion-label>
-                <p>Qtd. Lote Minimo: {{produto.qtdLoteMinimo}}</p>
-                <p>Qtd. Múltiplo: {{produto.qtdMultiplo}}</p>
-            </ion-label>
-        </ion-row>
-
-        <div class="card-separator"></div>
+        <!-- <div class="card-separator"></div> -->
 
         <ion-row>
 

@@ -1,17 +1,15 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>
-      Produtos
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content [fullscreen]="true">
 
-  <app-lista-produtos 
-          [produtos]="produtos"
-          podeAddProduto="true"
-          (addProdutoHandler)="adicionarProdutoCarrinho($event)">
+  <app-page-header titulo="Produtos" info="Selecione os produtos para fazer seu pedido"></app-page-header>
+
+  <ion-fab horizontal="end"  vertical="top" slot="fixed">
+    <ion-fab-button size="small" color="primary" >
+      <ion-icon name="search"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <app-lista-produtos [produtos]="produtos" podeAddProduto="true"
+    (addProdutoHandler)="adicionarProdutoCarrinho($event)">
   </app-lista-produtos>
 
 </ion-content>

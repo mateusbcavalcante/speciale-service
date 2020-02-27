@@ -1,16 +1,10 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>
-      Carrinho
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content [fullscreen]="true">
 
-  <app-lista-produtos [produtos]="produtos" 
-                      podeRemoverProduto="true"
-                      (removerProdutoHandler)="removerProdutoCarrinho($event)"></app-lista-produtos>
+  <app-page-header titulo="Meu Carrinho" info="Total de itens no carrinho : 20">
+  </app-page-header>
+
+  <app-lista-produtos [produtos]="produtos" podeRemoverProduto="true"
+    (removerProdutoHandler)="removerProdutoCarrinho($event)"></app-lista-produtos>
 
   <form [formGroup]="carrinhoForm">
 

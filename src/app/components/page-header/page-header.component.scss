@@ -1,0 +1,37 @@
+.welcome-header {
+  position: relative;
+  background: linear-gradient(0deg, #f5f6f900, #bf8358d9);
+  width: 100%;
+  padding: 20px;
+  height: 200px;
+
+  .refresh {
+    position: absolute;
+    right: 10px;
+    background-color: #4c5b79;
+    box-shadow: 0px 0px 5px #5b6a89;
+  }
+
+  .content {
+    text-align: center;
+    padding: 20px 0 0;
+    color: white;
+
+    img {
+      width: 100px;
+      margin-bottom: 10px;
+    }
+
+    .title {
+      font-size: 2em;
+      margin-bottom: 10px;
+      color: #884e25;
+    }
+
+    .subtitle {
+      font-size: 15px;
+      text-align: center;
+      color: #00000069;
+    }
+  }
+}

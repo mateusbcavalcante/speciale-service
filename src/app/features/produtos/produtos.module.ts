@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProdutosPage } from './produtos.page';
 import { ListaProdutosComponentModule } from '../../components/lista-produtos/lista-produtos.module';
+import { PageHeaderComponentModule } from '../../components/page-header/page-header.module';
 
 
 @NgModule({
@@ -13,6 +14,7 @@ import { ListaProdutosComponentModule } from '../../components/lista-produtos/li
     CommonModule,
     FormsModule,
     ListaProdutosComponentModule,
+    PageHeaderComponentModule,
     RouterModule.forChild([{ path: '', component: ProdutosPage }])
   ],
   declarations: [
