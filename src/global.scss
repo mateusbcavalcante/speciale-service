@@ -25,24 +25,187 @@
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
 
-ion-toolbar {
-  --background: url("assets/images/bg.png");
-  height: 100%;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  color: #3a1e14;
+.header-md:after {
+  background-image: none !important;
+}
+
+ion-title {
+  color: #9b592a;
+  font-size: 2em;
+  padding-top: 0.6em;
+  padding-left: 0.6em;
+}
+
+.color1 {
+  color: #9b592a;
+}
+
+.color2 {
+  color: #ff8801;
+}
+
+.color3 {
+  color: #e1be64;
+}
+
+.color4 {
+  color: #a2a2a2;
+}
+
+.negrito {
+  font-weight: bold !important;
+}
+
+.fz-12 {
+  font-size: 12px !important;
+}
+
+.bg {
+  background: url("/assets/images/bg-login.jpg") no-repeat center/cover fixed;
+}
+
+.header {
+  height: 130px; // 20vh;
+
+  .logo {
+    width: 160px; //40vw
+    height: 120px;
+    position: relative;
+    margin: 0 auto;
+
+    img {
+      display: block;
+      border-radius: 50%;
+      position: absolute;
+      bottom: calc(-1 * (60px + 4px)); // -42px;
+      border: 8px solid #e6daad;
+      background-color: #fff;
+    }
+  }
+}
+
+.card-form {
+  // background-color: #eee5e5c4;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  padding-left: 10px;
+  padding-right: 10px;
+  height: auto;
+  overflow: hidden;
+  left: 2.5%;
+  right: 2.5%;
+  position: unset;
+  margin-left: 5%;
+  margin-right: 5%;
+  border-radius: 20px;
+  // min-height: 380px;
+
+  // ion-input, ion-datetime, ion-textarea {
+  //   background-color: #d1dada;
+  //   width: 95%;
+  //   display: block;
+  //   margin: 0 auto;
+  //   border-radius: 5px;
+  //   color: #744e3f;
+  //   font-size: 15px;
+  //   --padding-top: 15px;
+  //   --padding-bottom: 15px;
+  //   --padding-start: 16px;
+  //   --placeholder-opacity: 0.8;
+  // }
+
+  ion-label {
+    color: #9b592a !important;
+    flex: auto !important;
+  }
+
+  .card-form-btn {
+    width: 95%;
+    display: block;
+    margin: 0 auto;
+    border-radius: 5px;
+    background-color: #775141;
+    margin-top: 15px;
+  }
+
+  .card-form-btn-link {
+    color: #744e40;
+    text-transform: initial;
+    cursor: pointer;
+  }
+
+  .card-form-field-invalido {
+    margin: 0 auto;
+    padding-bottom: 5px;
+    width: 95%;
+
+    ion-col {
+      color: red;
+      font-size: 12px;
+    }
+  }
 }
 
 .form-field-invalido {
   position: relative;
   color: #f53d3d;
   margin-top: 10px;
-  font-size: 13px;
-  font-weight: bold;
+  font-size: 14px;
 }
 
-.modal-esqueceu-senha {
-  --width: 90%;
-  --height: 40%;
+.instabar {
+  margin: 10px 40px 18px;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  display: flex;
+
+  .left-pos {
+    -webkit-box-flex: 1;
+    -webkit-flex-grow: 1;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    -webkit-flex-shrink: 1;
+    -ms-flex-negative: 1;
+    flex-shrink: 1;
+    background-color: #dbdbdb;
+    background-color: rgba(var(--b38, 219, 219, 219), 1);
+    height: 1px;
+    position: relative;
+    top: 0.45em;
+  }
+
+  .center-pos {
+    color: #999;
+    color: rgba(var(--f52, 153, 153, 153), 1);
+    -webkit-box-flex: 0;
+    -webkit-flex-grow: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 15px;
+    margin: 0 18px;
+    text-transform: uppercase;
+  }
+
+  .right-pos {
+    -webkit-box-flex: 1;
+    -webkit-flex-grow: 1;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    -webkit-flex-shrink: 1;
+    -ms-flex-negative: 1;
+    flex-shrink: 1;
+    background-color: #dbdbdb;
+    background-color: rgba(var(--b38, 219, 219, 219), 1);
+    height: 1px;
+    position: relative;
+    top: 0.45em;
+  }
 }

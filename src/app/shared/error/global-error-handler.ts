@@ -1,7 +1,7 @@
 import { ErrorHandler, Injectable } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
-import { NotificacaoService } from 'src/app/core';
-import { AppError } from 'src/app/core/domain';
+import { NotificacaoService } from '../notificacao/notificacao.service';
+import { AppError } from '../../core/domain/app.error';
 
 const enum ERROR_TYPE {
   SERVER,
@@ -10,34 +10,26 @@ const enum ERROR_TYPE {
   UNKNOWN
 }
 
-
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class GlobalErrorHandler implements ErrorHandler {
 
   constructor(private notificacaoService: NotificacaoService) { }
 
   async handleError(error: any) {
 
-    const errorType = this._selectHandlerErrorStrategy(error);
+    const errorType = this._selectErrorType(error);
+    const errorTypeMessage = this._buildErrorTypeMessage(errorType, error);
 
-    if (errorType === ERROR_TYPE.CLIENT) {
-      await this.notificacaoService.showErrorToaster('Ops! Ocorreu um problema no app. Tente novamente');
+    await this.notificacaoService.showErrorToaster(errorTypeMessage);
 
-    } else if (errorType === ERROR_TYPE.SERVER) {
-      await this.notificacaoService.showErrorToaster(error.error.message);
-
-    } else if (errorType === ERROR_TYPE.APP) {
-      await this.notificacaoService.showErrorToaster(error.message);
-
-    } else if (errorType === ERROR_TYPE.UNKNOWN) {
-      await this.notificacaoService.showErrorToaster('Ops! Desculpe o app encontrou um problema desconhecido');
-    }
-
-    console.error('ERRO => %o', error);
+    console.log(`Tipo de erro identificado ${errorType}`);
+    console.error(error);
 
   }
 
-  private _selectHandlerErrorStrategy(error: any): ERROR_TYPE {
+  private _selectErrorType(error: any): ERROR_TYPE {
     if (error instanceof HttpErrorResponse) {
       return ERROR_TYPE.SERVER;
     }
@@ -52,6 +44,21 @@ export class GlobalErrorHandler implements ErrorHandler {
 
     return ERROR_TYPE.UNKNOWN;
 
+  }
+
+  private _buildErrorTypeMessage(errorType: ERROR_TYPE, error: any): string {
+    if (errorType === ERROR_TYPE.CLIENT) {
+      return 'Ocorreu um problema no app. Tente novamente';
+
+    } else if (errorType === ERROR_TYPE.SERVER) {
+      return error && error.error.message ? error.error.message : 'Ocorreu um problema ao acessar dados remotos';
+
+    } else if (errorType === ERROR_TYPE.APP) {
+      return error && error.message ? error.message : 'Erro ao executar ação no aplicativo';
+
+    } else if (errorType === ERROR_TYPE.UNKNOWN) {
+      return 'Desculpe o app encontrou um problema desconhecido';
+    }
   }
 
 }

@@ -1,0 +1,17 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Produtos
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+  <app-lista-produtos 
+          [produtos]="produtos"
+          podeAddProduto="true"
+          (addProdutoHandler)="adicionarProdutoCarrinho($event)">
+  </app-lista-produtos>
+
+</ion-content>

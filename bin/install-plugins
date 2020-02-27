@@ -1,0 +1,6 @@
+ionic cordova plugin add cordova-plugin-whitelist --save
+ionic cordova plugin add cordova-plugin-statusbar --save
+ionic cordova plugin add cordova-plugin-device --save
+ionic cordova plugin add cordova-plugin-splashscreen --save
+ionic cordova plugin add cordova-plugin-ionic-webview --save
+ionic cordova plugin add cordova-plugin-ionic-keyboard --save

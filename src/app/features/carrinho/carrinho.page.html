@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Carrinho
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+  <app-lista-produtos [produtos]="produtos" 
+                      podeRemoverProduto="true"
+                      (removerProdutoHandler)="removerProdutoCarrinho($event)"></app-lista-produtos>
+
+  <form [formGroup]="carrinhoForm">
+
+    <div class="card-form">
+
+      <ion-item>
+        <ion-label position="fixed">Data Pedido:</ion-label>
+        <ion-datetime displayFormat="DD/MM/YYYY" doneText="OK" cancelText="Cancelar" formControlName="dataPedido">
+        </ion-datetime>
+      </ion-item>
+
+    </div>
+
+  </form>
+
+  <ion-row>
+    <ion-col col-12>
+      <ion-button color="primary" expand="full" (click)="registrarPedido()" [disabled]="produtos.length === 0">Fazer
+        Pedido</ion-button>
+    </ion-col>
+  </ion-row>
+
+
+
+</ion-content>
