@@ -28,6 +28,10 @@ export class ProdutosPage implements OnInit {
     );
   }
 
+  pesquisarMeusProdutos() {
+    this.listarMeusProdutosDisponiveis();
+  }
+
   adicionarProdutoCarrinho(event: any) {
     const produto = event.produto;
     this.produtosService.adicionarProduto(this.produtos, produto);

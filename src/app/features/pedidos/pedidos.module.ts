@@ -4,7 +4,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PedidosPage } from './pedidos.page';
-
+import { PageHeaderComponentModule } from '../../components/page-header/page-header.module';
+import { CardPedidoComponentModule } from '../../components/card-pedido/card-pedido.module';
 
 
 @NgModule({
@@ -13,6 +14,8 @@ import { PedidosPage } from './pedidos.page';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    PageHeaderComponentModule,
+    CardPedidoComponentModule,
     RouterModule.forChild([{ path: '', component: PedidosPage }])
   ],
   declarations: [

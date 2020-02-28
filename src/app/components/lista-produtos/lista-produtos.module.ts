@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { ListaProdutosComponent } from './lista-produtos.component';
 import { ContadorProdutoComponentModule } from '../contador-produto/contador-produto.module';
+import { TextareaToggleComponentModule } from '../textarea-toggle/textarea-toggle.module';
 
 
 @NgModule({
@@ -11,7 +12,8 @@ import { ContadorProdutoComponentModule } from '../contador-produto/contador-pro
     CommonModule,
     FormsModule,
     IonicModule,
-    ContadorProdutoComponentModule
+    ContadorProdutoComponentModule,
+    TextareaToggleComponentModule
   ],
   declarations: [
     ListaProdutosComponent

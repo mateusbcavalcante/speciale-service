@@ -1,12 +1,12 @@
 <ion-content [fullscreen]="true">
 
-  <app-page-header titulo="Meu Carrinho" info="Total de itens no carrinho : 20">
+  <app-page-header titulo="Meu Carrinho" [info]="mensagem">
   </app-page-header>
 
   <app-lista-produtos [produtos]="produtos" podeRemoverProduto="true"
     (removerProdutoHandler)="removerProdutoCarrinho($event)"></app-lista-produtos>
 
-  <form [formGroup]="carrinhoForm">
+  <form [formGroup]="carrinhoForm" *ngIf="produtos.length">
 
     <div class="card-form">
 
@@ -22,8 +22,7 @@
 
   <ion-row>
     <ion-col col-12>
-      <ion-button color="primary" expand="full" (click)="registrarPedido()" [disabled]="produtos.length === 0">Fazer
-        Pedido</ion-button>
+      <ion-button color="primary" expand="full" (click)="registrarPedido()" [disabled]="produtos.length">Fazer Pedido</ion-button>
     </ion-col>
   </ion-row>
 

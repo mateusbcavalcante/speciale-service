@@ -31,7 +31,7 @@ export class ListaProdutosComponent implements OnInit {
   }
 
   async removerProdutoEvent(produto: Produto) {
-    await this.alertServive.confirm('Confirmação', `Deseja remover do carrinho o produto ${produto.desProduto}`, () => {
+    await this.alertServive.confirm('Confirmação', `Deseja remover do carrinho o produto ${produto.desProduto} ?`, () => {
       this.removerProdutoHandler.emit({
         produto
       });

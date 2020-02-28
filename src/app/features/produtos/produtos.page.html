@@ -3,7 +3,7 @@
   <app-page-header titulo="Produtos" info="Selecione os produtos para fazer seu pedido"></app-page-header>
 
   <ion-fab horizontal="end"  vertical="top" slot="fixed">
-    <ion-fab-button size="small" color="primary" >
+    <ion-fab-button size="small" color="primary" (click)="pesquisarMeusProdutos()" >
       <ion-icon name="search"></ion-icon>
     </ion-fab-button>
   </ion-fab>

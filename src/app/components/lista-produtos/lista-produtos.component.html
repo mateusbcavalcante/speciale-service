@@ -4,8 +4,9 @@
         <ion-card-title>{{produto.desProduto}}</ion-card-title>
     </ion-card-header>
 
+    <app-textarea-toggle label="Observações" ></app-textarea-toggle>
+    
     <ion-list>
-
         <ion-item>
             <ion-label>Qtd. Lote Minimo</ion-label>
             <ion-badge fill="outline" slot="end">{{produto.qtdLoteMinimo}}</ion-badge>
@@ -18,8 +19,6 @@
     </ion-list>
 
     <ion-card-content>
-
-        <!-- <div class="card-separator"></div> -->
 
         <ion-row>
 
@@ -45,22 +44,3 @@
     </ion-card-content>
 
 </ion-card>
-
-<!-- <div class="card" *ngFor="let produto of produtos">
-
-    <div class="image">
-        <img src="http://assets.materialup.com/uploads/fc97b003-ba72-4c6e-9dd3-19bf5002c244/preview.jpg" width="100%">
-    </div>
-
-    <div class="text">
-
-        <div class="fab">&#43;</div>
-
-        <h3>Descrição da funcionalidade deve vir abaixo do título do caso de uso.</h3>
-        <p>Mussum ipsum cacilds, vidis litro abertis. Consetis adipiscings elitis. Pra lá , depois divoltis porris,
-            paradis. Paisis, filhis, espiritis santis. Mé faiz elementum girarzis, nisi eros vermeio, in elementis mé
-            pra quem é amistosis quis leo.</p>
-
-    </div>
-
-</div> -->

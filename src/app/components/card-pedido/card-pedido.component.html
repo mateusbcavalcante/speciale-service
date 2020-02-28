@@ -1,0 +1,46 @@
+<ion-card *ngIf="pedido">
+
+    <ion-card-header>
+        <ion-card-title>
+            <h2>Protocolo: {{pedido?.idPedido}}</h2>
+        </ion-card-title>
+    </ion-card-header>
+
+    <ion-item>
+        <ion-label>
+            <p><b>Data Pedido:</b> {{pedido?.dataPedido | date:'dd/MM/yyyy'}}</p>
+        </ion-label>
+    </ion-item>
+    <ion-item>
+        <ion-label>
+            <p><b>Cadastrado por:</b> {{pedido?.usuarioCadastro?.nome}}</p>
+        </ion-label>
+    </ion-item>
+    <ion-item>
+        <ion-label>
+            <p><b>Situação:</b> {{pedido?.flgAtivo}}</p>
+        </ion-label>
+    </ion-item>
+    <ion-item *ngIf="pedido?.observacao">
+        <ion-label>
+            <p><b>Observação:</b> </p>
+            <p>{{pedido?.observacao}}</p>
+        </ion-label>
+    </ion-item>
+
+
+    <ion-list>
+        <ion-item-divider>
+            <ion-label>
+                <h2>Produtos do Pedido</h2>
+            </ion-label>
+        </ion-item-divider>
+        <ion-item *ngFor="let produto of pedido?.produtos">
+            <ion-label>
+                <h3>{{produto?.desProduto}}</h3>
+                <p>Quantidade: {{produto?.qtdSolicitada}}</p>
+            </ion-label>
+        </ion-item>
+    </ion-list>
+
+</ion-card>

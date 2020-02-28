@@ -17,6 +17,8 @@ export class CarrinhoPage implements OnInit {
 
   carrinhoForm: FormGroup;
 
+  mensagem = '';
+
   constructor(
     private formBuilder: FormBuilder,
     private produtosService: ProdutosService,
@@ -57,6 +59,7 @@ export class CarrinhoPage implements OnInit {
 
   listarProdutosCarrinho() {
     this.produtos = this.produtosService.getListaProdutosCarrinho();
+    this.mensagem = `Você tem ${this.produtos.length} produtos no carrinho`;
   }
 
   removerProdutoCarrinho(event: any) {
