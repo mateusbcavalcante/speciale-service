@@ -4,8 +4,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProdutosPage } from './produtos.page';
-import { ListaProdutosComponentModule } from '../../components/lista-produtos/lista-produtos.module';
 import { PageHeaderComponentModule } from '../../components/page-header/page-header.module';
+import { CardProdutoComponentModule } from '../../components/card-produto/card-produto.module';
 
 
 @NgModule({
@@ -13,7 +13,7 @@ import { PageHeaderComponentModule } from '../../components/page-header/page-hea
     IonicModule,
     CommonModule,
     FormsModule,
-    ListaProdutosComponentModule,
+    CardProdutoComponentModule,
     PageHeaderComponentModule,
     RouterModule.forChild([{ path: '', component: ProdutosPage }])
   ],

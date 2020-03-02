@@ -1,4 +1,13 @@
 ion-content {
+
+  ion-button {
+    width: 95%;
+    display: block;
+    margin: 0 auto;
+    border-radius: 5px;
+    // margin-top: 15px;
+  }
+
   .card-form {
     background-color: #fbf7ec;
     // padding-bottom: 15px;
@@ -12,11 +21,11 @@ ion-content {
     margin-left: 5%;
     margin-right: 5%;
     margin-top: -60px;
-    margin-bottom: 80px;
     border-radius: 20px;
 
     form {
-      ion-label {
+      
+      ion-label{
         width: 95%;
         color: #744e3f;
         font-size: 15px;
@@ -32,8 +41,6 @@ ion-content {
         border-radius: 5px;
         color: #744e3f;
         font-size: 15px;
-        // --padding-top: 15px;
-        // --padding-bottom: 15px;
         --padding-start: 16px;
       }
 
@@ -47,17 +54,6 @@ ion-content {
           font-size: 12px;
         }
       }
-    }
-  }
-
-  ion-footer {
-    ion-button {
-      width: 95%;
-      display: block;
-      margin: 0 auto;
-      border-radius: 5px;
-      background-color: #775141;
-      // margin-top: 15px;
     }
   }
 }

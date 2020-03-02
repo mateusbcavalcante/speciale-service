@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ProdutosService } from '../../core/services/produtos.service';
+import { AuthService } from '../../core/services/auth.service';
+import { Produto } from '../../core/domain/produto';
+import { CarrinhoService } from '../../core/services/carrinho.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-produtos',
@@ -7,34 +11,29 @@ import { ProdutosService } from '../../core/services/produtos.service';
 })
 export class ProdutosPage implements OnInit {
 
-  produtos = [];
+  produtos$: Observable<Produto[]>;
 
   constructor(
-    private produtosService: ProdutosService
+    private authService: AuthService,
+    private produtosService: ProdutosService,
+    private carrinhoService: CarrinhoService
   ) { }
 
   ngOnInit() {
-  }
-
-  ionViewWillEnter() {
-    this.listarMeusProdutosDisponiveis();
-  }
-
-  listarMeusProdutosDisponiveis() {
-    this.produtosService.listarMeusProdutos().subscribe(
-      produtos => {
-        this.produtos = this.produtosService.listarMeusProdutosDisponiveis(produtos);
-      }
-    );
+    this.produtos$ = this.produtosService.produtos;
+    this.pesquisarMeusProdutos();
   }
 
   pesquisarMeusProdutos() {
-    this.listarMeusProdutosDisponiveis();
+    const usuario = this.authService.getUsuarioLogado();
+    this.produtosService.listarProdutosCliente(usuario.idCliente);
   }
 
   adicionarProdutoCarrinho(event: any) {
     const produto = event.produto;
-    this.produtosService.adicionarProduto(this.produtos, produto);
+    this.carrinhoService.addItemCarrinho({
+      produto
+    });
   }
 
 }

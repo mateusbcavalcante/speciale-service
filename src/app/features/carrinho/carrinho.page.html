@@ -1,31 +1,46 @@
-<ion-content [fullscreen]="true">
+<ion-content>
 
-  <app-page-header titulo="Meu Carrinho" [info]="mensagem">
-  </app-page-header>
+  <app-page-header titulo="Meu Carrinho" info="Lista os itens selecionados para pedido"></app-page-header>
 
-  <app-lista-produtos [produtos]="produtos" podeRemoverProduto="true"
-    (removerProdutoHandler)="removerProdutoCarrinho($event)"></app-lista-produtos>
+  <div class="card-form" [hidden]="(carrinho$ | async).totalItens === 0">
 
-  <form [formGroup]="carrinhoForm" *ngIf="produtos.length">
+    <form [formGroup]="carrinhoForm">
 
-    <div class="card-form">
+      <ion-grid>
 
-      <ion-item>
-        <ion-label position="fixed">Data Pedido:</ion-label>
-        <ion-datetime displayFormat="DD/MM/YYYY" doneText="OK" cancelText="Cancelar" formControlName="dataPedido">
-        </ion-datetime>
-      </ion-item>
+        <ion-row>
+          <ion-col col-4>
+            <ion-label>
+              Data Pedido:
+            </ion-label>
+          </ion-col>
+          <ion-col col-8>
+            <ion-datetime displayFormat="DD/MM/YYYY" doneText="OK" cancelText="Cancelar" formControlName="dataPedido">
+            </ion-datetime>
+          </ion-col>
+        </ion-row>
 
-    </div>
+      </ion-grid>
 
-  </form>
+    </form>
 
-  <ion-row>
-    <ion-col col-12>
-      <ion-button color="primary" expand="full" (click)="registrarPedido()" [disabled]="produtos.length">Fazer Pedido</ion-button>
-    </ion-col>
-  </ion-row>
+  </div>
 
+  <app-card-item *ngFor="let item of (carrinho$ | async).itens" (removerItem)="removerItemCarrinho($event)"
+    [item]="item">
+  </app-card-item>
 
+  <ion-footer *ngIf="(carrinho$ | async).totalItens > 0">
+
+    <ion-row>
+    
+      <ion-col col-12>
+        <ion-button class="card-form-btn"  (click)="registrarPedido()"
+          [disabled]="(carrinho$ | async).totalItens === 0">Fazer Pedido</ion-button>
+      </ion-col>
+    
+    </ion-row>
+
+  </ion-footer>
 
 </ion-content>

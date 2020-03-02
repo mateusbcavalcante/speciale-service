@@ -3,7 +3,10 @@ import { Pedido } from 'src/app/core/domain/pedido';
 
 @Component({
   selector: 'app-card-pedido',
-  templateUrl: 'card-pedido.component.html'
+  templateUrl: 'card-pedido.component.html',
+  styleUrls: [
+    'card-pedido.component.scss'
+  ]
 })
 export class CardPedidoComponent implements OnInit {
 

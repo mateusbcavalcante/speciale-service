@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { ApiService } from './api.service';
-import { ProdutosService } from './produtos.service';
 import { Pedido } from '../domain/pedido';
 import { ObterPedidoDto } from '../domain/obter-pedido.dto';
 import { formatDateParam } from '../../shared/utils/date-utils';
+import { Item } from '../domain/item';
 
 
 @Injectable({
@@ -13,16 +13,30 @@ import { formatDateParam } from '../../shared/utils/date-utils';
 export class PedidosService {
 
   constructor(
-    private apiService: ApiService,
-    private produtosService: ProdutosService) {
+    private apiService: ApiService) {
   }
 
-  cadastrarPedido(pedido: Pedido): Observable<Pedido> {
+  private montarPedidoPorItens(pedido: Pedido, itens: Item[]): Pedido {
+    const produtos = [];
+    let observacao = '';
+    itens.forEach(item => {
+      if (item.observacao) {
+        observacao += `${item.produto.desProduto}\n${item.observacao}\n`;
+      }
+      produtos.push(item.produto);
+    });
+    pedido.produtos = produtos;
+    pedido.observacao = observacao;
+    return pedido;
+  }
+
+  cadastrarPedido(pedido: Pedido, itens: Item[]): Observable<Pedido> {
+    pedido = this.montarPedidoPorItens(pedido, itens);
     return this.apiService.post<Pedido>(`/pedidos`, pedido);
   }
 
   atualizarPedido(pedido: Pedido): Observable<Pedido> {
-    pedido.produtos = this.produtosService.getListaProdutosCarrinho();
+    // pedido.produtos = this.produtosService.getListaProdutosCarrinho();
     return this.apiService.put<Pedido>(`/pedidos/${pedido.idPedido}`, pedido);
   }
 

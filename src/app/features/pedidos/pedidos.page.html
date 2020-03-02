@@ -1,27 +1,37 @@
 <ion-content [fullscreen]="true">
 
-  <app-page-header titulo="Pedidos" info="Pesquisa de pedidos">
+  <app-page-header titulo="Pedidos" info="Pesquise seus pedidos pela data do pedido">
   </app-page-header>
 
-  <form [formGroup]="pedidosPesquisaForm" style="margin-top: -60px;">
+  <div class="card-form">
 
-    <ion-row>
-      <ion-col col-12>
-        <ion-item>
-          <ion-label position="stacked">Data Pedido</ion-label>
-          <ion-datetime displayFormat="DD/MM/YYYY" doneText="OK" cancelText="Cancelar" formControlName="dataPedido">
-          </ion-datetime>
-        </ion-item>
-      </ion-col>
-    </ion-row>
+    <form [formGroup]="pedidosPesquisaForm">
 
-    <ion-row>
-      <ion-col col-12>
-        <ion-button color="primary" expand="full" (click)="pesquisarPedidos()">Pesquisar</ion-button>
-      </ion-col>
-    </ion-row>
+      <ion-grid>
 
-  </form>
+        <ion-row>
+          <ion-col col-4>
+            <ion-label>
+              Data Pedido:
+            </ion-label>
+          </ion-col>
+          <ion-col col-8>
+            <ion-datetime displayFormat="DD/MM/YYYY" doneText="OK" cancelText="Cancelar" formControlName="dataPedido">
+            </ion-datetime>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col col-12>
+            <ion-button class="card-form-btn" (click)="pesquisarPedidos()">Pesquisar Pedidos</ion-button>
+          </ion-col>
+        </ion-row>
+
+      </ion-grid>
+
+    </form>
+
+  </div>
 
   <app-card-pedido [pedido]="pedido"></app-card-pedido>
 
@@ -29,7 +39,7 @@
 
     <ion-row>
       <ion-col col-12>
-        <ion-button color="danger" expand="full" (click)="inativarPedidoConfirmacao()">Inativar Pedido</ion-button>
+        <ion-button color="danger" class="card-form-btn" (click)="inativarPedidoConfirmacao()">Inativar Pedido</ion-button>
       </ion-col>
     </ion-row>
 

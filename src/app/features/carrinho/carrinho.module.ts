@@ -4,10 +4,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CarrinhoPage } from './carrinho.page';
-import { ListaProdutosComponentModule } from '../../components/lista-produtos/lista-produtos.module';
-import { PageHeaderComponentModule } from 'src/app/components/page-header/page-header.module';
-
-
+import { PageHeaderComponentModule } from '../../components/page-header/page-header.module';
+import { CardItemComponentModule } from '../../components/card-item/card-item.module';
 
 @NgModule({
   imports: [
@@ -15,7 +13,7 @@ import { PageHeaderComponentModule } from 'src/app/components/page-header/page-h
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    ListaProdutosComponentModule,
+    CardItemComponentModule,
     PageHeaderComponentModule,
     RouterModule.forChild([{ path: '', component: CarrinhoPage }])
   ],

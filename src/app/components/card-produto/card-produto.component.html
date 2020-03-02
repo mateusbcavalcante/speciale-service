@@ -1,11 +1,7 @@
-<ion-card mode="ios" *ngFor="let produto of produtos">
-
+<ion-card mode="ios" *ngIf="produto">
     <ion-card-header>
         <ion-card-title>{{produto.desProduto}}</ion-card-title>
     </ion-card-header>
-
-    <app-textarea-toggle label="Observações" ></app-textarea-toggle>
-    
     <ion-list>
         <ion-item>
             <ion-label>Qtd. Lote Minimo</ion-label>
@@ -15,32 +11,21 @@
             <ion-label>Qtd. Múltiplo</ion-label>
             <ion-badge slot="end">{{produto.qtdMultiplo}}</ion-badge>
         </ion-item>
-
     </ion-list>
-
     <ion-card-content>
-
         <ion-row>
-
             <ion-col size="8">
-                <app-contador-produto [produto]="produto"></app-contador-produto>
+                <app-contador-item [item]="produto"></app-contador-item>
             </ion-col>
-
-            <ion-col size="4">
-
-                <ion-button *ngIf="podeRemoverProduto" class="align-right" color="danger" size='small'
-                    (click)="removerProdutoEvent(produto)">
-                    <ion-icon name="trash"></ion-icon>
-                </ion-button>
-
-                <ion-button *ngIf="podeAddProduto" class="align-right" color="success"
-                    [disabled]="produto.qtdSolicitada === 0" size='small' (click)="addProdutoEvent(produto)">
+            <ion-col size="4" style="padding-top: 0px;">
+                <ion-button class="align-right" 
+                            color="success" 
+                            size='small' 
+                            [disabled]="produto.qtdSolicitada === 0"
+                            (click)="addItemEvent(produto)">
                     <ion-icon name="cart"></ion-icon>
                 </ion-button>
             </ion-col>
-
         </ion-row>
-
     </ion-card-content>
-
 </ion-card>

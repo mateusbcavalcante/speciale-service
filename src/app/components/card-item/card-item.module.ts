@@ -2,9 +2,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import { ListaProdutosComponent } from './lista-produtos.component';
-import { ContadorProdutoComponentModule } from '../contador-produto/contador-produto.module';
 import { TextareaToggleComponentModule } from '../textarea-toggle/textarea-toggle.module';
+import { ContadorItemComponentModule } from '../contador-item/contador-item.module';
+import { CardItemComponent } from './card-item.component';
 
 
 @NgModule({
@@ -12,14 +12,14 @@ import { TextareaToggleComponentModule } from '../textarea-toggle/textarea-toggl
     CommonModule,
     FormsModule,
     IonicModule,
-    ContadorProdutoComponentModule,
+    ContadorItemComponentModule,
     TextareaToggleComponentModule
   ],
   declarations: [
-    ListaProdutosComponent
+    CardItemComponent
   ],
   exports: [
-    ListaProdutosComponent
+    CardItemComponent
   ]
 })
-export class ListaProdutosComponentModule { }
+export class CardItemComponentModule { }

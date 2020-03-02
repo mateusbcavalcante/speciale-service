@@ -9,7 +9,10 @@ import { AlertService } from '../../shared/alertas/alert.service';
 
 @Component({
   selector: 'app-pedidos',
-  templateUrl: 'pedidos.page.html'
+  templateUrl: 'pedidos.page.html',
+  styleUrls: [
+    'pedidos.page.scss'
+  ]
 })
 export class PedidosPage implements OnInit {
 

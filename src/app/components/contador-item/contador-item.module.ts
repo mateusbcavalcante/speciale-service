@@ -2,9 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import { ContadorProdutoComponent } from './contador-produto.component';
-
-
+import { ContadorItemComponent } from './contador-item.component';
 
 @NgModule({
   imports: [
@@ -13,10 +11,10 @@ import { ContadorProdutoComponent } from './contador-produto.component';
     IonicModule
   ],
   declarations: [
-    ContadorProdutoComponent
+    ContadorItemComponent
   ],
   exports: [
-    ContadorProdutoComponent
+    ContadorItemComponent
   ]
 })
-export class ContadorProdutoComponentModule { }
+export class ContadorItemComponentModule { }
