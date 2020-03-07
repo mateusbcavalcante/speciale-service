@@ -1,0 +1,78 @@
+<ion-content>
+
+  <app-page-header titulo="Alterar Senha" info="Altere sua senha preenchendo os dados abaixo">
+  </app-page-header>
+
+  <div class="card-form">
+
+    <form [formGroup]="alterarSenhaForm">
+
+      <ion-row>
+        <ion-col>
+          <ion-input placeholder="Senha" type="password" formControlName="senha"></ion-input>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="card-form-field-invalido"
+        *ngIf="alterarSenhaForm.get('senha').hasError('required') && alterarSenhaForm.get('senha').touched ">
+        <ion-col>
+          Campo obrigatório
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="card-form-field-invalido"
+        *ngIf="alterarSenhaForm.get('senha').hasError('minlength') && alterarSenhaForm.get('senha').touched ">
+        <ion-col>
+          Mínimo de 6 caracteres
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-input placeholder="Confirmar Senha" type="password" formControlName="senhaConfirmacao"></ion-input>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="card-form-field-invalido"
+        *ngIf="alterarSenhaForm.get('senhaConfirmacao').hasError('required') && alterarSenhaForm.get('senhaConfirmacao').touched ">
+        <ion-col>
+          Campo obrigatório
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="card-form-field-invalido"
+        *ngIf="alterarSenhaForm.get('senhaConfirmacao').hasError('minlength') && alterarSenhaForm.get('senhaConfirmacao').touched ">
+        <ion-col>
+          Mínimo de 6 caracteres
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="card-form-field-invalido"
+        *ngIf="alterarSenhaForm.hasError('notSame') && alterarSenhaForm.get('senhaConfirmacao').touched ">
+        <ion-col>
+         Senha está diferente da Confirmação
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-button color="primary" (click)="alterarSenha()" class="card-form-btn"
+            [disabled]="!alterarSenhaForm.valid">
+            Alterar Senha
+          </ion-button>
+        </ion-col>
+      </ion-row>
+
+      <ion-row style="margin-top: 25px;">
+        <ion-col>
+          <ion-button class="card-form-btn-link" expand="full" fill="clear" (click)="voltar()">
+            <b>Voltar</b>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+
+    </form>
+
+  </div>
+
+</ion-content>

@@ -36,7 +36,6 @@ export class PedidosService {
   }
 
   atualizarPedido(pedido: Pedido): Observable<Pedido> {
-    // pedido.produtos = this.produtosService.getListaProdutosCarrinho();
     return this.apiService.put<Pedido>(`/pedidos/${pedido.idPedido}`, pedido);
   }
 

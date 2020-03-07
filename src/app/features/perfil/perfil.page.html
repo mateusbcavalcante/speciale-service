@@ -1,21 +1,40 @@
-<ion-content fullscreen="true">
+<ion-content>
 
   <div class="card">
+
     <div class="header">
+
       <div class="avatar">
         <img src="assets/images/profile.png" alt="">
       </div>
+
     </div>
+
     <div class="card-body">
-     
+
       <div class="user-meta ion-text-center">
         <h3 class="name">{{usuario.login}}</h3>
         <h6 class="info">{{usuario.email}}</h6>
       </div>
 
-      <ion-button expand="full" color="primary">Alterar Senha</ion-button>
-      <ion-button expand="full" color="secondary" (click)='logout()'>Sair</ion-button>
+      <ion-row>
+        <ion-col col-12>
+          <ion-button class="card-form-btn" (click)="showAlterarSenha()">
+            Alterar Senha
+          </ion-button>
+        </ion-col>
+      </ion-row>
+
+      <ion-row style="margin-top: 20px;">
+        <ion-col col-12>
+          <ion-button color="danger" class="card-form-btn" (click)="logout()">
+            Sair
+          </ion-button>
+        </ion-col>
+      </ion-row>
 
     </div>
+
   </div>
+
 </ion-content>

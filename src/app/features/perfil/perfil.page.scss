@@ -1,68 +1,64 @@
 ion-content {
-  --background: url("/assets/images/bg-login.jpg");
   position: relative;
   height: 100%;
   width: 100%;
 
-  ion-button {
-    margin-top: 1em;
-    margin-bottom: 1em;
-  }
-}
+  .card {
+    margin: 0 auto;
 
-ion-toolbar {
-  --background: transparent;
-}
+    .header {
+      height: 200px; // 20vh;
+      background: url("/assets/images/bg-login.jpg") fixed;
 
-ion-chip {
-  --background: #e6daad;
-  --color: #fff;
-}
+      .avatar {
+        width: 160px; //40vw
+        height: 160px;
+        position: relative;
+        margin: 0 auto;
 
-.card {
-  margin: 0 auto;
-
-  .header {
-    height: 200px; // 20vh;
-
-    .avatar {
-      width: 160px; //40vw
-      height: 160px;
-      position: relative;
-      margin: 0 auto;
-
-      img {
-        display: block;
-        border-radius: 50%;
-        position: absolute;
-        bottom: calc(-1 * (80px + 4px)); // -42px;
-        border: 8px solid #e6daad;
-        background-color: #fff;
+        img {
+          display: block;
+          border-radius: 50%;
+          position: absolute;
+          bottom: calc(-1 * (80px + 4px)); // -42px;
+          border: 8px solid #e6daad;
+          background-color: #fff;
+        }
       }
     }
-  }
-}
 
-.card-body {
-  background-color: #ffffff;
-  padding: 30px;
-  height: calc(100vh - (200px + 56px));
-  overflow: hidden;
+    .card-body {
+      transition: all 0.2s ease-in-out;
+      background: linear-gradient(0deg, #f5f6f900, #bf8358c4);
+      padding: 30px;
+      height: calc(100vh - (200px + 56px));
+      overflow: auto;
 
-  .user-meta {
-    padding-top: 40px;
+      ion-button {
+        width: 95%;
+        display: block;
+        margin: 0 auto;
+        border-radius: 5px;
+        margin-top: 15px;
+      }
 
-    .name {
-      font-size: 24px;
-      font-weight: 600;
-      color: #303940;
-    }
+      .user-meta {
+        padding-top: 20px;
 
-    .info {
-      font-size: 90%;
-      color: #949ea6;
-      text-transform: lowercase;
-      margin: 0 auto;
+        .name {
+          font-size: 2em;
+          margin-bottom: 10px;
+          color: #884e25;
+        }
+
+        .info {
+          font-size: 15px;
+          text-align: center;
+          color: #00000069;
+          text-transform: lowercase;
+          margin: 0 auto;
+        }
+      }
     }
   }
 }

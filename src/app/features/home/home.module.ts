@@ -46,7 +46,17 @@ const routes: Routes = [
             path: '',
             loadChildren: () =>
               import('../perfil/perfil.module').then(m => m.PerfilPageModule)
-          }
+          },
+          {
+            path: 'alterar-senha',
+            children: [
+              {
+                path: '',
+                loadChildren: () =>
+                  import('../alterar-senha/alterar-senha.module').then(m => m.AlterarSenhaPageModule)
+              }
+            ]
+          },
         ]
       },
       {

@@ -8,7 +8,9 @@ import { Produto } from '../domain/produto';
 })
 export class ProdutosService {
 
+  // tslint:disable-next-line: variable-name
   private _produtos = new BehaviorSubject<Produto[]>([]);
+  // tslint:disable-next-line: variable-name
   private _store: { produtos: Produto[] } = { produtos: [] };
   readonly produtos = this._produtos.asObservable();
 

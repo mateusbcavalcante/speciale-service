@@ -26,4 +26,8 @@ export class PerfilPage implements OnInit {
     this.navCtrl.navigateRoot('/');
   }
 
+  showAlterarSenha(){
+    this.navCtrl.navigateRoot('/app/perfil/alterar-senha');
+  }
+
 }
