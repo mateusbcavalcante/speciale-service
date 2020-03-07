@@ -27,6 +27,10 @@
     }
   }
 
+  p {
+    white-space: pre-line !important;
+  }
+
   .plus-minus-toggle {
     cursor: pointer;
     height: 15px;

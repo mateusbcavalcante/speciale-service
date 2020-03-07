@@ -1,10 +1,19 @@
-<ion-card *ngIf="pedido">
+<ion-card *ngIf="pedido.idPedido">
 
     <ion-card-header>
         <ion-card-title>
             <h2>Protocolo: {{pedido?.idPedido}}</h2>
         </ion-card-title>
     </ion-card-header>
+
+    <ion-row class='menu-acao-pedido'>
+        <ion-col>
+            <ion-button color="danger" expande="full" size='small' (click)="inativarEvent(pedido)">Inativar</ion-button>
+        </ion-col>
+        <ion-col>
+            <ion-button color="primary" size='small' (click)="editarEvent(pedido)">Editar</ion-button>
+        </ion-col>
+    </ion-row>
 
     <ion-item>
         <ion-label>
@@ -24,7 +33,7 @@
     <ion-item *ngIf="pedido?.observacao">
         <ion-label>
             <p><b>Observação:</b> </p>
-            <p >{{pedido?.observacao}}</p>
+            <p>{{pedido?.observacao}}</p>
         </ion-label>
     </ion-item>
 

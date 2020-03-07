@@ -33,16 +33,6 @@
 
   </div>
 
-  <app-card-pedido [pedido]="pedido"></app-card-pedido>
-
-  <ion-footer *ngIf="pedido">
-
-    <ion-row>
-      <ion-col col-12>
-        <ion-button color="danger" class="card-form-btn" (click)="inativarPedidoConfirmacao()">Inativar Pedido</ion-button>
-      </ion-col>
-    </ion-row>
-
-  </ion-footer>
+  <app-card-pedido [pedido]="pedido$ | async" (editar)="editarPedido($event)" (inativar)="inativarPedidoConfirmacao($event)"></app-card-pedido>
 
 </ion-content>

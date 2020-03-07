@@ -14,7 +14,7 @@ export class AlertService {
   async confirm(headerText: string, messageText: string, callbackOK: () => void) {
     const alert = await this.alertController.create({
       header: headerText,
-      message: messageText,
+      message: messageText.replace(/\n/g, '<br>'),
       mode: 'ios',
       buttons: [
         {

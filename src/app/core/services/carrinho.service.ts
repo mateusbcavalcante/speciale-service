@@ -6,7 +6,7 @@ import * as _ from 'lodash';
 
 const initializeCarrinho = (): Carrinho => {
   return { itens: [], totalItens: 0 };
-}
+};
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +19,7 @@ export class CarrinhoService {
   private _store: { carrinho: Carrinho } = { carrinho: initializeCarrinho() };
   readonly carrinho = this._carrinho.asObservable();
 
-  private atualizarCarrinho() {
+  private updateDataService() {
     this._store.carrinho.totalItens = this._store.carrinho.itens.length;
     this._carrinho.next(Object.assign({}, this._store).carrinho);
   }
@@ -42,7 +42,7 @@ export class CarrinhoService {
       itens.push(item);
     }
 
-    this.atualizarCarrinho();
+    this.updateDataService();
   }
 
   obterItemCarrinho(item: Item): Item {
@@ -52,13 +52,13 @@ export class CarrinhoService {
   removerItemCarrinho(item: Item) {
     _.remove(this._store.carrinho.itens, { produto: { idProduto: item.produto.idProduto } });
     item.produto.status = 'DISPONIVEL';
-    this.atualizarCarrinho();
+    this.updateDataService();
   }
 
   limparCarrinho(): void {
     this.atualizarStatusProdutos('DISPONIVEL');
     this._store = { carrinho: initializeCarrinho() };
-    this.atualizarCarrinho();
+    this.updateDataService();
   }
 
   getItens(): Item[] {

@@ -7,6 +7,7 @@ ion-card {
     transition: all 0.2s ease-in-out;
     background: linear-gradient(0deg, #d7d8da00, #e4c57452);
     height: auto;
+    padding-bottom: 0px;
 
     ion-card-title {
       color: var(--ion-color-primary);
@@ -42,6 +43,20 @@ ion-card {
 
   p {
     white-space: pre-line !important;
+  }
+
+  .menu-acao-pedido {
+    margin-left: 10px;
+    margin-right: 10px;
+
+    ion-col{
+      padding-top: 0px !important;
+      padding-bottom: 0px !important;
+      
+      ion-button{
+        display: flex;
+      }
+    }
   }
 
   ion-card-content {

@@ -5,6 +5,7 @@ import { NotificacaoService } from '../../shared/notificacao/notificacao.service
 import { PedidosService } from '../../core/services/pedidos.service';
 import { AuthService } from '../../core/services/auth.service';
 import { AlertService } from '../../shared/alertas/alert.service';
+import { Observable } from 'rxjs';
 
 
 @Component({
@@ -16,7 +17,7 @@ import { AlertService } from '../../shared/alertas/alert.service';
 })
 export class PedidosPage implements OnInit {
 
-  pedido: Pedido;
+  pedido$: Observable<Pedido>;
 
   pedidosPesquisaForm: FormGroup;
 
@@ -30,10 +31,7 @@ export class PedidosPage implements OnInit {
 
   ngOnInit() {
     this.criarFormularioPesquisaPedidos();
-  }
-
-  ionViewWillEnter() {
-    this.pedido = null;
+    this.pedido$ = this.pedidoService.pedido;
   }
 
   criarFormularioPesquisaPedidos() {
@@ -45,32 +43,28 @@ export class PedidosPage implements OnInit {
   }
 
   obterPedidoParametrosPesquisa() {
-    this.pedido = null;
-    this.pedidoService.obterPedido(this.pedidosPesquisaForm.value).subscribe(
-      pedido => {
-        this.pedido = pedido;
-      }
-    );
+    this.pedidoService.obterPedido(this.pedidosPesquisaForm.value);
   }
 
   pesquisarPedidos() {
     this.obterPedidoParametrosPesquisa();
   }
 
-  inativarPedido() {
-    this.pedidoService.inativarPedido(this.pedido).subscribe(
-      async data => {
-        await this.notificacaoService.showSuccessToaster('Pedido inativado com sucesso !!!');
-        this.pedido = null;
-      }
-    );
+  inativarPedido(pedido: Pedido) {
+    this.pedidoService.inativarPedido(pedido);
   }
 
-  inativarPedidoConfirmacao() {
+  editarPedido(event: any){
+    const pedido = event.pedido;
+  }
+
+  inativarPedidoConfirmacao(event: any) {
+    const pedido = event.pedido;
     this.alertService.confirm(
       'Confirmação',
-      `Deseja realmente inativar o pedido: ${this.pedido.idPedido} ?`,
-      () => this.inativarPedido()
+      `Deseja realmente inativar o pedido:
+      ${pedido.idPedido} ?`,
+      () => this.inativarPedido(pedido)
     );
   }
 

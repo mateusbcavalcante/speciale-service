@@ -62,7 +62,8 @@ export class CarrinhoPage implements OnInit {
     const item = event.item;
     this.alertService.confirm(
       'Confirmação',
-      `Deseja remover o item : '${item.produto.desProduto}' ?`,
+      `Deseja remover o item :
+      ${item.produto.desProduto} ?`,
       () => this.removerItemCarrinho(item)
     );
   }
@@ -72,7 +73,7 @@ export class CarrinhoPage implements OnInit {
     const pedido = this.carrinhoForm.value;
     const itens = this.carrinhoService.getItens();
 
-    this.pedidosService.cadastrarPedido(pedido, itens).subscribe(
+    this.pedidosService.cadastrarNovoPedido(pedido, itens).subscribe(
       async data => {
         await this.notificacaoService.showSuccessToaster(
           `Seu pedido de número: '${data.idPedido}' foi enviado para Speciale. Obrigado!!!`, 5000);
