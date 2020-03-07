@@ -24,6 +24,10 @@ export class CarrinhoService {
     this._carrinho.next(Object.assign({}, this._store).carrinho);
   }
 
+  private atualizarStatusProdutos(statusProduto: string) {
+    this._store.carrinho.itens.forEach(item => item.produto.status = statusProduto);
+  }
+
   addItemCarrinho(item: Item) {
 
     const itemCarrinho = this.obterItemCarrinho(item);
@@ -33,6 +37,7 @@ export class CarrinhoService {
       itemCarrinho.observacao = item.observacao;
 
     } else {
+      item.produto.status = 'CARRINHO';
       const itens = this._store.carrinho.itens;
       itens.push(item);
     }
@@ -46,10 +51,12 @@ export class CarrinhoService {
 
   removerItemCarrinho(item: Item) {
     _.remove(this._store.carrinho.itens, { produto: { idProduto: item.produto.idProduto } });
+    item.produto.status = 'DISPONIVEL';
     this.atualizarCarrinho();
   }
 
   limparCarrinho(): void {
+    this.atualizarStatusProdutos('DISPONIVEL');
     this._store = { carrinho: initializeCarrinho() };
     this.atualizarCarrinho();
   }

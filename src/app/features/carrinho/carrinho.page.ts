@@ -4,6 +4,8 @@ import { AuthService } from '../../core/services/auth.service';
 import { CarrinhoService } from '../../core/services/carrinho.service';
 import { PedidosService } from '../../core/services/pedidos.service';
 import { NotificacaoService } from '../../shared/notificacao/notificacao.service';
+import { AlertService } from '../../shared/alertas/alert.service';
+import { Item } from '../../core/domain/item';
 import { Carrinho } from '../../core/domain/carrinho';
 import { Observable } from 'rxjs';
 
@@ -25,6 +27,7 @@ export class CarrinhoPage implements OnInit {
     private carrinhoService: CarrinhoService,
     private pedidosService: PedidosService,
     private authService: AuthService,
+    private alertService: AlertService,
     private notificacaoService: NotificacaoService
   ) { }
 
@@ -51,9 +54,17 @@ export class CarrinhoPage implements OnInit {
     this.carrinhoService.limparCarrinho();
   }
 
-  removerItemCarrinho(event: any) {
-    const item = event.item;
+  removerItemCarrinho(item: Item) {
     this.carrinhoService.removerItemCarrinho(item);
+  }
+
+  removerItemCarrinhoConfirmacao(event: any) {
+    const item = event.item;
+    this.alertService.confirm(
+      'Confirmação',
+      `Deseja remover o item : '${item.produto.desProduto}' ?`,
+      () => this.removerItemCarrinho(item)
+    );
   }
 
   registrarPedido() {

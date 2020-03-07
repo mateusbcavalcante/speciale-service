@@ -21,14 +21,15 @@ export class TextareaToggleComponent implements ControlValueAccessor {
   @Input()
   label = '';
 
-  @Input()
-  item: Item;
+  // tslint:disable-next-line: no-input-rename
+  @Input('value')
+  textareaValue: string;
 
   visible = false;
 
-  textareaValue = '';
-
   onTouch: any = () => { };
+
+  onChange: any = () => { };
 
   constructor() { }
 
@@ -40,10 +41,6 @@ export class TextareaToggleComponent implements ControlValueAccessor {
 
   writeValue(obj: any): void {
     this.value = obj;
-  }
-
-  onChange(event: any) {
-    this.textareaValue = event.target.value;
   }
 
   registerOnChange(fn: any): void {
@@ -59,10 +56,6 @@ export class TextareaToggleComponent implements ControlValueAccessor {
 
   toggle(event: any) {
     this.visible = !this.visible;
-  }
-
-  save() {
-    this.item.observacao = this.textareaValue;
   }
 
 }

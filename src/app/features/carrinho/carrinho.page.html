@@ -26,7 +26,7 @@
 
   </div>
 
-  <app-card-item *ngFor="let item of (carrinho$ | async).itens" (removerItem)="removerItemCarrinho($event)"
+  <app-card-item *ngFor="let item of (carrinho$ | async).itens" (removerItem)="removerItemCarrinhoConfirmacao($event)"
     [item]="item">
   </app-card-item>
 

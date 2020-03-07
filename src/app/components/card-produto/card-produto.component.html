@@ -1,8 +1,17 @@
 <ion-card mode="ios" *ngIf="produto">
     <ion-card-header>
         <ion-card-title>{{produto.desProduto}}</ion-card-title>
+        <ion-card-subtitle [hidden]="produto.status !== 'CARRINHO'">
+            <p> Adicionado ao seu Carrinho</p>
+        </ion-card-subtitle>
     </ion-card-header>
-    <ion-list>
+    <ion-list class='produto-carrinho' [hidden]="produto.status !== 'CARRINHO'">
+        <ion-item>
+            <ion-label>Qtd. Solicitada</ion-label>
+            <ion-badge fill="outline" slot="end">{{produto.qtdSolicitada}}</ion-badge>
+        </ion-item>
+    </ion-list>
+    <ion-list [hidden]="produto.status === 'CARRINHO'">
         <ion-item>
             <ion-label>Qtd. Lote Minimo</ion-label>
             <ion-badge fill="outline" slot="end">{{produto.qtdLoteMinimo}}</ion-badge>
@@ -13,16 +22,13 @@
         </ion-item>
     </ion-list>
     <ion-card-content>
-        <ion-row>
+        <ion-row [hidden]="produto.status === 'CARRINHO'">
             <ion-col size="8">
                 <app-contador-item [item]="produto"></app-contador-item>
             </ion-col>
             <ion-col size="4" style="padding-top: 0px;">
-                <ion-button class="align-right" 
-                            color="success" 
-                            size='small' 
-                            [disabled]="produto.qtdSolicitada === 0"
-                            (click)="addItemEvent(produto)">
+                <ion-button class="align-right" color="success" size='small' [disabled]="produto.qtdSolicitada === 0"
+                    (click)="addItemEvent(produto)">
                     <ion-icon name="cart"></ion-icon>
                 </ion-button>
             </ion-col>

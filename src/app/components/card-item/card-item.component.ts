@@ -21,6 +21,10 @@ export class CardItemComponent implements OnInit {
 
   }
 
+  setObservacao(event: any) {
+    this.item.observacao = event.target.value;
+  }
+
   removerItemEvent(item: Item) {
     this.removerItem.emit({
       item

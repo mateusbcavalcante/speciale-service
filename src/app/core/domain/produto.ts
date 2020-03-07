@@ -6,4 +6,5 @@ export interface Produto {
     qtdLoteMinimo: number;
     qtdMultiplo: number;
     qtdSolicitada: number;
+    status?: string;
 }

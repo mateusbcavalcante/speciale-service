@@ -19,7 +19,6 @@ export class CardProdutoComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-
   }
 
   addItemEvent(produto: Produto) {

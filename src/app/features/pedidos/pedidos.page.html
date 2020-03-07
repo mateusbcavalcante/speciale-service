@@ -1,7 +1,13 @@
-<ion-content [fullscreen]="true">
+<ion-content>
 
   <app-page-header titulo="Pedidos" info="Pesquise seus pedidos pela data do pedido">
   </app-page-header>
+
+  <ion-fab horizontal="end" vertical="top" slot="fixed">
+    <ion-fab-button size="small" color="primary" (click)="pesquisarPedidos()">
+      <ion-icon name="search"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 
   <div class="card-form">
 
@@ -18,12 +24,6 @@
           <ion-col col-8>
             <ion-datetime displayFormat="DD/MM/YYYY" doneText="OK" cancelText="Cancelar" formControlName="dataPedido">
             </ion-datetime>
-          </ion-col>
-        </ion-row>
-
-        <ion-row>
-          <ion-col col-12>
-            <ion-button class="card-form-btn" (click)="pesquisarPedidos()">Pesquisar Pedidos</ion-button>
           </ion-col>
         </ion-row>
 

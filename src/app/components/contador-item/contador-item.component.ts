@@ -15,17 +15,20 @@ export class ContadorItemComponent implements OnInit {
     qtdMultiplo: 0
   };
 
+  @Input()
+  minValue = 0;
+
   constructor() { }
 
   ngOnInit() {
     if (!this.item.qtdSolicitada) {
-      this.item.qtdSolicitada = 0;
+      this.item.qtdSolicitada = this.minValue;
     }
   }
 
   remove() {
     if (this.item.qtdSolicitada === this.item.qtdLoteMinimo) {
-      this.item.qtdSolicitada = 0;
+      this.item.qtdSolicitada = this.minValue;
     } else if (this.item.qtdSolicitada > 0) {
       this.item.qtdSolicitada -= this.item.qtdMultiplo;
     }
