@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Pedido } from 'src/app/core/domain/pedido';
+import { Pedido } from '../../core/domain/pedido';
 
 @Component({
   selector: 'app-card-pedido',

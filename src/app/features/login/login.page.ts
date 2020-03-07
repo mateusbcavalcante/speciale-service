@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NavController } from '@ionic/angular';
 import { AuthService } from '../../core/services/auth.service';
-import { NotificacaoService } from 'src/app/shared/notificacao/notificacao.service';
+import { NotificacaoService } from '../../shared/notificacao/notificacao.service';
 
 @Component({
   selector: 'app-login',
