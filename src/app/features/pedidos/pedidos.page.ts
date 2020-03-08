@@ -6,6 +6,7 @@ import { PedidosService } from '../../core/services/pedidos.service';
 import { AuthService } from '../../core/services/auth.service';
 import { AlertService } from '../../shared/alertas/alert.service';
 import { Observable } from 'rxjs';
+import { NavController } from '@ionic/angular';
 
 
 @Component({
@@ -27,6 +28,7 @@ export class PedidosPage implements OnInit {
     private pedidoService: PedidosService,
     private authService: AuthService,
     private alertService: AlertService,
+    private navCtrl: NavController,
   ) { }
 
   ngOnInit() {
@@ -54,8 +56,9 @@ export class PedidosPage implements OnInit {
     this.pedidoService.inativarPedido(pedido);
   }
 
-  editarPedido(event: any){
+  async editarPedido(event: any) {
     const pedido = event.pedido;
+    await this.navCtrl.navigateForward(`/app/pedidos/${pedido.idPedido}`);
   }
 
   inativarPedidoConfirmacao(event: any) {

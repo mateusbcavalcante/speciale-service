@@ -1,17 +1,16 @@
 ion-card {
-  margin-left: 15px;
-  margin-right: 15px;
-
   ion-card-header {
     overflow: hidden;
     transition: all 0.2s ease-in-out;
     background: linear-gradient(0deg, #d7d8da00, #e4c57452);
     height: auto;
-    padding-bottom: 0px;
-
+    padding-top: 0px;
+    padding-bottom: 15px;
+    
     ion-card-title {
       color: var(--ion-color-primary);
       font-size: 20px;
+      font-weight: initial;
     }
   }
 
@@ -22,7 +21,7 @@ ion-card {
     ion-item-divider {
       ion-label {
         h2 {
-          color: #9b592a;
+          color: var(--ion-color-primary);
           font-size: 17px;
         }
       }
@@ -30,12 +29,12 @@ ion-card {
 
     ion-item {
       ion-label {
-        h3 {
-          color: #ff8801;
-          font-size: 15px;
+        h6 {
+          font-size: 13px !important;
+          // color: ;
         }
         p {
-          font-size: 13px;
+          font-size: 11px !important;
         }
       }
     }
@@ -48,12 +47,13 @@ ion-card {
   .menu-acao-pedido {
     margin-left: 10px;
     margin-right: 10px;
+    margin-bottom: 10px;
 
-    ion-col{
+    ion-col {
       padding-top: 0px !important;
       padding-bottom: 0px !important;
-      
-      ion-button{
+
+      ion-button {
         display: flex;
       }
     }

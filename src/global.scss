@@ -24,49 +24,44 @@
 @import "~@ionic/angular/css/text-alignment.css";
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
+@import "./theme/forms.scss";
+@import url("https://fonts.googleapis.com/css?family=Oxygen&display=swap");
 
-.header-md:after {
-  background-image: none !important;
+ion-content {
+  position: relative;
+  // --background: linear-gradient(0deg, var(--ion-color-light-tint), #ece0d7);
+  --background: linear-gradient(-10deg, var(--ion-color-light), #ffffff, #a56a3fc7);
+
+  width: 100%;
+  padding: 20px;
 }
 
-.color1 {
-  color: #9b592a;
+ion-toolbar {
+  --background: transparent;
+  --ion-color-base: transparent !important;
 }
 
-.color2 {
-  color: #ff8801;
+/* Show background if class is active */
+.show-background {
+  border-style: none;
+  background: var(--ion-color-primary);
 }
 
-.color3 {
-  color: #e1be64;
+/* Remove bottom border on md */
+.header-md::after {
+  background-image: none;
 }
 
-.color4 {
-  color: #a2a2a2;
+/* Remove bottom border on ios */
+.header-ios ion-toolbar:last-child {
+  --border-width: 0;
 }
 
-.negrito {
-  font-weight: bold !important;
+.fab-button-top {
+  margin-top: -20px;
 }
 
-.fz-12 {
-  font-size: 12px !important;
-}
-
-.align-left {
-  float: left;
-}
-
-.align-right {
-  float: right;
-}
-
-app-card-produto ion-card:first-child {
-  margin-top: -75px;
-  margin-bottom: 90px;
-}
-
-app-card-item ion-card:first-child {
-  margin-top: -60px;
-  margin-bottom: 80px;
+.ripple-parent {
+  position: relative;
+  overflow: hidden;
 }

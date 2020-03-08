@@ -6,8 +6,9 @@ import { AuthService } from './core/services/auth.service';
 
 @Component({
   selector: 'app-root',
-  templateUrl: 'app.component.html',
-  styleUrls: ['app.component.scss']
+  template: `<ion-app>
+              <ion-router-outlet></ion-router-outlet>
+             </ion-app>`
 })
 export class AppComponent {
   constructor(
@@ -24,17 +25,16 @@ export class AppComponent {
     this.platform.ready().then(async () => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
-      await this.openFirstPage();
+      await this.restaurarSessao();
     });
 
   }
 
-  async openFirstPage() {
-    if (this.isSessaoAtiva()) {
-      await this.navCtrl.navigateRoot('/app');
-
-    } else {
+  async restaurarSessao() {
+    if (!this.isSessaoAtiva()) {
       await this.navCtrl.navigateRoot('/');
+    } else {
+      await this.navCtrl.navigateRoot('/app');
     }
   }
 

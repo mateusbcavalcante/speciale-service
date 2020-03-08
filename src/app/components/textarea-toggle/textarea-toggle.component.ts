@@ -1,6 +1,5 @@
 import { Component, Input, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Item } from '../../core/domain/item';
 
 @Component({
   selector: 'app-textarea-toggle',
@@ -12,7 +11,7 @@ import { Item } from '../../core/domain/item';
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => TextareaToggleComponent),
-      multi: true
+      multi: true,
     }
   ]
 })
@@ -39,6 +38,10 @@ export class TextareaToggleComponent implements ControlValueAccessor {
     this.onTouch(val);
   }
 
+  get value(): string {
+    return this.textareaValue;
+  }
+
   writeValue(obj: any): void {
     this.value = obj;
   }
@@ -56,6 +59,10 @@ export class TextareaToggleComponent implements ControlValueAccessor {
 
   toggle(event: any) {
     this.visible = !this.visible;
+  }
+
+  saveValue(event: any) {
+    this.textareaValue = event.target.value;
   }
 
 }

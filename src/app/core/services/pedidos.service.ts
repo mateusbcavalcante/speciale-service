@@ -5,7 +5,8 @@ import { Pedido } from '../domain/pedido';
 import { ObterPedidoDto } from '../domain/obter-pedido.dto';
 import { formatDateParam } from '../../shared/utils/date-utils';
 import { Item } from '../domain/item';
-import { catchError } from 'rxjs/operators';
+import { Produto } from '../domain/produto';
+import * as _ from 'lodash';
 
 
 const initializePedido = (): Pedido => {
@@ -36,9 +37,17 @@ export class PedidosService {
     private apiService: ApiService) {
   }
 
-  private updateDataService(pedido: Pedido) {
-    this._store.pedido = pedido;
+  private updateDataService(pedido?: Pedido) {
+    if (pedido) {
+      this._store.pedido = pedido;
+    }
     this._pedido.next(Object.assign({}, this._store).pedido);
+  }
+
+  private templateObservacaoItem(item: Item): string {
+    return `#-------------------------\n
+    ${item.produto.desProduto}\n
+    ${item.observacao}\n`;
   }
 
   private montarPedidoPorItens(pedido: Pedido, itens: Item[]): Pedido {
@@ -46,7 +55,7 @@ export class PedidosService {
     let observacao = '';
     itens.forEach(item => {
       if (item.observacao) {
-        observacao += `${item.produto.desProduto}\n${item.observacao}\n`;
+        observacao += this.templateObservacaoItem(item);
       }
       produtos.push(item.produto);
     });
@@ -82,6 +91,20 @@ export class PedidosService {
     this.apiService.put<Pedido>(`/pedidos/${pedido.idPedido}/inativar`, pedido).subscribe(
       data => this.updateDataService(data)
     );
+  }
+
+  removerProdutoPedido(produto: Produto) {
+    _.remove(this._store.pedido.produtos, { idProduto: produto.idProduto });
+    produto.status = 'DISPONIVEL';
+    this.updateDataService();
+  }
+
+  obterPedidoPorId(idPedido: number) {
+    if (this._store.pedido.idPedido === idPedido) {
+      this.updateDataService();
+    } else {
+      throw new Error('Pedido está desatualizado. Favor pesquisar novamente');
+    }
   }
 
   getPedido(): Pedido {

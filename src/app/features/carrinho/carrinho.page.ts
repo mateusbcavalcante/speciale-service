@@ -11,10 +11,7 @@ import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-carrinho',
-  templateUrl: 'carrinho.page.html',
-  styleUrls: [
-    'carrinho.page.scss'
-  ]
+  templateUrl: 'carrinho.page.html'
 })
 export class CarrinhoPage implements OnInit {
 

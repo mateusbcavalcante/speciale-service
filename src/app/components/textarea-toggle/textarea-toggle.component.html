@@ -2,11 +2,17 @@
     <ion-col size="1">
         <div [className]="visible ? 'plus-minus-toggle' : 'plus-minus-toggle collapsed'" (click)="toggle($event)"></div>
     </ion-col>
-    <ion-col size="7">{{label}}</ion-col>
+    <ion-col size="7">
+        <span>{{label}}</span>
+    </ion-col>
 </ion-row>
-<ion-row>
+<ion-row [hidden]="!visible" >
     <ion-col size="12">
-        <ion-textarea rows="10" [hidden]="!visible" (change)="onChange($event)"></ion-textarea>
-        <p [hidden]="visible">{{textareaValue}}</p>
+        <ion-textarea rows="10" [value]='textareaValue' (change)="saveValue($event)"></ion-textarea>
+    </ion-col>
+</ion-row>
+<ion-row [hidden]="visible" >
+    <ion-col size="12">
+        <ion-text>{{textareaValue}}</ion-text>
     </ion-col>
 </ion-row>

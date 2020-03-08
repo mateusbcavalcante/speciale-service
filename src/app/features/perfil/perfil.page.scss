@@ -8,11 +8,11 @@ ion-content {
 
     .header {
       height: 200px; // 20vh;
-      background: url("/assets/images/bg-login.jpg") fixed;
+      // background: url("/assets/images/bg-login.jpg") fixed;
 
       .avatar {
-        width: 160px; //40vw
-        height: 160px;
+        width: 100px; //40vw
+        height: 100px;
         position: relative;
         margin: 0 auto;
 
@@ -21,18 +21,13 @@ ion-content {
           border-radius: 50%;
           position: absolute;
           bottom: calc(-1 * (80px + 4px)); // -42px;
-          border: 8px solid #e6daad;
+          border: 3px solid #e6daad;
           background-color: #fff;
         }
       }
     }
 
     .card-body {
-      transition: all 0.2s ease-in-out;
-      background: linear-gradient(0deg, #f5f6f900, #bf8358c4);
-      padding: 30px;
-      height: calc(100vh - (200px + 56px));
-      overflow: auto;
 
       ion-button {
         width: 95%;
@@ -57,6 +52,21 @@ ion-content {
           color: #00000069;
           text-transform: lowercase;
           margin: 0 auto;
+        }
+      }
+
+      .menu-acao {
+        margin-left: 10px;
+        margin-right: 10px;
+        margin-bottom: 10px;
+    
+        ion-col {
+          padding-top: 0px !important;
+          padding-bottom: 0px !important;
+    
+          ion-button {
+            display: flex;
+          }
         }
       }
     }

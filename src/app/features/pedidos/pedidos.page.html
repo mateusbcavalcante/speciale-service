@@ -1,28 +1,38 @@
-<ion-content>
+<ion-header>
+  <ion-toolbar [class.show-background]="showToolbar">
+    <ion-buttons slot="start">
+      <ion-back-button text=""></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen="true">
 
   <app-page-header titulo="Pedidos" info="Pesquise seus pedidos pela data do pedido">
   </app-page-header>
 
-  <ion-fab horizontal="end" vertical="top" slot="fixed">
+  <ion-fab horizontal="end" class="fab-button-top" vertical="top" slot="fixed">
     <ion-fab-button size="small" color="primary" (click)="pesquisarPedidos()">
       <ion-icon name="search"></ion-icon>
     </ion-fab-button>
   </ion-fab>
 
-  <div class="card-form">
+  <ion-card mode="ios" class="card-form">
+
+    <ion-card-header></ion-card-header>
 
     <form [formGroup]="pedidosPesquisaForm">
 
       <ion-grid>
 
         <ion-row>
-          <ion-col col-4>
-            <ion-label>
-              Data Pedido:
+          <ion-col size="5">
+           <ion-label>
+             Data Pedido:
             </ion-label>
           </ion-col>
-          <ion-col col-8>
-            <ion-datetime displayFormat="DD/MM/YYYY" doneText="OK" cancelText="Cancelar" formControlName="dataPedido">
+          <ion-col size="7">
+            <ion-datetime displayFormat="DD/MM/YYYY" mode="md"  doneText="OK" cancelText="Cancelar" formControlName="dataPedido">
             </ion-datetime>
           </ion-col>
         </ion-row>
@@ -31,7 +41,7 @@
 
     </form>
 
-  </div>
+  </ion-card>
 
   <app-card-pedido [pedido]="pedido$ | async" (editar)="editarPedido($event)" (inativar)="inativarPedidoConfirmacao($event)"></app-card-pedido>
 

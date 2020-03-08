@@ -1,4 +1,12 @@
-<ion-content>
+<ion-header>
+  <ion-toolbar [class.show-background]="showToolbar">
+    <ion-buttons slot="start">
+      <ion-back-button text=""></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen="true">
 
   <div class="card">
 
@@ -17,19 +25,12 @@
         <h6 class="info">{{usuario.email}}</h6>
       </div>
 
-      <ion-row>
-        <ion-col col-12>
-          <ion-button class="card-form-btn" (click)="showAlterarSenha()">
-            Alterar Senha
-          </ion-button>
+      <ion-row class='menu-acao'>
+        <ion-col>
+          <ion-button color="primary" expande="full" size='small' (click)="showAlterarSenha()">Alterar Senha</ion-button>
         </ion-col>
-      </ion-row>
-
-      <ion-row style="margin-top: 20px;">
-        <ion-col col-12>
-          <ion-button color="danger" class="card-form-btn" (click)="logout()">
-            Sair
-          </ion-button>
+        <ion-col>
+          <ion-button color="danger" size='small' (click)="logout()">Sair</ion-button>
         </ion-col>
       </ion-row>
 

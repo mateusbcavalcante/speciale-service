@@ -7,10 +7,7 @@ import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-alterar-senha',
-  templateUrl: 'alterar-senha.page.html',
-  styleUrls: [
-    'alterar-senha.page.scss'
-  ]
+  templateUrl: 'alterar-senha.page.html'
 })
 export class AlterarSenhaPage implements OnInit {
 

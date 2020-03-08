@@ -1,0 +1,47 @@
+<ion-header>
+    <ion-toolbar [class.show-background]="showToolbar">
+        <ion-buttons slot="start">
+            <ion-back-button text=""></ion-back-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen="true">
+
+    <app-page-header [titulo]="'Pedido ' + (pedido$| async).idPedido" info="Alteração dos dados do pedido">
+    </app-page-header>
+
+    <ion-card mode="ios" class="card-form">
+
+        <ion-card-header></ion-card-header>
+
+        <form [formGroup]="pedidoForm">
+            <ion-grid>
+                <ion-row>
+                    <ion-col size="5">
+                        <ion-label>Data Pedido</ion-label>
+                    </ion-col>
+                    <ion-col size="7">
+                        <ion-datetime displayFormat="DD/MM/YYYY" mode="md" formControlName="dataPedido" doneText="OK"
+                            cancelText="Cancelar"></ion-datetime>
+                    </ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col size="12">
+                        <ion-label style="margin-top: -15px;">Observações</ion-label>
+                    </ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col size="12">
+                        <ion-textarea rows="10" formControlName="observacao"></ion-textarea>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+        </form>
+    </ion-card>
+
+    <app-produtos-pedido (removerProduto)="removerProdutoPedidoConfirmacao($event)" [pedido]="pedido$ | async">
+    </app-produtos-pedido>
+
+
+</ion-content>

@@ -1,30 +1,16 @@
-.welcome-header {
-  position: relative;
-  background: linear-gradient(0deg, #f5f6f900, #bf8358c4);
-  width: 100%;
-  padding: 20px;
-  height: 200px;
+.content {
+  text-align: center;
+  padding: 0px 20px 0px 20px;
 
-  .content {
+  .title {
+    font-size: 2em;
+    margin-bottom: 0px;
+    color: var(--ion-color-primary-shade);
+  }
+
+  .subtitle {
+    font-size: 15px;
     text-align: center;
-    padding: 20px 0 0;
-    color: white;
-
-    img {
-      width: 100px;
-      margin-bottom: 10px;
-    }
-
-    .title {
-      font-size: 2em;
-      margin-bottom: 10px;
-      color: #884e25;
-    }
-
-    .subtitle {
-      font-size: 15px;
-      text-align: center;
-      color: #00000069;
-    }
+    color: var(--ion-color-primary);
   }
 }

@@ -21,22 +21,32 @@
     --padding-end: 10px;
     --padding-bottom: 10px;
     --padding-start: 10px;
+    background: #9b592a1a;
 
     .collapsed {
       display: none;
     }
   }
 
-  p {
+  ion-text {
     white-space: pre-line !important;
+    text-align: justify;
+    color: rgba(var(--ion-text-color-rgb,0,0,0),.4);
+  }
+
+  span{
+    font-size: 15px;
+    font-weight: 300;
+    color: var(--ion-color-primary-tint);
   }
 
   .plus-minus-toggle {
     cursor: pointer;
     height: 15px;
     position: relative;
-    float: right;
-    margin-right: 21px;
+    // float: right;
+    // margin-right: 21px;
+    margin-top: 3px;
     &:before,
     &:after {
       background: #bf9271;

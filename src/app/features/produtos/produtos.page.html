@@ -1,8 +1,16 @@
-<ion-content>
+<ion-header>
+  <ion-toolbar [class.show-background]="showToolbar">
+    <ion-buttons slot="start">
+      <ion-back-button text=""></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen="true">
 
   <app-page-header titulo="Produtos" info="Selecione os produtos para fazer o pedido"></app-page-header>
 
-  <ion-fab horizontal="end" vertical="top" slot="fixed">
+  <ion-fab horizontal="end" class="fab-button-top" vertical="top" slot="fixed">
     <ion-fab-button size="small" color="primary" (click)="pesquisarMeusProdutos()">
       <ion-icon name="search"></ion-icon>
     </ion-fab-button>
@@ -10,7 +18,7 @@
 
 
   <app-card-produto *ngFor="let produto of (produtos$ | async)" (addItem)="adicionarProdutoCarrinho($event)"
-    [produto]="produto">
+    [produto]="produto" [hidden]="produto.status === 'CARRINHO'">
   </app-card-produto>
 
 </ion-content>
