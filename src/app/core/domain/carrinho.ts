@@ -1,7 +1,14 @@
 import { Item } from './item';
+import { Produto } from './produto';
 
 export interface Carrinho {
 
     itens: Item[];
-    totalItens: number;
+}
+
+export class CarrinhoState {
+
+    itens: Item[] = [];
+    produtos: Produto[] = [];
+
 }

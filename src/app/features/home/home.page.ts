@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { CarrinhoService } from '../../core/services/carrinho.service';
-import { Carrinho } from '../../core/domain/carrinho';
 import { Observable } from 'rxjs';
+import { Item } from '../../core/domain/item';
+import { LojaService } from '../../core/services/loja.service';
 
 @Component({
   selector: 'app-home',
@@ -9,12 +9,16 @@ import { Observable } from 'rxjs';
 })
 export class HomePage implements OnInit {
 
-  carrinho$: Observable<Carrinho>;
+  itens$: Observable<Item[]>;
 
-  constructor(private carrinhoService: CarrinhoService) { }
+  constructor(private lojaService: LojaService) { }
 
   ngOnInit() {
-    this.carrinho$ = this.carrinhoService.carrinho;
+    this.obterItensCarriho();
+  }
+
+  obterItensCarriho() {
+    this.itens$ = this.lojaService.obterItensCarrinho();
   }
 
 }

@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ProdutosService } from '../../core/services/produtos.service';
 import { AuthService } from '../../core/services/auth.service';
 import { Produto } from '../../core/domain/produto';
-import { CarrinhoService } from '../../core/services/carrinho.service';
 import { Observable } from 'rxjs';
+import { LojaService } from '../../core/services/loja.service';
 
 @Component({
   selector: 'app-produtos',
@@ -15,25 +14,26 @@ export class ProdutosPage implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private produtosService: ProdutosService,
-    private carrinhoService: CarrinhoService
+    private lojaService: LojaService
   ) { }
 
   ngOnInit() {
-    this.produtos$ = this.produtosService.produtos;
+    this.obterProdutosDisponiveis();
     this.pesquisarMeusProdutos();
+  }
+
+  obterProdutosDisponiveis() {
+    this.produtos$ = this.lojaService.obterProdutosDisponiveis();
   }
 
   pesquisarMeusProdutos() {
     const usuario = this.authService.getUsuarioLogado();
-    this.produtosService.listarProdutosCliente(usuario.idCliente);
+    this.lojaService.listarProdutosPorCliente(usuario.idCliente);
   }
 
   adicionarProdutoCarrinho(event: any) {
     const produto = event.produto;
-    this.carrinhoService.addItemCarrinho({
-      produto
-    });
+    this.lojaService.addProdutoCarrinho(produto);
   }
 
 }

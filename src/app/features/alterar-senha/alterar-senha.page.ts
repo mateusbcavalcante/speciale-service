@@ -1,3 +1,4 @@
+import { ScrollDetail } from '@ionic/core';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NotificacaoService } from '../../shared/notificacao/notificacao.service';
@@ -12,7 +13,6 @@ import { NavController } from '@ionic/angular';
 export class AlterarSenhaPage implements OnInit {
 
   usuario: Usuario;
-
   alterarSenhaForm: FormGroup;
 
   constructor(
@@ -50,7 +50,10 @@ export class AlterarSenhaPage implements OnInit {
 
   alterarSenha() {
     this.authService.alterarSenha(this.alterarSenhaForm.value).subscribe(
-      async data => await this.notificacaoService.showSuccessToaster('Sua senha foi alterada com sucesso !!!')
+      async data => { 
+        await this.notificacaoService.showSuccessToaster('Sua senha foi alterada com sucesso !!!');
+        this.alterarSenhaForm.reset();
+      }
     );
   }
 

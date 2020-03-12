@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar [class.show-background]="showToolbar">
+  <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button text=""></ion-back-button>
     </ion-buttons>
@@ -67,7 +67,7 @@
 
         <ion-row>
           <ion-col>
-            <ion-button color="primary" (click)="alterarSenha()" class="card-form-btn"
+            <ion-button color="primary" size='small' (click)="alterarSenha()" class="card-form-btn"
               [disabled]="!alterarSenhaForm.valid">
               Alterar Senha
             </ion-button>

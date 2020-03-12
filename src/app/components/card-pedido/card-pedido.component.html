@@ -1,4 +1,4 @@
-<ion-card mode="ios" class="card-form" *ngIf="pedido.idPedido">
+<ion-card mode="ios" class="card-form" *ngIf="pedido?.idPedido">
 
     <ion-card-header>
         <ion-card-title>
@@ -21,7 +21,7 @@
     <ion-item>
         <ion-label>
             <h6>Situação</h6>
-            <p>{{pedido?.flgAtivo}}</p>
+            <p>{{pedido?.flgAtivo | pedidoSituacao}}</p>
         </ion-label>
     </ion-item>
     <ion-item *ngIf="pedido?.observacao">
@@ -38,7 +38,7 @@
                 <h2>Produtos do Pedido</h2>
             </ion-label>
         </ion-item-divider>
-        <ion-item *ngFor="let produto of pedido?.produtos">
+        <ion-item *ngFor="let produto of pedido?.produtos" [hidden]="produto.flgAtivo === 'N'">
             <ion-label>
                 <h6>{{produto?.desProduto}}</h6>
                 <p>Qtd Solicitada: {{produto?.qtdSolicitada}}</p>

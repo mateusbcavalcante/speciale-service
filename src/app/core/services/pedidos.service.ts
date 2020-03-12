@@ -1,114 +1,97 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, BehaviorSubject, throwError } from 'rxjs';
-import { ApiService } from './api.service';
-import { Pedido } from '../domain/pedido';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { getInputDateValue } from '../../shared/utils/form-utils';
 import { ObterPedidoDto } from '../domain/obter-pedido.dto';
-import { formatDateParam } from '../../shared/utils/date-utils';
-import { Item } from '../domain/item';
+import { initializePedido, Pedido } from '../domain/pedido';
 import { Produto } from '../domain/produto';
-import * as _ from 'lodash';
+import { PedidoStore } from '../store/pedido.store';
+import { ApiService } from './api.service';
 
-
-const initializePedido = (): Pedido => {
-  return {
-    idCliente: 0,
-    idUsuario: 0,
-    idPedido: 0,
-    dataPedido: null,
-    observacao: '',
-    flgAtivo: '',
-    produtos: [],
-    usuarioCadastro: null
-  };
-};
 
 @Injectable({
   providedIn: 'root',
 })
 export class PedidosService {
 
-  // tslint:disable-next-line: variable-name
-  private _pedido = new BehaviorSubject<Pedido>(initializePedido());
-  // tslint:disable-next-line: variable-name
-  private _store: { pedido: Pedido } = { pedido: initializePedido() };
-  readonly pedido = this._pedido.asObservable();
-
   constructor(
-    private apiService: ApiService) {
+    private apiService: ApiService,
+    private pedidoStore: PedidoStore) {
   }
 
-  private updateDataService(pedido?: Pedido) {
-    if (pedido) {
-      this._store.pedido = pedido;
-    }
-    this._pedido.next(Object.assign({}, this._store).pedido);
-  }
-
-  private templateObservacaoItem(item: Item): string {
-    return `#-------------------------\n
-    ${item.produto.desProduto}\n
-    ${item.observacao}\n`;
-  }
-
-  private montarPedidoPorItens(pedido: Pedido, itens: Item[]): Pedido {
-    const produtos = [];
-    let observacao = '';
-    itens.forEach(item => {
-      if (item.observacao) {
-        observacao += this.templateObservacaoItem(item);
-      }
-      produtos.push(item.produto);
-    });
-    pedido.produtos = produtos;
-    pedido.observacao = observacao;
-    return pedido;
-  }
-
-  cadastrarNovoPedido(pedido: Pedido, itens: Item[]): Observable<Pedido> {
-    pedido = this.montarPedidoPorItens(pedido, itens);
+  cadastrarNovoPedido(pedido: Pedido): Observable<Pedido> {
     return this.apiService.post<Pedido>(`/pedidos`, pedido);
   }
 
   atualizarPedido(pedido: Pedido) {
-    this.apiService.put<Pedido>(`/pedidos/${pedido.idPedido}`, pedido).subscribe(
-      data => this.updateDataService(data)
-    );
+    this.apiService.put<Pedido>(`/pedidos/${pedido.idPedido}`, pedido)
+      .subscribe(data => this.pedidoStore.carregarPedido(data));
   }
 
-  obterPedido(obterPedidoDto: ObterPedidoDto) {
-    const dataPedido = formatDateParam(obterPedidoDto.dataPedido);
+  pesquisarPedido(obterPedidoDto: ObterPedidoDto) {
+    const dataPedido = getInputDateValue(obterPedidoDto.dataPedido);
     this.apiService.get<Pedido>(`/pedidos?idCliente=${obterPedidoDto.idCliente}&dataPedido=${dataPedido}`)
       .subscribe(
-        data => this.updateDataService(data),
+        data => this.pedidoStore.carregarPedido(data),
         error => {
-          this.updateDataService(initializePedido());
+          this.pedidoStore.carregarPedido(initializePedido());
           throw error;
         }
       );
   }
 
   inativarPedido(pedido: Pedido) {
-    this.apiService.put<Pedido>(`/pedidos/${pedido.idPedido}/inativar`, pedido).subscribe(
-      data => this.updateDataService(data)
-    );
+    this.apiService.put<Pedido>(`/pedidos/${pedido.idPedido}/inativar`, pedido)
+      .subscribe(data => this.pedidoStore.carregarPedido(initializePedido()));
   }
 
   removerProdutoPedido(produto: Produto) {
-    _.remove(this._store.pedido.produtos, { idProduto: produto.idProduto });
-    produto.status = 'DISPONIVEL';
-    this.updateDataService();
-  }
-
-  obterPedidoPorId(idPedido: number) {
-    if (this._store.pedido.idPedido === idPedido) {
-      this.updateDataService();
+    produto.qtdSolicitada = 0;
+    if (produto.idPedidoProduto) {
+      produto.flgAtivo = 'N';
     } else {
-      throw new Error('Pedido está desatualizado. Favor pesquisar novamente');
+      this.pedidoStore.removerProdutoPedido(produto);
     }
+    this.pedidoStore.addProduto(produto);
   }
 
-  getPedido(): Pedido {
-    return this._store.pedido;
+  addProdutoPedido(produto: Produto) {
+    this.pedidoStore.addProdutoPedido(produto);
+    this.pedidoStore.removerProduto(produto);
+  }
+
+  obterPedido(): Observable<Pedido> {
+    return this.pedidoStore.state$
+      .pipe(
+        map(pedidoState => pedidoState.pedido)
+      );
+  }
+
+  obterPedidoEdicao(): Observable<Pedido> {
+    return this.pedidoStore.state$
+      .pipe(
+        map(pedidoState => pedidoState.pedidoEdicao)
+      );
+  }
+
+  obterProdutos(): Observable<Produto[]> {
+    return this.pedidoStore.state$
+      .pipe(
+        map(pedidoState => pedidoState.produtos)
+      );
+  }
+
+  listarProdutosPorCliente(idCliente?: number) {
+    this.apiService.get<Produto[]>(`/produtos/clientes/${idCliente}`)
+      .subscribe(
+        (produtos: Produto[]) => this.pedidoStore.carregarProdutos(produtos)
+      );
+  }
+
+  montarPedido(data: any): Pedido {
+    const pedido: Pedido = data;
+    pedido.produtos = this.pedidoStore.state.pedidoEdicao.produtos;
+    return pedido;
   }
 
 }

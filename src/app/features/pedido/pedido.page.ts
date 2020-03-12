@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Pedido } from '../../core/domain/pedido';
-import { NotificacaoService } from '../../shared/notificacao/notificacao.service';
-import { PedidosService } from '../../core/services/pedidos.service';
-import { AuthService } from '../../core/services/auth.service';
-import { AlertService } from '../../shared/alertas/alert.service';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { ModalController } from '@ionic/angular';
 import { Observable } from 'rxjs';
+import { ListaProdutosComponent } from '../../components/lista-produtos/lista-produtos.component';
+import { Pedido } from '../../core/domain/pedido';
 import { Produto } from '../../core/domain/produto';
+import { PedidosService } from '../../core/services/pedidos.service';
+import { AlertService } from '../../shared/alertas/alert.service';
+import { formatISODateTimeUTC } from '../../shared/utils/date-utils';
 
 
 @Component({
@@ -18,43 +19,86 @@ import { Produto } from '../../core/domain/produto';
 })
 export class PedidoPage implements OnInit {
 
-  pedido$: Observable<Pedido>;
-
+  pedidoEdicao$: Observable<Pedido>;
+  produtos$: Observable<Produto[]>;
   pedidoForm: FormGroup;
 
   constructor(
     private formBuilder: FormBuilder,
-    private pedidoService: PedidosService,
-    private authService: AuthService,
+    private pedidosService: PedidosService,
     private alertService: AlertService,
+    private modalController: ModalController
   ) { }
 
   ngOnInit() {
     this.criarFormularioPedido();
-    this.pedido$ = this.pedidoService.pedido;
-    this.pedidoService.obterPedidoPorId(19495);
+    this.carregarPedido();
     this.populateForm();
   }
 
+  ionViewDidEnter() {
+    this.carregarProdutos();
+  }
+
   criarFormularioPedido() {
-    const usuario = this.authService.getUsuarioLogado();
     this.pedidoForm = this.formBuilder.group({
-      dataPedido: ['', Validators.required],
-      idCliente: [usuario.idCliente],
-      observacao: ['']
+      idPedido: [0],
+      dataPedido: [],
+      idCliente: [0],
+      idUsuario: [0],
+      observacao: []
     });
   }
 
-  populateForm() {
-    this.pedidoForm.patchValue(this.pedidoService.getPedido());
+  carregarPedido() {
+    this.pedidoEdicao$ = this.pedidosService.obterPedidoEdicao();
   }
 
-  setObservacao(event: any) {
-    console.log(event.target.value);
+  carregarProdutos() {
+    this.produtos$ = this.pedidosService.obterProdutos();
+    this.pedidosService.listarProdutosPorCliente(this.pedidoForm.controls.idCliente.value);
+  }
+
+  populateForm() {
+    if (this.pedidoEdicao$) {
+      this.pedidoEdicao$.subscribe(
+        pedido => {
+          this.pedidoForm.patchValue({
+            idPedido: pedido.idPedido,
+            dataPedido: formatISODateTimeUTC(pedido.dataPedido),
+            idCliente: pedido.idCliente,
+            idUsuario: pedido.idUsuario,
+            observacao: pedido.observacao
+          });
+        }
+      );
+    }
+  }
+
+  async listarProdutoSelecao(event: any) {
+    const pedido = event.pedido;
+    const modal = await this.modalController.create({
+      component: ListaProdutosComponent,
+      mode: 'ios',
+      swipeToClose: true,
+      componentProps: {
+        produtos: this.produtos$
+      }
+    });
+
+    modal.onDidDismiss().then(
+      (result) => {
+        if (result.data) {
+          this.pedidosService.addProdutoPedido(result.data as Produto);
+        }
+      }
+    );
+
+    return await modal.present();
   }
 
   removerProdutoPedido(produto: Produto) {
-    this.pedidoService.removerProdutoPedido(produto);
+    this.pedidosService.removerProdutoPedido(produto);
   }
 
   removerProdutoPedidoConfirmacao(event: any) {
@@ -68,6 +112,7 @@ export class PedidoPage implements OnInit {
   }
 
   alterarPedido() {
-
+    const pedido = this.pedidosService.montarPedido(this.pedidoForm.value);
+    this.pedidosService.atualizarPedido(pedido);
   }
 }

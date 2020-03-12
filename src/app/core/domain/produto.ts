@@ -1,10 +1,17 @@
 
 export interface Produto {
 
+    idPedidoProduto?: number;
     idProduto: number;
     desProduto: string;
     qtdLoteMinimo: number;
     qtdMultiplo: number;
     qtdSolicitada: number;
-    status?: string;
+    flgAtivo: string;
+}
+
+
+export class ProdutosState {
+
+    disponiveis: Produto[] = [];
 }

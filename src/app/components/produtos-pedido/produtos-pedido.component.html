@@ -3,12 +3,15 @@
     <ion-card-header>
         <ion-card-title>
             Lista de Produtos
+            <ion-button style="float: right;" color="success" size='small' (click)="addProdutoEvent()">
+                <ion-icon name="add"></ion-icon>
+            </ion-button>
         </ion-card-title>
     </ion-card-header>
 
     <ion-grid>
 
-        <ion-row *ngFor="let produto of pedido.produtos">
+        <ion-row *ngFor="let produto of pedido.produtos" [hidden]="produto.flgAtivo === 'N'">
 
             <ion-col size="12">
                 <h6>{{produto.desProduto}}</h6>
@@ -23,8 +26,6 @@
                     <ion-icon name="trash"></ion-icon>
                 </ion-button>
             </ion-col>
-
-
 
         </ion-row>
 

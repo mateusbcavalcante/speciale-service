@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar [class.show-background]="showToolbar">
+  <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button text=""></ion-back-button>
     </ion-buttons>
@@ -18,7 +18,7 @@
 
 
   <app-card-produto *ngFor="let produto of (produtos$ | async)" (addItem)="adicionarProdutoCarrinho($event)"
-    [produto]="produto" [hidden]="produto.status === 'CARRINHO'">
+    [produto]="produto">
   </app-card-produto>
 
 </ion-content>

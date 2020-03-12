@@ -1,0 +1,19 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="end">
+            <ion-button color="primary" (click)="fechar()">
+                <ion-icon slot="icon-only" name="close-circle-outline"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen="true">
+
+    <app-page-header titulo="Produtos" info=""></app-page-header>
+
+    <app-card-produto *ngFor="let produto of (produtos | async)" (addItem)="selecionarProdutoEvent($event)" [produto]="produto"
+        icon="add">
+    </app-card-produto>
+
+</ion-content>

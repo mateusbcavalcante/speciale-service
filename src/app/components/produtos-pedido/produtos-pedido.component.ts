@@ -15,6 +15,9 @@ export class ProdutosPedidoComponent implements OnInit {
   pedido: Pedido;
 
   @Output()
+  addProduto: EventEmitter<any> = new EventEmitter<any>();
+
+  @Output()
   removerProduto: EventEmitter<any> = new EventEmitter<any>();
 
   constructor() { }
@@ -22,11 +25,11 @@ export class ProdutosPedidoComponent implements OnInit {
   ngOnInit() {
   }
 
-  // addItemEvent(produto: Produto) {
-  //   this.addItem.emit({
-  //     produto
-  //   });
-  // }
+  addProdutoEvent() {
+    this.addProduto.emit({
+      pedido: this.pedido
+    });
+  }
 
   removerProdutoEvent(produto: Produto) {
     this.removerProduto.emit({

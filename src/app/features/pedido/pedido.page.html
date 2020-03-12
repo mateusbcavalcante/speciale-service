@@ -1,15 +1,25 @@
 <ion-header>
-    <ion-toolbar [class.show-background]="showToolbar">
+    <ion-toolbar>
         <ion-buttons slot="start">
-            <ion-back-button text=""></ion-back-button>
+            <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
         </ion-buttons>
     </ion-toolbar>
 </ion-header>
 
 <ion-content fullscreen="true">
 
-    <app-page-header [titulo]="'Pedido ' + (pedido$| async).idPedido" info="Alteração dos dados do pedido">
+    <app-page-header [titulo]="'Pedido ' + (pedidoEdicao$| async).idPedido" info="Alteração dos dados do pedido">
     </app-page-header>
+
+    <!-- <ion-fab horizontal="end" class="fab-button-top" vertical="top" slot="fixed">
+        <ion-fab-button size="small" color="primary" (click)="alterarPedido()">
+            <ion-icon name="checkmark-outline"></ion-icon>
+        </ion-fab-button>
+      </ion-fab> -->
+
+    <app-produtos-pedido (addProduto)="listarProdutoSelecao($event)"
+        (removerProduto)="removerProdutoPedidoConfirmacao($event)" [pedido]="pedidoEdicao$ | async">
+    </app-produtos-pedido>
 
     <ion-card mode="ios" class="card-form">
 
@@ -23,7 +33,7 @@
                     </ion-col>
                     <ion-col size="7">
                         <ion-datetime displayFormat="DD/MM/YYYY" mode="md" formControlName="dataPedido" doneText="OK"
-                            cancelText="Cancelar"></ion-datetime>
+                            cancelText="Cancelar" display-timezone="America/Fortaleza"></ion-datetime>
                     </ion-col>
                 </ion-row>
                 <ion-row>
@@ -36,12 +46,13 @@
                         <ion-textarea rows="10" formControlName="observacao"></ion-textarea>
                     </ion-col>
                 </ion-row>
+                <ion-row >
+                    <ion-col style="margin-top: 20px;" size="12">
+                        <ion-button color="primary" class="card-form-btn" size='small' (click)="alterarPedido()">Alterar Pedido</ion-button>
+                    </ion-col>
+                </ion-row>
             </ion-grid>
         </form>
     </ion-card>
-
-    <app-produtos-pedido (removerProduto)="removerProdutoPedidoConfirmacao($event)" [pedido]="pedido$ | async">
-    </app-produtos-pedido>
-
 
 </ion-content>

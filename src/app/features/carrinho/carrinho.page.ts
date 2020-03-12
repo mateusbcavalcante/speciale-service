@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { AuthService } from '../../core/services/auth.service';
-import { CarrinhoService } from '../../core/services/carrinho.service';
-import { PedidosService } from '../../core/services/pedidos.service';
-import { NotificacaoService } from '../../shared/notificacao/notificacao.service';
-import { AlertService } from '../../shared/alertas/alert.service';
-import { Item } from '../../core/domain/item';
-import { Carrinho } from '../../core/domain/carrinho';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs';
+import { Item } from '../../core/domain/item';
+import { AuthService } from '../../core/services/auth.service';
+import { LojaService } from '../../core/services/loja.service';
+import { PedidosService } from '../../core/services/pedidos.service';
+import { AlertService } from '../../shared/alertas/alert.service';
+import { NotificacaoService } from '../../shared/notificacao/notificacao.service';
+import { setInputDateTimeValue } from '../../shared/utils/form-utils';
 
 @Component({
   selector: 'app-carrinho',
@@ -15,13 +15,13 @@ import { Observable } from 'rxjs';
 })
 export class CarrinhoPage implements OnInit {
 
-  carrinho$: Observable<Carrinho>;
+  itens$: Observable<Item[]>;
 
   carrinhoForm: FormGroup;
 
   constructor(
     private formBuilder: FormBuilder,
-    private carrinhoService: CarrinhoService,
+    private lojaService: LojaService,
     private pedidosService: PedidosService,
     private authService: AuthService,
     private alertService: AlertService,
@@ -30,29 +30,29 @@ export class CarrinhoPage implements OnInit {
 
   ngOnInit() {
     this.criarFormularioCarrinho();
-    this.obterCarriho();
+    this.obterItensCarriho();
   }
 
   criarFormularioCarrinho() {
     const usuario = this.authService.getUsuarioLogado();
     this.carrinhoForm = this.formBuilder.group({
-      dataPedido: [new Date().toISOString(), Validators.required],
+      dataPedido: [setInputDateTimeValue(new Date())],
       idCliente: [usuario.idCliente],
       idUsuario: [usuario.idUsuario],
       idPedido: [0],
     });
   }
 
-  obterCarriho() {
-    this.carrinho$ = this.carrinhoService.carrinho;
+  obterItensCarriho() {
+    this.itens$ = this.lojaService.obterItensCarrinho();
   }
 
   limparCarrinho() {
-    this.carrinhoService.limparCarrinho();
+    this.lojaService.limparCarrinho();
   }
 
   removerItemCarrinho(item: Item) {
-    this.carrinhoService.removerItemCarrinho(item);
+    this.lojaService.removerItemCarrinho(item);
   }
 
   removerItemCarrinhoConfirmacao(event: any) {
@@ -66,17 +66,12 @@ export class CarrinhoPage implements OnInit {
   }
 
   registrarPedido() {
-
-    const pedido = this.carrinhoForm.value;
-    const itens = this.carrinhoService.getItens();
-
-    this.pedidosService.cadastrarNovoPedido(pedido, itens).subscribe(
+    const pedido = this.lojaService.montarPedido(this.carrinhoForm.value);
+    this.pedidosService.cadastrarNovoPedido(pedido).subscribe(
       async data => {
-        await this.notificacaoService.showSuccessToaster(
-          `Seu pedido de número: '${data.idPedido}' foi enviado para Speciale. Obrigado!!!`, 5000);
+        await this.notificacaoService.showSuccessToaster(`Pedido ${data.idPedido} foi enviado para Speciale. Obrigado!!!`);
         this.limparCarrinho();
       }
     );
   }
-
 }

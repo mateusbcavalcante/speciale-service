@@ -5,6 +5,7 @@ import { NotificacaoService } from '../../shared/notificacao/notificacao.service
 import { PedidosService } from '../../core/services/pedidos.service';
 import { AuthService } from '../../core/services/auth.service';
 import { AlertService } from '../../shared/alertas/alert.service';
+import { setInputDateTimeValue } from '../../shared/utils/form-utils';
 import { Observable } from 'rxjs';
 import { NavController } from '@ionic/angular';
 
@@ -33,19 +34,19 @@ export class PedidosPage implements OnInit {
 
   ngOnInit() {
     this.criarFormularioPesquisaPedidos();
-    this.pedido$ = this.pedidoService.pedido;
+    this.pedido$ = this.pedidoService.obterPedido();
   }
 
   criarFormularioPesquisaPedidos() {
     const usuario = this.authService.getUsuarioLogado();
     this.pedidosPesquisaForm = this.formBuilder.group({
-      dataPedido: [new Date().toISOString(), Validators.required],
+      dataPedido: [setInputDateTimeValue(new Date())],
       idCliente: [usuario.idCliente]
     });
   }
 
   obterPedidoParametrosPesquisa() {
-    this.pedidoService.obterPedido(this.pedidosPesquisaForm.value);
+    this.pedidoService.pesquisarPedido(this.pedidosPesquisaForm.value);
   }
 
   pesquisarPedidos() {
@@ -56,9 +57,9 @@ export class PedidosPage implements OnInit {
     this.pedidoService.inativarPedido(pedido);
   }
 
-  async editarPedido(event: any) {
+  editarPedido(event: any) {
     const pedido = event.pedido;
-    await this.navCtrl.navigateForward(`/app/pedidos/${pedido.idPedido}`);
+    this.navCtrl.navigateForward(`/app/pedidos/${pedido.idPedido}`);
   }
 
   inativarPedidoConfirmacao(event: any) {

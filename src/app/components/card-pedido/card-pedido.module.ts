@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { CardPedidoComponent } from './card-pedido.component';
+import { PedidoSituacaoPipe } from './pedido-situacao.pipe';
 
 
 @NgModule({
@@ -12,7 +13,8 @@ import { CardPedidoComponent } from './card-pedido.component';
     IonicModule
   ],
   declarations: [
-    CardPedidoComponent
+    PedidoSituacaoPipe,
+    CardPedidoComponent,
   ],
   exports: [
     CardPedidoComponent

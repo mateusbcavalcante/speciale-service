@@ -13,6 +13,9 @@ export class CardProdutoComponent implements OnInit {
   @Input()
   produto: Produto;
 
+  @Input()
+  icon = 'cart';
+
   @Output()
   addItem: EventEmitter<any> = new EventEmitter<any>();
 
