@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Pedido, PedidoState } from '../domain/pedido';
+import { Pedido, PedidoState, PedidoStatus, PedidoTipoStatus } from '../domain/pedido';
 import { Store } from '../store/store';
 import * as _ from 'lodash';
 import { Produto } from '../domain/produto';
@@ -15,6 +15,10 @@ export class PedidoStore extends Store<PedidoState> {
 
   carregarPedido(pedido: Pedido) {
     this.setPedido(pedido);
+  }
+
+  carregarPedidoEdicao(pedido: Pedido) {
+    this.setPedidoEdicao(pedido);
   }
 
   carregarProdutos(produtos: Produto[]) {
@@ -56,11 +60,56 @@ export class PedidoStore extends Store<PedidoState> {
     _.orderBy(this.state.pedidoEdicao.produtos, ['desProduto'], ['asc']);
   }
 
+  setStatusEnviandoCriar(mensagem = '') {
+    this.setStatusCriar(new PedidoStatus(PedidoTipoStatus.ENVIANDO, mensagem));
+  }
+
+  setStatusEnviadoCriar(mensagem = '') {
+    this.setStatusCriar(new PedidoStatus(PedidoTipoStatus.ENVIADO, mensagem));
+  }
+
+  setStatusNaoEnviadoCriar(mensagem = '') {
+    this.setStatusCriar(new PedidoStatus(PedidoTipoStatus.NAO_ENVIADO, mensagem));
+  }
+
+  setStatusEnviandoAlterar(mensagem = '') {
+    this.setStatusAlterar(new PedidoStatus(PedidoTipoStatus.ENVIANDO, mensagem));
+  }
+
+  setStatusEnviadoAlterar(mensagem = '') {
+    this.setStatusAlterar(new PedidoStatus(PedidoTipoStatus.ENVIADO, mensagem));
+  }
+
+  setStatusNaoEnviadoAlterar(mensagem = '') {
+    this.setStatusAlterar(new PedidoStatus(PedidoTipoStatus.NAO_ENVIADO, mensagem));
+  }
+
+  setStatusCarregadoAlterar(mensagem = '') {
+    this.setStatusAlterar(new PedidoStatus(PedidoTipoStatus.CARREGADO, mensagem));
+  }
+
+  setStatusNaoCarregadoAlterar(mensagem = '') {
+    this.setStatusAlterar(new PedidoStatus(PedidoTipoStatus.NAO_CARREGADO, mensagem));
+  }
+
+  private setStatusCriar(pedidoStatus: PedidoStatus) {
+    this.setState({
+      ...this.state,
+      statusCriar: pedidoStatus
+    });
+  }
+
+  private setStatusAlterar(pedidoStatus: PedidoStatus) {
+    this.setState({
+      ...this.state,
+      statusAlterar: pedidoStatus
+    });
+  }
+
   private setPedido(novoPedido: Pedido) {
     this.setState({
       ...this.state,
-      pedido: novoPedido,
-      pedidoEdicao: _.cloneDeep(novoPedido)
+      pedido: novoPedido
     });
   }
 

@@ -3,9 +3,9 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
+import { IonicHeaderParallaxModule } from 'ionic-header-parallax';
 import { ListaProdutosComponent } from '../../components/lista-produtos/lista-produtos.component';
 import { ListaProdutosComponentModule } from '../../components/lista-produtos/lista-produtos.module';
-import { PageHeaderComponentModule } from '../../components/page-header/page-header.module';
 import { ProdutosPedidoComponentModule } from '../../components/produtos-pedido/produtos-pedido.module';
 import { TextareaToggleComponentModule } from '../../components/textarea-toggle/textarea-toggle.module';
 import { PedidoPage } from './pedido.page';
@@ -16,7 +16,7 @@ import { PedidoPage } from './pedido.page';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    PageHeaderComponentModule,
+    IonicHeaderParallaxModule,
     ProdutosPedidoComponentModule,
     TextareaToggleComponentModule,
     ListaProdutosComponentModule,

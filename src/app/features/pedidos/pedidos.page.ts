@@ -1,14 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Pedido } from '../../core/domain/pedido';
-import { NotificacaoService } from '../../shared/notificacao/notificacao.service';
-import { PedidosService } from '../../core/services/pedidos.service';
-import { AuthService } from '../../core/services/auth.service';
-import { AlertService } from '../../shared/alertas/alert.service';
-import { setInputDateTimeValue } from '../../shared/utils/form-utils';
-import { Observable } from 'rxjs';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { NavController } from '@ionic/angular';
-
+import { Observable } from 'rxjs';
+import { toDateISOString } from '../../shared/utils/date-utils';
+import { Pedido } from '../../core/domain/pedido';
+import { AuthService } from '../../core/services/auth.service';
+import { PedidosService } from '../../core/services/pedidos.service';
+import { AlertService } from '../../shared/alertas/alert.service';
 
 @Component({
   selector: 'app-pedidos',
@@ -25,11 +23,10 @@ export class PedidosPage implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private notificacaoService: NotificacaoService,
     private pedidoService: PedidosService,
     private authService: AuthService,
     private alertService: AlertService,
-    private navCtrl: NavController,
+    private navCtrl: NavController
   ) { }
 
   ngOnInit() {
@@ -40,17 +37,17 @@ export class PedidosPage implements OnInit {
   criarFormularioPesquisaPedidos() {
     const usuario = this.authService.getUsuarioLogado();
     this.pedidosPesquisaForm = this.formBuilder.group({
-      dataPedido: [setInputDateTimeValue(new Date())],
+      dataPedido: [toDateISOString(new Date())],
       idCliente: [usuario.idCliente]
     });
   }
 
-  obterPedidoParametrosPesquisa() {
+  pesquisarPedidos() {
     this.pedidoService.pesquisarPedido(this.pedidosPesquisaForm.value);
   }
 
-  pesquisarPedidos() {
-    this.obterPedidoParametrosPesquisa();
+  changePeriodo(event: any) {
+    this.pesquisarPedidos();
   }
 
   inativarPedido(pedido: Pedido) {
@@ -59,6 +56,7 @@ export class PedidosPage implements OnInit {
 
   editarPedido(event: any) {
     const pedido = event.pedido;
+    this.pedidoService.carregarPedidoEdicao(pedido);
     this.navCtrl.navigateForward(`/app/pedidos/${pedido.idPedido}`);
   }
 

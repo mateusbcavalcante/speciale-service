@@ -1,14 +1,12 @@
-<ion-header>
+<ion-header parallax maximumHeight="140">
   <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button text=""></ion-back-button>
-    </ion-buttons>
+    <ion-title>
+      Produtos
+    </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content fullscreen="true">
-
-  <app-page-header titulo="Produtos" info="Selecione os produtos para fazer o pedido"></app-page-header>
+<ion-content >
 
   <ion-fab horizontal="end" class="fab-button-top" vertical="top" slot="fixed">
     <ion-fab-button size="small" color="primary" (click)="pesquisarMeusProdutos()">
@@ -17,8 +15,9 @@
   </ion-fab>
 
 
-  <app-card-produto *ngFor="let produto of (produtos$ | async)" (addItem)="adicionarProdutoCarrinho($event)"
-    [produto]="produto">
+  <app-card-produto *ngFor="let produto of (produtos$ | async)" 
+                    (addItem)="adicionarProdutoCarrinho($event)"
+                    [produto]="produto">
   </app-card-produto>
 
 </ion-content>

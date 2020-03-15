@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProdutosPage } from './produtos.page';
-import { PageHeaderComponentModule } from '../../components/page-header/page-header.module';
+import { IonicHeaderParallaxModule } from 'ionic-header-parallax';
 import { CardProdutoComponentModule } from '../../components/card-produto/card-produto.module';
 
 
@@ -14,7 +14,7 @@ import { CardProdutoComponentModule } from '../../components/card-produto/card-p
     CommonModule,
     FormsModule,
     CardProdutoComponentModule,
-    PageHeaderComponentModule,
+    IonicHeaderParallaxModule,
     RouterModule.forChild([{ path: '', component: ProdutosPage }])
   ],
   declarations: [

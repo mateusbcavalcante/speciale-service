@@ -1,27 +1,26 @@
-<ion-header>
+<ion-header parallax maximumHeight="140">
     <ion-toolbar>
         <ion-buttons slot="start">
-            <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
+            <ion-back-button></ion-back-button>
         </ion-buttons>
+        <ion-title>Pedido: {{(pedidoEdicao$ | async).idPedido}}</ion-title>
     </ion-toolbar>
 </ion-header>
 
-<ion-content fullscreen="true">
+<ion-content>
 
-    <app-page-header [titulo]="'Pedido ' + (pedidoEdicao$| async).idPedido" info="Alteração dos dados do pedido">
-    </app-page-header>
+    <ion-card mode="ios" class="card-message" *ngIf="(pedidoStatus$ | async).tipo === 'ENVIADO'">
+        <ion-card-header>
+            <img src='assets/images/success.png' alt="">
+            <h3>Seu pedido foi atualizado com sucesso !!!</h3>
+        </ion-card-header>
+    </ion-card>
 
-    <!-- <ion-fab horizontal="end" class="fab-button-top" vertical="top" slot="fixed">
-        <ion-fab-button size="small" color="primary" (click)="alterarPedido()">
-            <ion-icon name="checkmark-outline"></ion-icon>
-        </ion-fab-button>
-      </ion-fab> -->
-
-    <app-produtos-pedido (addProduto)="listarProdutoSelecao($event)"
+    <app-produtos-pedido *ngIf="(pedidoStatus$ | async).tipo !== 'ENVIADO'" (addProduto)="listarProdutoSelecao($event)"
         (removerProduto)="removerProdutoPedidoConfirmacao($event)" [pedido]="pedidoEdicao$ | async">
     </app-produtos-pedido>
 
-    <ion-card mode="ios" class="card-form">
+    <ion-card mode="ios" class="card-form" *ngIf="(pedidoStatus$ | async).tipo !== 'ENVIADO'">
 
         <ion-card-header></ion-card-header>
 
@@ -33,7 +32,7 @@
                     </ion-col>
                     <ion-col size="7">
                         <ion-datetime displayFormat="DD/MM/YYYY" mode="md" formControlName="dataPedido" doneText="OK"
-                            cancelText="Cancelar" display-timezone="America/Fortaleza"></ion-datetime>
+                            cancelText="Cancelar"></ion-datetime>
                     </ion-col>
                 </ion-row>
                 <ion-row>
@@ -46,9 +45,10 @@
                         <ion-textarea rows="10" formControlName="observacao"></ion-textarea>
                     </ion-col>
                 </ion-row>
-                <ion-row >
+                <ion-row>
                     <ion-col style="margin-top: 20px;" size="12">
-                        <ion-button color="primary" class="card-form-btn" size='small' (click)="alterarPedido()">Alterar Pedido</ion-button>
+                        <ion-button color="primary" class="card-form-btn" size='small' (click)="alterarPedido()">Alterar
+                            Pedido</ion-button>
                     </ion-col>
                 </ion-row>
             </ion-grid>

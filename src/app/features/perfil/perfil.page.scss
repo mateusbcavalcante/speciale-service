@@ -7,8 +7,8 @@ ion-content {
     margin: 0 auto;
 
     .header {
-      height: 200px; // 20vh;
-      // background: url("/assets/images/bg-login.jpg") fixed;
+      height: 130px;
+      margin-top: -60px;
 
       .avatar {
         width: 100px; //40vw
@@ -20,15 +20,14 @@ ion-content {
           display: block;
           border-radius: 50%;
           position: absolute;
-          bottom: calc(-1 * (80px + 4px)); // -42px;
           border: 3px solid #e6daad;
           background-color: #fff;
+          z-index: 300;
         }
       }
     }
 
     .card-body {
-
       ion-button {
         width: 95%;
         display: block;
@@ -38,8 +37,6 @@ ion-content {
       }
 
       .user-meta {
-        padding-top: 20px;
-
         .name {
           font-size: 2em;
           margin-bottom: 10px;
@@ -59,11 +56,12 @@ ion-content {
         margin-left: 10px;
         margin-right: 10px;
         margin-bottom: 10px;
-    
+        margin-bottom: 30px;
+
         ion-col {
           padding-top: 0px !important;
           padding-bottom: 0px !important;
-    
+
           ion-button {
             display: flex;
           }

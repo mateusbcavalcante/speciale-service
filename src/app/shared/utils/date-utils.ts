@@ -1,4 +1,21 @@
 
+export function toDateISOString(value: Date): string {
+    const tzo = -value.getTimezoneOffset(),
+        dif = tzo >= 0 ? '+' : '-',
+        pad = (num) => {
+            const norm = Math.floor(Math.abs(num));
+            return (norm < 10 ? '0' : '') + norm;
+        };
+    return value.getFullYear() +
+        '-' + pad(value.getMonth() + 1) +
+        '-' + pad(value.getDate()) +
+        'T' + pad(value.getHours()) +
+        ':' + pad(value.getMinutes()) +
+        ':' + pad(value.getSeconds()) +
+        dif + pad(tzo / 60) +
+        ':' + pad(tzo % 60);
+}
+
 export function formatDateTime(date: Date): string {
     return `${formatDate(date)} ${formatTime(date)}`;
 }
@@ -16,12 +33,12 @@ export function formatTime(date: Date): string {
     return `${hora}:${minutos}:${segundos}`;
 }
 
-export function formatISODateTimeUTC(dateTime: any, includeTime = true): string {
+export function parseToISODateTime(dateTime: any, includeTime = true): Date {
     if (dateTime) {
         if (includeTime) {
             dateTime = `${dateTime} ${formatTime(new Date())}`;
         }
-        return new Date(`${dateTime} UTC`).toISOString();
+        return new Date(`${dateTime}`);
     }
     return null;
 }

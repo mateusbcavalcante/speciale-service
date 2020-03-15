@@ -1,15 +1,12 @@
-<ion-header>
+<ion-header parallax maximumHeight="140">
   <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button text=""></ion-back-button>
-    </ion-buttons>
+    <ion-title>
+      Pedidos
+    </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content fullscreen="true">
-
-  <app-page-header titulo="Pedidos" info="Pesquise seus pedidos pela data do pedido">
-  </app-page-header>
+<ion-content>
 
   <ion-fab horizontal="end" class="fab-button-top" vertical="top" slot="fixed">
     <ion-fab-button size="small" color="primary" (click)="pesquisarPedidos()">
@@ -17,7 +14,7 @@
     </ion-fab-button>
   </ion-fab>
 
-  <ion-card mode="ios" class="card-form">
+  <ion-card mode="ios" class="card-form card-overlay-paralax">
 
     <ion-card-header></ion-card-header>
 
@@ -31,7 +28,7 @@
           </ion-col>
           <ion-col size="7">
             <ion-datetime displayFormat="DD/MM/YYYY" mode="md" doneText="OK" cancelText="Cancelar"
-              formControlName="dataPedido" display-timezone="America/Fortaleza">
+              formControlName="dataPedido" (ionChange)="changePeriodo($event)">
             </ion-datetime>
           </ion-col>
         </ion-row>

@@ -2,12 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Item } from '../../core/domain/item';
+import { PedidoStatus } from '../../core/domain/pedido';
 import { AuthService } from '../../core/services/auth.service';
 import { LojaService } from '../../core/services/loja.service';
-import { PedidosService } from '../../core/services/pedidos.service';
 import { AlertService } from '../../shared/alertas/alert.service';
-import { NotificacaoService } from '../../shared/notificacao/notificacao.service';
-import { setInputDateTimeValue } from '../../shared/utils/form-utils';
+import { toDateISOString } from '../../shared/utils/date-utils';
 
 @Component({
   selector: 'app-carrinho',
@@ -16,27 +15,31 @@ import { setInputDateTimeValue } from '../../shared/utils/form-utils';
 export class CarrinhoPage implements OnInit {
 
   itens$: Observable<Item[]>;
+  pedidoStatus$: Observable<PedidoStatus>;
 
   carrinhoForm: FormGroup;
 
   constructor(
     private formBuilder: FormBuilder,
     private lojaService: LojaService,
-    private pedidosService: PedidosService,
     private authService: AuthService,
-    private alertService: AlertService,
-    private notificacaoService: NotificacaoService
+    private alertService: AlertService
   ) { }
 
   ngOnInit() {
     this.criarFormularioCarrinho();
     this.obterItensCarriho();
+    this.obterPedidoStatusCriar();
+  }
+
+  ionViewWillEnter() {
+    this.lojaService.setPedidoStatusNaoEnviadoCriar();
   }
 
   criarFormularioCarrinho() {
     const usuario = this.authService.getUsuarioLogado();
     this.carrinhoForm = this.formBuilder.group({
-      dataPedido: [setInputDateTimeValue(new Date())],
+      dataPedido: [toDateISOString(new Date())],
       idCliente: [usuario.idCliente],
       idUsuario: [usuario.idUsuario],
       idPedido: [0],
@@ -45,6 +48,10 @@ export class CarrinhoPage implements OnInit {
 
   obterItensCarriho() {
     this.itens$ = this.lojaService.obterItensCarrinho();
+  }
+
+  obterPedidoStatusCriar() {
+    this.pedidoStatus$ = this.lojaService.obterPedidoStatusCriar();
   }
 
   limparCarrinho() {
@@ -66,12 +73,7 @@ export class CarrinhoPage implements OnInit {
   }
 
   registrarPedido() {
-    const pedido = this.lojaService.montarPedido(this.carrinhoForm.value);
-    this.pedidosService.cadastrarNovoPedido(pedido).subscribe(
-      async data => {
-        await this.notificacaoService.showSuccessToaster(`Pedido ${data.idPedido} foi enviado para Speciale. Obrigado!!!`);
-        this.limparCarrinho();
-      }
-    );
+    const pedido = this.lojaService.montarPedidoParaCadastro(this.carrinhoForm.value);
+    this.lojaService.cadastrarNovoPedido(pedido);
   }
 }

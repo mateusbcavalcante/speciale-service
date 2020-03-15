@@ -1,8 +1,4 @@
-import { formatDate, formatDateTime, formatISODateTimeUTC } from './date-utils';
-
-export function setInputDateTimeValue(date: Date): string {
-    return formatISODateTimeUTC(formatDateTime(date), false);
-}
+import { formatDate, formatDateTime } from './date-utils';
 
 export function getInputDateTimeValue(date: Date | string): string {
     if (typeof date === 'string') {

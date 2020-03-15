@@ -44,7 +44,6 @@ export class LoaderInterceptor implements HttpInterceptor {
         this.isLoading = true;
         return await this.loadingCtrl.create({
             mode: 'ios',
-            message: 'Processando...',
             duration: 10000
         }).then(a => {
             a.present().then(() => {

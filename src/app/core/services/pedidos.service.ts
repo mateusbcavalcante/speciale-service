@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
+import * as _ from 'lodash';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { getInputDateValue } from '../../shared/utils/form-utils';
+import { ResponsePedidoAdapter } from '../adapters/response-pedido.adapter';
 import { ObterPedidoDto } from '../domain/obter-pedido.dto';
-import { initializePedido, Pedido } from '../domain/pedido';
+import { initializePedido, Pedido, PedidoStatus } from '../domain/pedido';
 import { Produto } from '../domain/produto';
 import { PedidoStore } from '../store/pedido.store';
 import { ApiService } from './api.service';
-
 
 @Injectable({
   providedIn: 'root',
@@ -16,23 +17,32 @@ export class PedidosService {
 
   constructor(
     private apiService: ApiService,
-    private pedidoStore: PedidoStore) {
-  }
-
-  cadastrarNovoPedido(pedido: Pedido): Observable<Pedido> {
-    return this.apiService.post<Pedido>(`/pedidos`, pedido);
+    private pedidoStore: PedidoStore,
+    private responsePedidoAdapter: ResponsePedidoAdapter) {
   }
 
   atualizarPedido(pedido: Pedido) {
+    this.pedidoStore.setStatusEnviandoAlterar();
     this.apiService.put<Pedido>(`/pedidos/${pedido.idPedido}`, pedido)
-      .subscribe(data => this.pedidoStore.carregarPedido(data));
+      .subscribe(
+        data => {
+          const pedidoAlterado = this.responsePedidoAdapter.adapt(data);
+          this.pedidoStore.carregarPedido(pedidoAlterado);
+          this.pedidoStore.carregarPedidoEdicao(pedidoAlterado);
+          this.pedidoStore.setStatusEnviadoAlterar();
+        },
+        error => {
+          this.pedidoStore.setStatusNaoEnviadoAlterar();
+          throw error;
+        }
+      );
   }
 
   pesquisarPedido(obterPedidoDto: ObterPedidoDto) {
     const dataPedido = getInputDateValue(obterPedidoDto.dataPedido);
     this.apiService.get<Pedido>(`/pedidos?idCliente=${obterPedidoDto.idCliente}&dataPedido=${dataPedido}`)
       .subscribe(
-        data => this.pedidoStore.carregarPedido(data),
+        data => this.pedidoStore.carregarPedido(this.responsePedidoAdapter.adapt(data)),
         error => {
           this.pedidoStore.carregarPedido(initializePedido());
           throw error;
@@ -64,6 +74,18 @@ export class PedidosService {
     return this.pedidoStore.state$
       .pipe(
         map(pedidoState => pedidoState.pedido)
+      );
+  }
+
+  carregarPedidoEdicao(pedido: Pedido) {
+    this.pedidoStore.carregarPedidoEdicao(_.cloneDeep(pedido));
+    this.pedidoStore.setStatusCarregadoAlterar();
+  }
+
+  obterPedidoStatusAlterar(): Observable<PedidoStatus> {
+    return this.pedidoStore.state$
+      .pipe(
+        map(pedidoState => pedidoState.statusAlterar)
       );
   }
 

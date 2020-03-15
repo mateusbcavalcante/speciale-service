@@ -3,11 +3,10 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { ListaProdutosComponent } from '../../components/lista-produtos/lista-produtos.component';
-import { Pedido } from '../../core/domain/pedido';
+import { Pedido, PedidoStatus } from '../../core/domain/pedido';
 import { Produto } from '../../core/domain/produto';
 import { PedidosService } from '../../core/services/pedidos.service';
 import { AlertService } from '../../shared/alertas/alert.service';
-import { formatISODateTimeUTC } from '../../shared/utils/date-utils';
 
 
 @Component({
@@ -20,6 +19,7 @@ import { formatISODateTimeUTC } from '../../shared/utils/date-utils';
 export class PedidoPage implements OnInit {
 
   pedidoEdicao$: Observable<Pedido>;
+  pedidoStatus$: Observable<PedidoStatus>;
   produtos$: Observable<Produto[]>;
   pedidoForm: FormGroup;
 
@@ -32,7 +32,8 @@ export class PedidoPage implements OnInit {
 
   ngOnInit() {
     this.criarFormularioPedido();
-    this.carregarPedido();
+    this.carregarPedidoEdicao();
+    this.carregarPedidoStatusAlterar();
     this.populateForm();
   }
 
@@ -50,7 +51,11 @@ export class PedidoPage implements OnInit {
     });
   }
 
-  carregarPedido() {
+  carregarPedidoStatusAlterar() {
+    this.pedidoStatus$ = this.pedidosService.obterPedidoStatusAlterar();
+  }
+
+  carregarPedidoEdicao() {
     this.pedidoEdicao$ = this.pedidosService.obterPedidoEdicao();
   }
 
@@ -60,27 +65,20 @@ export class PedidoPage implements OnInit {
   }
 
   populateForm() {
-    if (this.pedidoEdicao$) {
-      this.pedidoEdicao$.subscribe(
-        pedido => {
-          this.pedidoForm.patchValue({
-            idPedido: pedido.idPedido,
-            dataPedido: formatISODateTimeUTC(pedido.dataPedido),
-            idCliente: pedido.idCliente,
-            idUsuario: pedido.idUsuario,
-            observacao: pedido.observacao
-          });
-        }
-      );
-    }
+    this.pedidoEdicao$.subscribe(pedido =>
+      this.pedidoForm.patchValue({
+        idPedido: pedido.idPedido,
+        idCliente: pedido.idCliente,
+        idUsuario: pedido.idUsuario,
+        dataPedido: pedido.dataPedido.toISOString(),
+        observacao: pedido.observacao
+      }));
   }
 
   async listarProdutoSelecao(event: any) {
-    const pedido = event.pedido;
     const modal = await this.modalController.create({
       component: ListaProdutosComponent,
-      mode: 'ios',
-      swipeToClose: true,
+      mode: 'md',
       componentProps: {
         produtos: this.produtos$
       }
@@ -91,8 +89,7 @@ export class PedidoPage implements OnInit {
         if (result.data) {
           this.pedidosService.addProdutoPedido(result.data as Produto);
         }
-      }
-    );
+      });
 
     return await modal.present();
   }

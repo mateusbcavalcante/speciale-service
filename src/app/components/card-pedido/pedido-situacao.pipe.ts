@@ -8,7 +8,7 @@ export class PedidoSituacaoPipe implements PipeTransform {
     switch (value) {
       case 'S': return 'ATIVO';
       case 'N': return 'INATIVO';
-      default: return 'DESCONHECIDO';
+      default: return value;
     }
   }
 }

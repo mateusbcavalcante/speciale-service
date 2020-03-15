@@ -6,7 +6,10 @@ import { LojaService } from '../../core/services/loja.service';
 
 @Component({
   selector: 'app-produtos',
-  templateUrl: 'produtos.page.html'
+  templateUrl: 'produtos.page.html',
+  styleUrls: [
+    'produtos.page.scss'
+  ]
 })
 export class ProdutosPage implements OnInit {
 

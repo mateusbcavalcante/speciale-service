@@ -25,6 +25,7 @@ ion-card {
       ion-col {
         h6 {
           color: var(--ion-color-primary-tint);
+          font-weight: initial;
         }
         p {
           white-space: pre-line !important;

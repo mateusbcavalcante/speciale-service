@@ -1,20 +1,25 @@
-<ion-header>
+<ion-header parallax maximumHeight="140">
   <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button text=""></ion-back-button>
-    </ion-buttons>
+    <ion-title>
+      Carrinho
+    </ion-title>
   </ion-toolbar>
 </ion-header>
+<ion-content>
 
-<ion-content fullscreen="true">
-
-  <app-page-header titulo="Meu Carrinho" info="Lista os itens selecionados para pedido"></app-page-header>
+  <ion-card mode="ios" class="card-message" *ngIf="(pedidoStatus$ | async).tipo === 'ENVIADO'">
+    <ion-card-header>
+      <img src='assets/images/success.png' alt="">
+      <h3>{{(pedidoStatus$ | async).mensagem}}</h3>
+    </ion-card-header>
+  </ion-card>
 
   <app-card-item *ngFor="let item of (itens$ | async)" (removerItem)="removerItemCarrinhoConfirmacao($event)"
     [item]="item">
   </app-card-item>
 
-  <ion-card mode="ios" class="card-form" [hidden]="(itens$ | async).length === 0">
+  <ion-card mode="ios" class="card-form" *ngIf="(pedidoStatus$ | async).tipo !== 'ENVIADO'"
+    [hidden]="(itens$ | async).length === 0">
 
     <ion-card-header></ion-card-header>
 
@@ -29,8 +34,8 @@
             </ion-label>
           </ion-col>
           <ion-col size="7">
-            <ion-datetime displayFormat="DD/MM/YYYY" doneText="OK" mode="md" display-timezone="America/Fortaleza"
-              cancelText="Cancelar" formControlName="dataPedido">
+            <ion-datetime displayFormat="DD/MM/YYYY" doneText="OK" mode="md" cancelText="Cancelar"
+              formControlName="dataPedido">
             </ion-datetime>
           </ion-col>
         </ion-row>

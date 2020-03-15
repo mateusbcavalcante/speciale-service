@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PedidosPage } from './pedidos.page';
-import { PageHeaderComponentModule } from '../../components/page-header/page-header.module';
+import { IonicHeaderParallaxModule } from 'ionic-header-parallax';
 import { CardPedidoComponentModule } from '../../components/card-pedido/card-pedido.module';
 
 
@@ -14,7 +14,7 @@ import { CardPedidoComponentModule } from '../../components/card-pedido/card-ped
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    PageHeaderComponentModule,
+    IonicHeaderParallaxModule,
     CardPedidoComponentModule,
     RouterModule.forChild([{ path: '', component: PedidosPage }])
   ],

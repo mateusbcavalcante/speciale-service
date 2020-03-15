@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
+import { IonicHeaderParallaxModule } from 'ionic-header-parallax';
 import { ListaProdutosComponent } from './lista-produtos.component';
 import { CardProdutoComponentModule } from '../card-produto/card-produto.module';
 import { PageHeaderComponentModule } from '../page-header/page-header.module';
@@ -12,6 +13,7 @@ import { PageHeaderComponentModule } from '../page-header/page-header.module';
     CommonModule,
     FormsModule,
     IonicModule,
+    IonicHeaderParallaxModule,
     CardProdutoComponentModule,
     PageHeaderComponentModule
   ],

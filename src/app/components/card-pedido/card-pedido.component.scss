@@ -11,6 +11,9 @@ ion-card {
       color: var(--ion-color-primary);
       font-size: 20px;
       font-weight: initial;
+      h2 {
+        font-weight: initial;
+      }
     }
   }
 
@@ -23,6 +26,7 @@ ion-card {
         h2 {
           color: var(--ion-color-primary);
           font-size: 17px;
+          font-weight: initial;
         }
       }
     }
