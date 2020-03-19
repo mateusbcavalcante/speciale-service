@@ -7,6 +7,7 @@ import { Pedido, PedidoStatus } from '../../core/domain/pedido';
 import { Produto } from '../../core/domain/produto';
 import { PedidosService } from '../../core/services/pedidos.service';
 import { AlertService } from '../../shared/alertas/alert.service';
+import { MENSAGENS } from '../../shared/mensagens/mensagens';
 
 
 @Component({
@@ -65,14 +66,14 @@ export class PedidoPage implements OnInit {
   }
 
   populateForm() {
-    this.pedidoEdicao$.subscribe(pedido =>
-      this.pedidoForm.patchValue({
-        idPedido: pedido.idPedido,
-        idCliente: pedido.idCliente,
-        idUsuario: pedido.idUsuario,
-        dataPedido: pedido.dataPedido.toISOString(),
-        observacao: pedido.observacao
-      }));
+    const pedido = this.pedidosService.getPedidoEdicaoValue();
+    this.pedidoForm.patchValue({
+      idPedido: pedido.idPedido,
+      idCliente: pedido.idCliente,
+      idUsuario: pedido.idUsuario,
+      dataPedido: pedido.dataPedido.toISOString(),
+      observacao: pedido.observacao
+    });
   }
 
   async listarProdutoSelecao(event: any) {
@@ -102,14 +103,12 @@ export class PedidoPage implements OnInit {
     const produto = event.produto;
     this.alertService.confirm(
       'Confirmação',
-      `Deseja remover o produto :
-      ${produto.desProduto} ?`,
+      MENSAGENS.CONFIMAR_REMOVER_PRODUTO(produto),
       () => this.removerProdutoPedido(produto)
     );
   }
 
   alterarPedido() {
-    const pedido = this.pedidosService.montarPedido(this.pedidoForm.value);
-    this.pedidosService.atualizarPedido(pedido);
+    this.pedidosService.atualizarPedidoForm(this.pedidoForm.value);
   }
 }

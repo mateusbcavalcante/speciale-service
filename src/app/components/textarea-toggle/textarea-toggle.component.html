@@ -1,6 +1,6 @@
-<ion-row>
+<ion-row (click)="toggle($event)">
     <ion-col size="1">
-        <div [className]="visible ? 'plus-minus-toggle' : 'plus-minus-toggle collapsed'" (click)="toggle($event)"></div>
+        <div [className]="visible ? 'plus-minus-toggle' : 'plus-minus-toggle collapsed'"></div>
     </ion-col>
     <ion-col size="7">
         <span>{{label}}</span>

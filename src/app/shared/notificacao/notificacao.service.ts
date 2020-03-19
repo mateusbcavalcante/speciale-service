@@ -24,7 +24,7 @@ export class NotificacaoService {
       color,
       mode: 'ios',
       duration,
-      position: 'top',
+      position: 'middle',
       buttons: [
         {
           text: 'X',
@@ -35,11 +35,11 @@ export class NotificacaoService {
     await this.toast.present();
   }
 
-  async showErrorToaster(message: string, duration = 30000) {
+  async showErrorToaster(message: string, duration = 10000) {
     await this.showToaster(message, duration, 'danger');
   }
 
-  async showSuccessToaster(message: string, duration = 30000) {
+  async showSuccessToaster(message: string, duration = 10000) {
     await this.showToaster(message, duration, 'success');
   }
 

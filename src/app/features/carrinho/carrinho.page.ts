@@ -7,6 +7,9 @@ import { AuthService } from '../../core/services/auth.service';
 import { LojaService } from '../../core/services/loja.service';
 import { AlertService } from '../../shared/alertas/alert.service';
 import { toDateISOString } from '../../shared/utils/date-utils';
+import { MENSAGENS } from '../../shared/mensagens/mensagens';
+import { PedidosService } from '../../core/services/pedidos.service';
+import { NotificacaoService } from '../../shared/notificacao/notificacao.service';
 
 @Component({
   selector: 'app-carrinho',
@@ -22,8 +25,10 @@ export class CarrinhoPage implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private lojaService: LojaService,
+    private pedidoService: PedidosService,
     private authService: AuthService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private notificacaoService: NotificacaoService
   ) { }
 
   ngOnInit() {
@@ -33,7 +38,7 @@ export class CarrinhoPage implements OnInit {
   }
 
   ionViewWillEnter() {
-    this.lojaService.setPedidoStatusNaoEnviadoCriar();
+    this.pedidoService.setPedidoStatusNaoEnviadoCriar();
   }
 
   criarFormularioCarrinho() {
@@ -51,7 +56,7 @@ export class CarrinhoPage implements OnInit {
   }
 
   obterPedidoStatusCriar() {
-    this.pedidoStatus$ = this.lojaService.obterPedidoStatusCriar();
+    this.pedidoStatus$ = this.pedidoService.obterPedidoStatusCriar();
   }
 
   limparCarrinho() {
@@ -66,14 +71,17 @@ export class CarrinhoPage implements OnInit {
     const item = event.item;
     this.alertService.confirm(
       'Confirmação',
-      `Deseja remover o item :
-      ${item.produto.desProduto} ?`,
+      MENSAGENS.CONFIMAR_REMOVER_ITEM_CARRINHO(item.produto),
       () => this.removerItemCarrinho(item)
     );
   }
 
-  registrarPedido() {
-    const pedido = this.lojaService.montarPedidoParaCadastro(this.carrinhoForm.value);
-    this.lojaService.cadastrarNovoPedido(pedido);
+  async registrarPedido() {
+    try {
+      this.pedidoService.cadastrarNovoPedidoForm(this.carrinhoForm.value);
+    } catch (error) {
+      await this.notificacaoService.showErrorToaster(error.message);
+    }
+
   }
 }

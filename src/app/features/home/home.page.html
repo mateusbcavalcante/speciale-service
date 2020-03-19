@@ -7,7 +7,7 @@
             <ion-label>Produtos</ion-label>
         </ion-tab-button>
 
-        <ion-tab-button tab="carrinho" [hidden]="(itens$ | async).length === 0">
+        <ion-tab-button tab="carrinho">
             <ion-icon name="cart-outline"></ion-icon>
             <ion-badge mode='ios' color="danger" [hidden]="(itens$ | async).length === 0">
                 {{(itens$ | async).length}}

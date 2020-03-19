@@ -7,6 +7,7 @@ import { Pedido } from '../../core/domain/pedido';
 import { AuthService } from '../../core/services/auth.service';
 import { PedidosService } from '../../core/services/pedidos.service';
 import { AlertService } from '../../shared/alertas/alert.service';
+import { MENSAGENS } from '../../shared/mensagens/mensagens';
 
 @Component({
   selector: 'app-pedidos',
@@ -64,8 +65,7 @@ export class PedidosPage implements OnInit {
     const pedido = event.pedido;
     this.alertService.confirm(
       'Confirmação',
-      `Deseja realmente inativar o pedido:
-      ${pedido.idPedido} ?`,
+      MENSAGENS.INATIVAR_PEDIDO(pedido),
       () => this.inativarPedido(pedido)
     );
   }

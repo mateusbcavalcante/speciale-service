@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NavController } from '@ionic/angular';
 import { AuthService } from '../../core/services/auth.service';
 import { NotificacaoService } from '../../shared/notificacao/notificacao.service';
+import { MENSAGENS } from '../../shared/mensagens/mensagens';
 
 @Component({
   selector: 'app-login',
@@ -54,9 +55,7 @@ export class LoginPage implements OnInit {
   esqueceuSenha() {
     this.authService.esqueceuSenha(this.esqueceuSenhaForm.value).subscribe(
       async usuario => {
-        await this.notificacaoService.showInfoToaster(
-          `Um email foi enviado para ${usuario.email}.
-          Acesse esse email para resdefinir sua senha.`);
+        await this.notificacaoService.showSuccessToaster(MENSAGENS.REDEFINICAO_SENHA(usuario));
       }
     );
   }

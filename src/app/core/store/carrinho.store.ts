@@ -4,6 +4,7 @@ import { Item } from '../domain/item';
 import { Produto } from '../domain/produto';
 import { Store } from '../store/store';
 import * as _ from 'lodash';
+import { ProdutosStore } from './produtos.store';
 
 @Injectable({
   providedIn: 'root',

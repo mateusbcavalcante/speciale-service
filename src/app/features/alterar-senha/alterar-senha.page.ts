@@ -1,10 +1,10 @@
-import { ScrollDetail } from '@ionic/core';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NotificacaoService } from '../../shared/notificacao/notificacao.service';
 import { AuthService } from '../../core/services/auth.service';
 import { Usuario } from '../../core/domain/usuario';
 import { NavController } from '@ionic/angular';
+import { MENSAGENS } from '../../shared/mensagens/mensagens';
 
 @Component({
   selector: 'app-alterar-senha',
@@ -50,8 +50,8 @@ export class AlterarSenhaPage implements OnInit {
 
   alterarSenha() {
     this.authService.alterarSenha(this.alterarSenhaForm.value).subscribe(
-      async data => { 
-        await this.notificacaoService.showSuccessToaster('Sua senha foi alterada com sucesso !!!');
+      async data => {
+        await this.notificacaoService.showSuccessToaster(MENSAGENS.SENHA_ALTERADA_OK);
         this.alterarSenhaForm.reset();
       }
     );

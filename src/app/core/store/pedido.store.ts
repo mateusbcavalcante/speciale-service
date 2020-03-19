@@ -46,7 +46,7 @@ export class PedidoStore extends Store<PedidoState> {
   addProdutoPedido(produto: Produto) {
     this.state.pedidoEdicao.produtos.push(produto);
     this.ordenarProdutosPedido();
-    this.setPedidoEdicao(this.state.pedidoEdicao);
+    // this.setPedidoEdicao(this.state.pedidoEdicao);
   }
 
   ordenarProdutos() {

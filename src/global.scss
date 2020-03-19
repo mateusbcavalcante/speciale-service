@@ -104,3 +104,15 @@ ion-tabs {
   position: relative;
   overflow: hidden;
 }
+
+.img-page {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+
+.text-page{
+  color: var(--ion-color-primary-tint);
+  text-align: center;
+}
