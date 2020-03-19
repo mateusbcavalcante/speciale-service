@@ -2,15 +2,15 @@ import { Injectable } from '@angular/core';
 import * as _ from 'lodash';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { MENSAGENS } from '../../shared/mensagens/mensagens';
 import { getInputDateValue } from '../../shared/utils/form-utils';
 import { ResponsePedidoAdapter } from '../adapters/response-pedido.adapter';
 import { ObterPedidoDto } from '../domain/obter-pedido.dto';
 import { initializePedido, Pedido, PedidoStatus } from '../domain/pedido';
 import { Produto } from '../domain/produto';
+import { CarrinhoStore } from '../store/carrinho.store';
 import { PedidoStore } from '../store/pedido.store';
 import { ApiService } from './api.service';
-import { MENSAGENS } from '../../shared/mensagens/mensagens';
-import { CarrinhoStore } from '../store/carrinho.store';
 import { ProdutosStore } from '../store/produtos.store';
 
 @Injectable({
@@ -38,8 +38,8 @@ export class PedidosService {
     this.pedidoStore.setStatusEnviandoCriar();
     this.apiService.post<Pedido>(`/pedidos`, pedido).subscribe(
       data => {
-        this.carrinhoStore.limparCarrinho();
         this.produtosStore.restoreProdutos();
+        this.carrinhoStore.limparCarrinho();
         this.pedidoStore.setStatusEnviadoCriar(MENSAGENS.CRIACAO_NOVO_PEDIDO(data));
       },
       error => {

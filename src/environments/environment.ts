@@ -1,5 +1,5 @@
 export const environment = {
   production: false,
-  base_url: 'http://localhost:8080/spdmws',
+  base_url: 'http://specialepanificacoes.com/spdmws',
   http_timeout: 10000
 };

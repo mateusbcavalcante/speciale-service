@@ -8,6 +8,7 @@ import { Produto } from '../../core/domain/produto';
 import { PedidosService } from '../../core/services/pedidos.service';
 import { AlertService } from '../../shared/alertas/alert.service';
 import { MENSAGENS } from '../../shared/mensagens/mensagens';
+import { NotificacaoService } from '../../shared/notificacao/notificacao.service';
 
 
 @Component({
@@ -28,7 +29,8 @@ export class PedidoPage implements OnInit {
     private formBuilder: FormBuilder,
     private pedidosService: PedidosService,
     private alertService: AlertService,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private notificacaoService: NotificacaoService,
   ) { }
 
   ngOnInit() {
@@ -108,7 +110,11 @@ export class PedidoPage implements OnInit {
     );
   }
 
-  alterarPedido() {
-    this.pedidosService.atualizarPedidoForm(this.pedidoForm.value);
+  async alterarPedido() {
+    try {
+      this.pedidosService.atualizarPedidoForm(this.pedidoForm.value);
+    } catch (error) {
+      await this.notificacaoService.showErrorToaster(error.message);
+    }
   }
 }
