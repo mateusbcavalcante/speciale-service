@@ -14,10 +14,10 @@ export class HomePage implements OnInit {
   constructor(private lojaService: LojaService) { }
 
   ngOnInit() {
-    this.obterItensCarriho();
+    this.obterItensCarrinho();
   }
 
-  obterItensCarriho() {
+  obterItensCarrinho() {
     this.itens$ = this.lojaService.obterItensCarrinho();
   }
 

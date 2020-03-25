@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
 import { NavController } from '@ionic/angular';
 import { Observable } from 'rxjs';
-import { toDateISOString } from '../../shared/utils/date-utils';
+import { ObterPedidoDto } from '../../core/domain/obter-pedido.dto';
 import { Pedido } from '../../core/domain/pedido';
-import { AuthService } from '../../core/services/auth.service';
 import { PedidosService } from '../../core/services/pedidos.service';
 import { AlertService } from '../../shared/alertas/alert.service';
 import { MENSAGENS } from '../../shared/mensagens/mensagens';
+import { toDateISOString } from '../../shared/utils/date-utils';
+import { NotificacaoService } from '../../shared/notificacao/notificacao.service';
 
 @Component({
   selector: 'app-pedidos',
@@ -19,36 +19,37 @@ import { MENSAGENS } from '../../shared/mensagens/mensagens';
 export class PedidosPage implements OnInit {
 
   pedido$: Observable<Pedido>;
-
-  pedidosPesquisaForm: FormGroup;
+  filtros: ObterPedidoDto;
 
   constructor(
-    private formBuilder: FormBuilder,
     private pedidoService: PedidosService,
-    private authService: AuthService,
     private alertService: AlertService,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private notificacaoService: NotificacaoService
   ) { }
 
   ngOnInit() {
-    this.criarFormularioPesquisaPedidos();
+    this.criarPesquisaPedidosModel();
     this.pedido$ = this.pedidoService.obterPedido();
   }
 
-  criarFormularioPesquisaPedidos() {
-    const usuario = this.authService.getUsuarioLogado();
-    this.pedidosPesquisaForm = this.formBuilder.group({
-      dataPedido: [toDateISOString(new Date())],
-      idCliente: [usuario.idCliente]
+  criarPesquisaPedidosModel() {
+    this.filtros = new ObterPedidoDto({
+      dataPedido: toDateISOString(new Date()),
+      idPedido: null
     });
   }
 
-  pesquisarPedidos() {
-    this.pedidoService.pesquisarPedido(this.pedidosPesquisaForm.value);
+  limparDateTimeField(event: any) {
+    this.filtros.dataPedido = null;
   }
 
-  changePeriodo(event: any) {
-    this.pesquisarPedidos();
+  async pesquisarPedidos() {
+    if (this.pedidoService.isFiltroPesquisaValido(this.filtros)) {
+      this.pedidoService.pesquisarPedido(this.filtros);
+    } else {
+      await this.notificacaoService.showErrorToaster(MENSAGENS.PESQUISA_PEDIDO_VALIDACAO);
+    }
   }
 
   inativarPedido(pedido: Pedido) {

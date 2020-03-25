@@ -10,10 +10,13 @@ export function getInputDateTimeValue(date: Date | string): string {
 }
 
 export function getInputDateValue(date: Date | string): string {
-    if (typeof date === 'string') {
-        return formatDate(new Date(date));
+    if (date) {
+        if (typeof date === 'string') {
+            return formatDate(new Date(date));
 
-    } else if (typeof date === 'object') {
-        return formatDate(date);
+        } else if (typeof date === 'object') {
+            return formatDate(date);
+        }
     }
+    return '';
 }

@@ -4,13 +4,13 @@ import { Pedido } from '../../core/domain/pedido';
 
 export const MENSAGENS = {
 
-    SENHA_ALTERADA_OK : 'Sua senha foi alterada com sucesso!',
+    SENHA_ALTERADA_OK: 'Sua senha foi alterada com sucesso!',
 
-    CONFIMAR_REMOVER_ITEM_CARRINHO : (produto: Produto): string => {
+    CONFIMAR_REMOVER_ITEM_CARRINHO: (produto: Produto): string => {
         return `Deseja remover o item ${produto.desProduto} ?`;
     },
 
-    CONFIMAR_REMOVER_PRODUTO : (produto: Produto): string => {
+    CONFIMAR_REMOVER_PRODUTO: (produto: Produto): string => {
         return `Deseja remover o produto ${produto.desProduto} ?`;
     },
 
@@ -28,4 +28,6 @@ export const MENSAGENS = {
 
     VALIDACAO_OBS: 'As observações não podem conter mais do que 400 caracteres. Você precisa reduzir o tamanhho desse(s) campo(s)',
 
-}
+    PESQUISA_PEDIDO_VALIDACAO: 'É necessário preencher pelo menos 1 campo para realizar a pesquisa!',
+
+};

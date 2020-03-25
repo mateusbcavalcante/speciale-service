@@ -6,6 +6,8 @@ import { Produto } from '../domain/produto';
 import { CarrinhoStore } from '../store/carrinho.store';
 import { ProdutosStore } from '../store/produtos.store';
 import { ApiService } from './api.service';
+import { CarrinhoStatus } from '../domain/carrinho';
+
 
 @Injectable({
   providedIn: 'root',
@@ -39,6 +41,13 @@ export class LojaService {
       );
   }
 
+  obterCarrinhoStatus(): Observable<CarrinhoStatus> {
+    return this.carrinhoStore.state$
+      .pipe(
+        map(carrinhoState => carrinhoState.status)
+      );
+  }
+
   addProdutoCarrinho(produto: Produto) {
     this.carrinhoStore.addProdutoCarrinho(produto);
     this.produtosStore.removerProduto(produto);
@@ -52,6 +61,10 @@ export class LojaService {
 
   limparCarrinho(): void {
     this.carrinhoStore.limparCarrinho();
+  }
+
+  checkoutCarrinho(): void {
+    this.carrinhoStore.checkoutCarrinho();
   }
 
 }

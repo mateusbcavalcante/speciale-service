@@ -3,15 +3,18 @@ import * as _ from 'lodash';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { MENSAGENS } from '../../shared/mensagens/mensagens';
+import { addDays, getDayNameOfWeekByDate, isDomingo } from '../../shared/utils/date-utils';
 import { getInputDateValue } from '../../shared/utils/form-utils';
 import { ResponsePedidoAdapter } from '../adapters/response-pedido.adapter';
+import { DataEntregaDto } from '../domain/data-entrega.dto';
 import { ObterPedidoDto } from '../domain/obter-pedido.dto';
 import { initializePedido, Pedido, PedidoStatus } from '../domain/pedido';
 import { Produto } from '../domain/produto';
 import { CarrinhoStore } from '../store/carrinho.store';
 import { PedidoStore } from '../store/pedido.store';
-import { ApiService } from './api.service';
 import { ProdutosStore } from '../store/produtos.store';
+import { ApiService } from './api.service';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -20,10 +23,22 @@ export class PedidosService {
 
   constructor(
     private apiService: ApiService,
+    private authService: AuthService,
     private pedidoStore: PedidoStore,
     private carrinhoStore: CarrinhoStore,
     private produtosStore: ProdutosStore,
     private responsePedidoAdapter: ResponsePedidoAdapter) {
+  }
+
+  calcularDataEntrega(dataPedido: Date): DataEntregaDto {
+    let dataEntrega = addDays(dataPedido, 1);
+    if (isDomingo(dataEntrega)) {
+      dataEntrega = addDays(dataEntrega, 1);
+    }
+    return {
+      dataEntrega,
+      diaSemana: getDayNameOfWeekByDate(dataEntrega)
+    };
   }
 
   cadastrarNovoPedidoForm(formData: any) {
@@ -39,7 +54,7 @@ export class PedidosService {
     this.apiService.post<Pedido>(`/pedidos`, pedido).subscribe(
       data => {
         this.produtosStore.restoreProdutos();
-        this.carrinhoStore.limparCarrinho();
+        this.carrinhoStore.checkoutCarrinho();
         this.pedidoStore.setStatusEnviadoCriar(MENSAGENS.CRIACAO_NOVO_PEDIDO(data));
       },
       error => {
@@ -85,9 +100,15 @@ export class PedidosService {
       );
   }
 
+  isFiltroPesquisaValido(obterPedidoDto: ObterPedidoDto): boolean {
+    return !!obterPedidoDto.dataPedido || !!obterPedidoDto.idPedido;
+  }
+
   pesquisarPedido(obterPedidoDto: ObterPedidoDto) {
+    const idCliente = this.authService.getUsuarioLogado().idCliente;
     const dataPedido = getInputDateValue(obterPedidoDto.dataPedido);
-    this.apiService.get<Pedido>(`/pedidos?idCliente=${obterPedidoDto.idCliente}&dataPedido=${dataPedido}`)
+    const idPedido = !!obterPedidoDto.idPedido ? obterPedidoDto.idPedido : 0;
+    this.apiService.get<Pedido>(`/pedidos?idCliente=${idCliente}&idPedido=${idPedido}&dataPedido=${dataPedido}`)
       .subscribe(
         data => this.pedidoStore.carregarPedido(this.responsePedidoAdapter.adapt(data)),
         error => {
@@ -162,16 +183,21 @@ export class PedidosService {
   }
 
   montarPedidoParaCadastro(data: any): Pedido {
-    const pedido: Pedido = data;
-    pedido.observacao = '';
+    const pedido: Pedido = _.cloneDeep(data);
+    pedido.observacao = this.montarObservacaoNovoPedido(pedido);
+    pedido.produtos = this.carrinhoStore.state.produtos;
+    return pedido;
+  }
+
+  private montarObservacaoNovoPedido(pedido: Pedido): string {
+    let observacoes = !!pedido.observacao ? `OBSERVAÇÃO GERAL: ${pedido.observacao}\n` : '';
     this.carrinhoStore.state.itens.forEach(
       item => {
         if (item.observacao) {
-          pedido.observacao += `${item.produto.desProduto} : ${item.observacao}\n`;
+          observacoes += `${item.produto.desProduto}: ${item.observacao}\n`;
         }
       });
-    pedido.produtos = this.carrinhoStore.state.produtos;
-    return pedido;
+    return observacoes;
   }
 
   montarPedido(data: any): Pedido {

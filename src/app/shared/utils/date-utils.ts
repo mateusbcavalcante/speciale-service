@@ -1,4 +1,6 @@
 
+const DIAS_SEMANA = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
+
 export function toDateISOString(value: Date): string {
     const tzo = -value.getTimezoneOffset(),
         dif = tzo >= 0 ? '+' : '-',
@@ -41,4 +43,22 @@ export function parseToISODateTime(dateTime: any, includeTime = true): Date {
         return new Date(`${dateTime}`);
     }
     return null;
+}
+
+export function addDays(date: Date, days: number): Date {
+    const result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result;
+}
+
+export function getDayNameOfWeekByDate(date: Date): string {
+    return getDayNameOfWeekByIndex(date.getDay());
+}
+
+export function getDayNameOfWeekByIndex(index: number): string {
+    return DIAS_SEMANA[index];
+}
+
+export function isDomingo(date: Date): boolean{
+    return date.getDay() === 0;
 }

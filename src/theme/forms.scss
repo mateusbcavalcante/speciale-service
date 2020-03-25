@@ -7,7 +7,8 @@
     height: auto;
   }
 
-  form{
+  form,
+  .form-wrapper {
     margin-top: -30px;
 
     ion-input {
@@ -18,10 +19,10 @@
       border-radius: 5px;
       color: #744e3f;
       font-size: 15px;
-      --padding-top: 15px;
-      --padding-bottom: 15px;
+      // --padding-top: 15px;
+      // --padding-bottom: 15px;
       --padding-start: 16px;
-      --placeholder-opacity: 0.8;
+      // --placeholder-opacity: 0.8;
     }
 
     ion-datetime {
@@ -38,7 +39,7 @@
 .card-form-login {
   background: linear-gradient(180deg, #de9d5abf, #f4f5f8b8);
   border-radius: 20px;
-  form{
+  form {
     margin-top: 20px;
 
     ion-input {
@@ -62,6 +63,7 @@
       border-radius: 5px;
       color: #744e3f;
       font-size: 15px;
+      margin: 0 auto;
     }
 
     ion-textarea {
@@ -81,17 +83,19 @@
 
 .card-form,
 .card-form-login {
-  form {
+  form,
+  .form-wrapper {
     .card-form-title {
       text-align: center;
       font-size: 25px;
       color: #775141;
     }
-    ion-grid{
-      ion-row{
+    ion-grid {
+      ion-row {
         width: 100%;
-        ion-col{
-          ion-label{
+        ion-col {
+          ion-label,
+          .label-value {
             padding-top: 10px !important;
             font-size: 15px;
             margin-left: 15px;

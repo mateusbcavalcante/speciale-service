@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CarrinhoState } from '../domain/carrinho';
+import { CarrinhoState, CarrinhoStatus } from '../domain/carrinho';
 import { Item } from '../domain/item';
 import { Produto } from '../domain/produto';
 import { Store } from '../store/store';
@@ -19,6 +19,7 @@ export class CarrinhoStore extends Store<CarrinhoState> {
       ...this.state,
       itens: [...this.state.itens, { produto }],
       produtos: [...this.state.produtos, produto],
+      status: CarrinhoStatus.ADD
     });
   }
 
@@ -26,16 +27,33 @@ export class CarrinhoStore extends Store<CarrinhoState> {
     this.setState({
       ...this.state,
       itens: [...this.filtrarItensNaoRemovidos(item)],
-      produtos: [...this.filtrarProdutosNaoRemovidos(item.produto)]
+      produtos: [...this.filtrarProdutosNaoRemovidos(item.produto)],
+      status: CarrinhoStatus.REMOVER
+    });
+  }
+
+  clearCarrinho(status: CarrinhoStatus): void {
+    this.setState({
+      ...this.state,
+      itens: [],
+      produtos: [],
+      status
     });
   }
 
   limparCarrinho(): void {
+    this.clearCarrinho(CarrinhoStatus.EMPTY);
+  }
+
+  errorCarrinho(): void {
     this.setState({
       ...this.state,
-      itens: [],
-      produtos: []
+      status: CarrinhoStatus.ERROR
     });
+  }
+
+  checkoutCarrinho(): void {
+    this.clearCarrinho(CarrinhoStatus.CHECKOUT);
   }
 
   private filtrarItensNaoRemovidos(item: Item): Item[] {

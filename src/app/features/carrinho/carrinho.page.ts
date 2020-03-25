@@ -1,25 +1,30 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs';
+import { filter } from 'rxjs/operators';
+import { CarrinhoStatus } from 'src/app/core/domain/carrinho';
 import { Item } from '../../core/domain/item';
 import { PedidoStatus } from '../../core/domain/pedido';
 import { AuthService } from '../../core/services/auth.service';
 import { LojaService } from '../../core/services/loja.service';
-import { AlertService } from '../../shared/alertas/alert.service';
-import { toDateISOString } from '../../shared/utils/date-utils';
-import { MENSAGENS } from '../../shared/mensagens/mensagens';
 import { PedidosService } from '../../core/services/pedidos.service';
+import { AlertService } from '../../shared/alertas/alert.service';
+import { MENSAGENS } from '../../shared/mensagens/mensagens';
 import { NotificacaoService } from '../../shared/notificacao/notificacao.service';
+import { toDateISOString } from '../../shared/utils/date-utils';
 
 @Component({
   selector: 'app-carrinho',
-  templateUrl: 'carrinho.page.html'
+  templateUrl: 'carrinho.page.html',
+  styleUrls: [
+    './carrinho.page.scss'
+  ]
 })
 export class CarrinhoPage implements OnInit {
 
   itens$: Observable<Item[]>;
   pedidoStatus$: Observable<PedidoStatus>;
-
+  carrinhoStatus$: Observable<CarrinhoStatus>;
   carrinhoForm: FormGroup;
 
   constructor(
@@ -31,27 +36,45 @@ export class CarrinhoPage implements OnInit {
     private notificacaoService: NotificacaoService
   ) { }
 
+
   ngOnInit() {
     this.criarFormularioCarrinho();
-    this.obterItensCarriho();
+    this.obterItensCarrinho();
     this.obterPedidoStatusCriar();
+    this.obterCarrinhoStatus();
+    this.onCarrinhoStatusChange();
   }
 
-  ionViewWillEnter() {
+  ionViewDidEnter() {
     this.pedidoService.setPedidoStatusNaoEnviadoCriar();
   }
 
-  criarFormularioCarrinho() {
+  private formularioCarrinhoInitialize() {
     const usuario = this.authService.getUsuarioLogado();
-    this.carrinhoForm = this.formBuilder.group({
-      dataPedido: [toDateISOString(new Date())],
-      idCliente: [usuario.idCliente],
-      idUsuario: [usuario.idUsuario],
-      idPedido: [0],
-    });
+    return {
+      dataPedido: toDateISOString(new Date()),
+      idCliente: usuario.idCliente,
+      idUsuario: usuario.idUsuario,
+      observacao: '',
+      idPedido: 0
+    };
   }
 
-  obterItensCarriho() {
+  criarFormularioCarrinho() {
+    this.carrinhoForm = this.formBuilder.group(
+      this.formularioCarrinhoInitialize()
+    );
+  }
+
+  onCarrinhoStatusChange() {
+    this.carrinhoStatus$.pipe(filter(
+      status => status === CarrinhoStatus.CHECKOUT)
+    ).subscribe(() => this.carrinhoForm.patchValue(
+      this.formularioCarrinhoInitialize()
+    ));
+  }
+
+  obterItensCarrinho() {
     this.itens$ = this.lojaService.obterItensCarrinho();
   }
 
@@ -59,8 +82,8 @@ export class CarrinhoPage implements OnInit {
     this.pedidoStatus$ = this.pedidoService.obterPedidoStatusCriar();
   }
 
-  limparCarrinho() {
-    this.lojaService.limparCarrinho();
+  obterCarrinhoStatus() {
+    this.carrinhoStatus$ = this.lojaService.obterCarrinhoStatus();
   }
 
   removerItemCarrinho(item: Item) {
