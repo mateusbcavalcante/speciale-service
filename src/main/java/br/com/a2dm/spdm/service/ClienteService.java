@@ -1,8 +1,10 @@
 package br.com.a2dm.spdm.service;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.hibernate.Criteria;
@@ -311,6 +313,7 @@ public class ClienteService extends A2DMHbNgc<Cliente>
 		vo.setFlgAtivo("N");
 		vo.setIdUsuarioAlt(util.getUsuarioLogado().getIdUsuario());
 		vo.setDatAlteracao(new Date());
+		vo.setListaClienteProduto(null);
 		
 		sessao.merge(vo);
 		
@@ -349,8 +352,9 @@ public class ClienteService extends A2DMHbNgc<Cliente>
 		vo.setFlgAtivo("S");
 		vo.setIdUsuarioAlt(util.getUsuarioLogado().getIdUsuario());
 		vo.setDatAlteracao(new Date());
+		vo.setListaClienteProduto(null);
 		
-		super.alterar(sessao, vo);
+		sessao.merge(vo);
 		
 		return vo;
 	}
@@ -419,14 +423,13 @@ public class ClienteService extends A2DMHbNgc<Cliente>
 		return filtroPropriedade;
 	}
 	
-	public void atualizarValorUnidade(BigInteger idCliente, Produto produto) throws Exception
-	{
+	public void atualizarValorUnidade(BigInteger idCliente, List<Produto> listaProduto, Produto produto) throws Exception {
 		Session sessao = HibernateUtil.getSession();
 		sessao.setFlushMode(FlushMode.COMMIT);
 		Transaction tx = sessao.beginTransaction();
 		try
 		{
-			atualizarValorUnidade(sessao, idCliente, produto);
+			atualizarValorUnidade(sessao, idCliente, listaProduto, produto);
 			tx.commit();
 		}
 		catch (Exception e)
@@ -438,9 +441,10 @@ public class ClienteService extends A2DMHbNgc<Cliente>
 		{
 			sessao.close();
 		}
+		
 	}
 
-	public void atualizarValorUnidade(Session sessao, BigInteger idCliente, Produto produto) throws Exception {
+	public void atualizarValorUnidade(Session sessao, BigInteger idCliente, List<Produto> listProduto, Produto produto) throws Exception {
 		if (idCliente != null
 				&& idCliente.intValue() > 0) 
 		{
@@ -464,6 +468,14 @@ public class ClienteService extends A2DMHbNgc<Cliente>
 				clienteProduto.setDatAlteracao(new Date());
 				
 				ClienteProdutoService.getInstancia().alterar(sessao, clienteProduto);
+			} else {
+				if (listProduto != null && listProduto.size() > 0) {
+					for (Produto element : listProduto) {
+						if (element.getIdProduto().intValue() == produto.getIdProduto().intValue()) {
+							element.setVlrUnidadeFormatado(produto.getVlrUnidadeFormatado());
+						}
+					}
+				}
 			}
 		}
 	}

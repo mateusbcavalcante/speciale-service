@@ -299,4 +299,155 @@ public class Cliente implements Serializable
 	public void setFlgSinc(String flgSinc) {
 		this.flgSinc = flgSinc;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((datAlteracao == null) ? 0 : datAlteracao.hashCode());
+		result = prime * result + ((datCadastro == null) ? 0 : datCadastro.hashCode());
+		result = prime * result + ((desCliente == null) ? 0 : desCliente.hashCode());
+		result = prime * result + ((filtroMap == null) ? 0 : filtroMap.hashCode());
+		result = prime * result + ((flgAtivo == null) ? 0 : flgAtivo.hashCode());
+		result = prime * result + ((flgSinc == null) ? 0 : flgSinc.hashCode());
+		result = prime * result + ((formaPagamento == null) ? 0 : formaPagamento.hashCode());
+		result = prime * result + ((horLimite == null) ? 0 : horLimite.hashCode());
+		result = prime * result + ((idCliente == null) ? 0 : idCliente.hashCode());
+		result = prime * result + ((idExterno == null) ? 0 : idExterno.hashCode());
+		result = prime * result + ((idFormaPagamento == null) ? 0 : idFormaPagamento.hashCode());
+		result = prime * result + ((idTipo == null) ? 0 : idTipo.hashCode());
+		result = prime * result + ((idUsuarioAlt == null) ? 0 : idUsuarioAlt.hashCode());
+		result = prime * result + ((idUsuarioCad == null) ? 0 : idUsuarioCad.hashCode());
+		result = prime * result + ((listaClienteProduto == null) ? 0 : listaClienteProduto.hashCode());
+		result = prime * result + ((listaProduto == null) ? 0 : listaProduto.hashCode());
+		result = prime * result + ((numPrioridade == null) ? 0 : numPrioridade.hashCode());
+		result = prime * result + ((tipo == null) ? 0 : tipo.hashCode());
+		result = prime * result + ((usuarioAlt == null) ? 0 : usuarioAlt.hashCode());
+		result = prime * result + ((usuarioCad == null) ? 0 : usuarioCad.hashCode());
+		result = prime * result + ((vlrFrete == null) ? 0 : vlrFrete.hashCode());
+		result = prime * result + ((vlrFreteFormatado == null) ? 0 : vlrFreteFormatado.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Cliente other = (Cliente) obj;
+		if (datAlteracao == null) {
+			if (other.datAlteracao != null)
+				return false;
+		} else if (!datAlteracao.equals(other.datAlteracao))
+			return false;
+		if (datCadastro == null) {
+			if (other.datCadastro != null)
+				return false;
+		} else if (!datCadastro.equals(other.datCadastro))
+			return false;
+		if (desCliente == null) {
+			if (other.desCliente != null)
+				return false;
+		} else if (!desCliente.equals(other.desCliente))
+			return false;
+		if (filtroMap == null) {
+			if (other.filtroMap != null)
+				return false;
+		} else if (!filtroMap.equals(other.filtroMap))
+			return false;
+		if (flgAtivo == null) {
+			if (other.flgAtivo != null)
+				return false;
+		} else if (!flgAtivo.equals(other.flgAtivo))
+			return false;
+		if (flgSinc == null) {
+			if (other.flgSinc != null)
+				return false;
+		} else if (!flgSinc.equals(other.flgSinc))
+			return false;
+		if (formaPagamento == null) {
+			if (other.formaPagamento != null)
+				return false;
+		} else if (!formaPagamento.equals(other.formaPagamento))
+			return false;
+		if (horLimite == null) {
+			if (other.horLimite != null)
+				return false;
+		} else if (!horLimite.equals(other.horLimite))
+			return false;
+		if (idCliente == null) {
+			if (other.idCliente != null)
+				return false;
+		} else if (!idCliente.equals(other.idCliente))
+			return false;
+		if (idExterno == null) {
+			if (other.idExterno != null)
+				return false;
+		} else if (!idExterno.equals(other.idExterno))
+			return false;
+		if (idFormaPagamento == null) {
+			if (other.idFormaPagamento != null)
+				return false;
+		} else if (!idFormaPagamento.equals(other.idFormaPagamento))
+			return false;
+		if (idTipo == null) {
+			if (other.idTipo != null)
+				return false;
+		} else if (!idTipo.equals(other.idTipo))
+			return false;
+		if (idUsuarioAlt == null) {
+			if (other.idUsuarioAlt != null)
+				return false;
+		} else if (!idUsuarioAlt.equals(other.idUsuarioAlt))
+			return false;
+		if (idUsuarioCad == null) {
+			if (other.idUsuarioCad != null)
+				return false;
+		} else if (!idUsuarioCad.equals(other.idUsuarioCad))
+			return false;
+		if (listaClienteProduto == null) {
+			if (other.listaClienteProduto != null)
+				return false;
+		} else if (!listaClienteProduto.equals(other.listaClienteProduto))
+			return false;
+		if (listaProduto == null) {
+			if (other.listaProduto != null)
+				return false;
+		} else if (!listaProduto.equals(other.listaProduto))
+			return false;
+		if (numPrioridade == null) {
+			if (other.numPrioridade != null)
+				return false;
+		} else if (!numPrioridade.equals(other.numPrioridade))
+			return false;
+		if (tipo == null) {
+			if (other.tipo != null)
+				return false;
+		} else if (!tipo.equals(other.tipo))
+			return false;
+		if (usuarioAlt == null) {
+			if (other.usuarioAlt != null)
+				return false;
+		} else if (!usuarioAlt.equals(other.usuarioAlt))
+			return false;
+		if (usuarioCad == null) {
+			if (other.usuarioCad != null)
+				return false;
+		} else if (!usuarioCad.equals(other.usuarioCad))
+			return false;
+		if (vlrFrete == null) {
+			if (other.vlrFrete != null)
+				return false;
+		} else if (!vlrFrete.equals(other.vlrFrete))
+			return false;
+		if (vlrFreteFormatado == null) {
+			if (other.vlrFreteFormatado != null)
+				return false;
+		} else if (!vlrFreteFormatado.equals(other.vlrFreteFormatado))
+			return false;
+		return true;
+	}
 }

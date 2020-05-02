@@ -417,7 +417,4 @@ public class Produto implements Serializable {
 	public void setQtdMassaTotalStr(String qtdMassaTotalStr) {
 		this.qtdMassaTotalStr = qtdMassaTotalStr;
 	}
-	
-	
-
 }
