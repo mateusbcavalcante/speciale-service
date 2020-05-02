@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="br.com.speciale" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>Speciale</name>
-    <description>Speciale</description>
+    <name>Go Bread</name>
+    <description>Padaria Artesanal</description>
     <author email="mateus@a2dm.com.br">A2DM</author>
     <content src="index.html" />
     <access origin="*" />
