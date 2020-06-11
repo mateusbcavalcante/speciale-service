@@ -13,7 +13,8 @@
     "run:device": "ionic cordova run android --prod --minifyjs --minifycss --optimizejs --aot",
     "build:device:prod": "cp resources/android/xml/network_security_config.xml platforms/android/app/src/main/res/xml/ && ionic cordova build android --prod --release --minifyjs --minifycss --optimizejs --aot",
     "platform:add": "ionic cordova platform add android --no-resources",
-    "platform:rm": "ionic cordova platform rm android"
+    "platform:rm": "ionic cordova platform rm android",
+    "signed:app": "sh bin/signed-app"
   },
   "private": true,
   "dependencies": {
