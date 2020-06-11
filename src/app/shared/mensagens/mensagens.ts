@@ -23,7 +23,7 @@ export const MENSAGENS = {
     },
 
     CRIACAO_NOVO_PEDIDO: (pedido: Pedido) => {
-        return `Seu pedido de protocolo ${pedido.idPedido} foi enviado para Speciale com sucesso!`;
+        return `Seu pedido de protocolo ${pedido.idPedido} foi enviado para Go Bread com sucesso!`;
     },
 
     VALIDACAO_OBS: 'As observações não podem conter mais do que 400 caracteres. Você precisa reduzir o tamanhho desse(s) campo(s)',
