@@ -115,6 +115,9 @@ public class Cliente implements Serializable
 	@Column(name = "flg_sinc")
 	private String flgSinc;
 	
+	@Column(name = "flg_evento")
+	private String flgEvento;
+	
 	@Transient
 	private List<Produto> listaProduto;
 	
@@ -298,6 +301,14 @@ public class Cliente implements Serializable
 
 	public void setFlgSinc(String flgSinc) {
 		this.flgSinc = flgSinc;
+	}
+	
+	public String getFlgEvento() {
+		return flgEvento;
+	}
+
+	public void setFlgEvento(String flgEvento) {
+		this.flgEvento = flgEvento;
 	}
 
 	@Override

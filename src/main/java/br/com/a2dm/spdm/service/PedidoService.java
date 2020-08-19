@@ -1,12 +1,15 @@
 package br.com.a2dm.spdm.service;
 
 import java.math.BigInteger;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.hibernate.Criteria;
@@ -44,6 +47,8 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 	public static final int JOIN_CLIENTE = 8;
 	
 	public static final int JOIN_PEDIDO_PRODUTO_PRODUTO = 16;
+	
+	public static final int JOIN_PEDIDO_OPCAO_ENTREGA = 32;
 	
 	private JSFUtil util = new JSFUtil();
 	
@@ -84,6 +89,14 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 	@Override
 	protected void validarInserir(Session sessao, Pedido vo) throws Exception
 	{
+		if (vo.getVlrFreteFormatado() != null
+				&& !vo.getVlrFreteFormatado().equalsIgnoreCase("")) 
+		{
+			vo.setVlrFrete(new Double(vo.getVlrFreteFormatado().toString().replace(".", "").replace(",", ".")));
+		} else {
+			vo.setVlrFrete(null);
+		}
+		
 		BigInteger idCliente = vo.getIdCliente();
 		
 		if (util != null && util.getUsuarioLogado() != null) {
@@ -168,6 +181,14 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 	@Override
 	protected void validarAlterar(Session sessao, Pedido vo) throws Exception
 	{
+		if (vo.getVlrFreteFormatado() != null
+				&& !vo.getVlrFreteFormatado().equalsIgnoreCase("")) 
+		{
+			vo.setVlrFrete(new Double(vo.getVlrFreteFormatado().toString().replace(".", "").replace(",", ".")));
+		} else {
+			vo.setVlrFrete(null);
+		}
+		
 		BigInteger idCliente = vo.getIdCliente();
 		
 		if (util != null && util.getUsuarioLogado() != null) {
@@ -222,6 +243,8 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 		pedido.setDatAlteracao(new Date());
 		pedido.setDatPedido(vo.getDatPedido());
 		pedido.setObsPedido(vo.getObsPedido());
+		pedido.setIdOpcaoEntrega(vo.getIdOpcaoEntrega());
+		pedido.setVlrFrete(vo.getVlrFrete());
 		pedido.setPlataforma(vo.getPlataforma());
 		
 		sessao.merge(pedido);	
@@ -307,6 +330,44 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 		return vo;
 	}
 	
+	public String buscarInformacoesOpcaoEntrega(BigInteger idCliente, BigInteger idOpcaoEntrega) throws Exception
+	{
+		Session sessao = HibernateUtil.getSession();
+		sessao.setFlushMode(FlushMode.COMMIT);
+		
+		try
+		{
+			return buscarInformacoesOpcaoEntrega(sessao, idCliente, idOpcaoEntrega);
+		}
+		catch (Exception e)
+		{
+			throw e;
+		}
+		finally
+		{
+			sessao.close();
+		}
+	}
+	
+	private String buscarInformacoesOpcaoEntrega(Session sessao, BigInteger idCliente, BigInteger idOpcaoEntrega) throws Exception {
+		String vltFreteFormatado = new DecimalFormat("#,##0.00", new DecimalFormatSymbols(new Locale("pt", "BR"))).format(0.00);
+		
+		if (idOpcaoEntrega != null
+				&& idOpcaoEntrega.intValue() > 0
+				&& idOpcaoEntrega.intValue() == OpcaoEntregaService.OPCAO_ENTREGA) 
+		{
+			Cliente cliente = new Cliente();
+			cliente.setIdCliente(idCliente);
+			
+			cliente = ClienteService.getInstancia().get(sessao, cliente, 0);
+			
+			if (cliente != null && cliente.getVlrFrete() != null) {
+				vltFreteFormatado = new DecimalFormat("#,##0.00", new DecimalFormatSymbols(new Locale("pt", "BR"))).format(cliente.getVlrFrete());
+			}
+		}
+		return vltFreteFormatado;
+	}
+
 	public Pedido inativar(Pedido vo) throws Exception
 	{
 		Session sessao = HibernateUtil.getSession();
@@ -710,6 +771,11 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 			criteria.createAlias("cliente", "cliente");
 	    }
 		
+		if ((join & JOIN_PEDIDO_OPCAO_ENTREGA) != 0)
+	    {
+			criteria.createAlias("opcaoEntrega", "opcaoEntrega");
+	    }
+		
 		return criteria;
 	}	
 
@@ -749,10 +815,17 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 
 	private void inserirGeradorPedido(Session sessao, List<Pedido> listaPedidoResult) throws Exception {
 		for (Pedido element : listaPedidoResult) {
+			BigInteger opcaoEntrega = BigInteger.valueOf(OpcaoEntregaService.OPCAO_ENTREGA);
+			
 			util.getUsuarioLogado().setIdCliente(element.getCliente().getIdCliente());
 			element.setIdCliente(element.getCliente().getIdCliente());
+			element.setIdOpcaoEntrega(opcaoEntrega);
 			element.setListaProduto(element.getCliente().getListaProduto());
 			element.setPlataforma(PedidoService.PLATAFORMA_WEB);
+			
+			element.setVlrFreteFormatado(this.buscarInformacoesOpcaoEntrega(sessao, element.getCliente().getIdCliente(), opcaoEntrega));
+			element.setVlrFrete(new Double(element.getVlrFreteFormatado().toString().replace(".", "").replace(",", ".")));
+			
 			this.inserir(sessao, element);
 		}
 	}

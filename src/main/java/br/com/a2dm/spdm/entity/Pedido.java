@@ -92,6 +92,16 @@ public class Pedido implements Serializable
 	@Column(name = "plataforma")
 	private String plataforma;
 	
+	@Column(name = "id_opcao_entrega")
+	private BigInteger idOpcaoEntrega;
+	
+	@Column(name = "vlr_frete")
+	private Double vlrFrete;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_opcao_entrega", insertable = false, updatable = false)
+	private OpcaoEntrega opcaoEntrega;
+	
 	@OneToMany(mappedBy="pedido", fetch = FetchType.LAZY)
     @Cascade(CascadeType.ALL)
 	@JsonIgnore
@@ -117,6 +127,9 @@ public class Pedido implements Serializable
 	
 	@Transient
 	private String observacao;
+	
+	@Transient
+	private String vlrFreteFormatado;
 
 	public BigInteger getIdPedido() {
 		return idPedido;
@@ -284,5 +297,37 @@ public class Pedido implements Serializable
 
 	public void setObservacao(String observacao) {
 		this.observacao = observacao;
+	}
+
+	public BigInteger getIdOpcaoEntrega() {
+		return idOpcaoEntrega;
+	}
+
+	public void setIdOpcaoEntrega(BigInteger idOpcaoEntrega) {
+		this.idOpcaoEntrega = idOpcaoEntrega;
+	}
+
+	public OpcaoEntrega getOpcaoEntrega() {
+		return opcaoEntrega;
+	}
+
+	public void setOpcaoEntrega(OpcaoEntrega opcaoEntrega) {
+		this.opcaoEntrega = opcaoEntrega;
+	}
+
+	public Double getVlrFrete() {
+		return vlrFrete;
+	}
+
+	public void setVlrFrete(Double vlrFrete) {
+		this.vlrFrete = vlrFrete;
+	}
+
+	public String getVlrFreteFormatado() {
+		return vlrFreteFormatado;
+	}
+
+	public void setVlrFreteFormatado(String vlrFreteFormatado) {
+		this.vlrFreteFormatado = vlrFreteFormatado;
 	}
 }
