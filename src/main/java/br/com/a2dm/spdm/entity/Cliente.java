@@ -118,6 +118,9 @@ public class Cliente implements Serializable
 	@Column(name = "flg_evento")
 	private String flgEvento;
 	
+	@Column(name = "flg_master")
+	private String flgMaster;
+	
 	@Transient
 	private List<Produto> listaProduto;
 	
@@ -309,6 +312,14 @@ public class Cliente implements Serializable
 
 	public void setFlgEvento(String flgEvento) {
 		this.flgEvento = flgEvento;
+	}
+	
+	public String getFlgMaster() {
+		return flgMaster;
+	}
+
+	public void setFlgMaster(String flgMaster) {
+		this.flgMaster = flgMaster;
 	}
 
 	@Override

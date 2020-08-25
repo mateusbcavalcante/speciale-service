@@ -86,9 +86,110 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 	    }
 	}
 	
+	protected void validacoes(Session sessao, Pedido vo) throws Exception
+	{
+		if(vo == null
+				|| vo.getDatPedido() == null
+				|| vo.getDatPedido().toString().trim().equals(""))
+		{
+			throw new Exception("O campo Data da Produção é obrigatório!");
+		}
+		
+		if (vo.getIdOpcaoEntrega() == null
+				|| vo.getIdOpcaoEntrega().intValue() <= 0) 
+		{
+			throw new Exception("O campo Opção de Entrega é obrigatório!");
+		} 
+		
+		if(vo.getListaProduto() == null
+				|| vo.getListaProduto().size() <= 0)
+		{
+			throw new Exception("Pelo menos 1 produto deve ser adicionado ao pedido!");
+		}
+		
+		Calendar c = Calendar.getInstance();
+		
+		c.set(Calendar.HOUR, 0);
+		c.set(Calendar.HOUR_OF_DAY, 0);
+		c.set(Calendar.MINUTE, 0);
+		c.set(Calendar.SECOND, 0);
+		c.set(Calendar.MILLISECOND, 0);
+		
+		Date dataHoje = c.getTime();
+		
+		if(vo.getDatPedido().before(dataHoje))
+		{
+			throw new Exception("O campo Data da Produção não pode ser menor que a Data Atual!");
+		}
+		
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(vo.getDatPedido());
+		
+		int dia = calendar.get(Calendar.DAY_OF_WEEK);
+		
+		if (!isClienteEvento(sessao) && dia == Calendar.SUNDAY) 
+		{
+			throw new Exception("Não é possível realizar pedido para o dia de Domingo!");
+		}
+		
+		BigInteger qtdTotalSolicitada = BigInteger.ZERO;
+		
+		for (Produto produto : vo.getListaProduto())
+		{
+			if(produto.getQtdSolicitada() == null
+					|| produto.getQtdSolicitada().intValue() <= 0)
+			{
+				throw new Exception("A Quantidade do produto " + produto.getDesProduto() + " não foi preenchida!");
+			}
+			
+			if (!isClienteEvento(sessao)) {
+				if(produto.getQtdLoteMinimo().intValue() > produto.getQtdSolicitada().intValue())
+				{
+					throw new Exception("O Lote Mínimo do produto " + produto.getDesProduto() + " não foi atingida! Quantidade de Lote Mínimo: " + produto.getQtdLoteMinimo());
+				}
+				
+				if(produto.getQtdSolicitada().intValue() % produto.getQtdMultiplo().intValue() != 0)
+				{
+					throw new Exception("A Quantidade do produto " + produto.getDesProduto() + " deve ser solicitada em múltiplo de "+ produto.getQtdMultiplo() +"!");
+				}
+			}
+			qtdTotalSolicitada = qtdTotalSolicitada.add(produto.getQtdSolicitada());
+		}
+		
+		if (!isClienteEvento(sessao) && !isMaster(sessao) && qtdTotalSolicitada.intValue() < 60) {
+			throw new Exception("É necessário solicitar, no mínimo, 60 pães!");
+		}
+	}
+	
+	private boolean isClienteEvento(Session sessao) throws Exception {
+		Cliente cliente = new Cliente();
+		cliente.setIdCliente(util.getUsuarioLogado().getIdCliente());
+		
+		cliente = ClienteService.getInstancia().get(sessao, cliente, 0);
+		
+		if (cliente != null) {
+			return cliente.getFlgEvento() != null && !cliente.getFlgEvento().equalsIgnoreCase("") && cliente.getFlgEvento().equalsIgnoreCase("S");
+		}
+		return false;
+	}
+	
+	private boolean isMaster(Session sessao) throws Exception {
+		Cliente cliente = new Cliente();
+		cliente.setIdCliente(util.getUsuarioLogado().getIdCliente());
+		
+		cliente = ClienteService.getInstancia().get(sessao, cliente, 0);
+		
+		if (cliente != null) {
+			return cliente.getFlgMaster() != null && !cliente.getFlgMaster().equalsIgnoreCase("") && cliente.getFlgMaster().equalsIgnoreCase("S");
+		}
+		return false;
+	}
+	
 	@Override
 	protected void validarInserir(Session sessao, Pedido vo) throws Exception
 	{
+		this.validacoes(sessao, vo);
+		
 		if (vo.getVlrFreteFormatado() != null
 				&& !vo.getVlrFreteFormatado().equalsIgnoreCase("")) 
 		{
@@ -180,7 +281,7 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 	
 	@Override
 	protected void validarAlterar(Session sessao, Pedido vo) throws Exception
-	{
+	{		
 		if (vo.getVlrFreteFormatado() != null
 				&& !vo.getVlrFreteFormatado().equalsIgnoreCase("")) 
 		{
@@ -233,6 +334,7 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 			idUsuario = util.getUsuarioLogado().getIdUsuario();
 		}
 		
+		validacoes(sessao, vo);
 		validarAlterar(sessao, vo);
 		
 		Pedido pedido = new Pedido();
@@ -815,15 +917,12 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 
 	private void inserirGeradorPedido(Session sessao, List<Pedido> listaPedidoResult) throws Exception {
 		for (Pedido element : listaPedidoResult) {
-			BigInteger opcaoEntrega = BigInteger.valueOf(OpcaoEntregaService.OPCAO_ENTREGA);
-			
 			util.getUsuarioLogado().setIdCliente(element.getCliente().getIdCliente());
 			element.setIdCliente(element.getCliente().getIdCliente());
-			element.setIdOpcaoEntrega(opcaoEntrega);
 			element.setListaProduto(element.getCliente().getListaProduto());
 			element.setPlataforma(PedidoService.PLATAFORMA_WEB);
 			
-			element.setVlrFreteFormatado(this.buscarInformacoesOpcaoEntrega(sessao, element.getCliente().getIdCliente(), opcaoEntrega));
+			element.setVlrFreteFormatado(this.buscarInformacoesOpcaoEntrega(sessao, element.getCliente().getIdCliente(), element.getIdOpcaoEntrega()));
 			element.setVlrFrete(new Double(element.getVlrFreteFormatado().toString().replace(".", "").replace(",", ".")));
 			
 			this.inserir(sessao, element);
@@ -866,6 +965,9 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 			pedido.setDatAlteracao(element.getDatAlteracao());
 			pedido.setIdUsuarioAlt(util.getUsuarioLogado().getIdUsuario());
 			pedido.setObsPedido(element.getObsPedido());
+			pedido.setIdOpcaoEntrega(element.getIdOpcaoEntrega());
+			pedido.setVlrFreteFormatado(this.buscarInformacoesOpcaoEntrega(sessao, element.getCliente().getIdCliente(), element.getIdOpcaoEntrega()));
+			pedido.setVlrFrete(new Double(pedido.getVlrFreteFormatado().toString().replace(".", "").replace(",", ".")));
 			pedido.setPlataforma(PedidoService.PLATAFORMA_WEB);
 			
 			sessao.merge(pedido);
