@@ -27,6 +27,7 @@ import br.com.a2dm.brcmn.util.HibernateUtil;
 import br.com.a2dm.brcmn.util.RestritorHb;
 import br.com.a2dm.brcmn.util.jsf.JSFUtil;
 import br.com.a2dm.spdm.entity.Cliente;
+import br.com.a2dm.spdm.entity.OpcaoEntrega;
 import br.com.a2dm.spdm.entity.Pedido;
 import br.com.a2dm.spdm.entity.PedidoProduto;
 import br.com.a2dm.spdm.entity.Produto;
@@ -570,11 +571,14 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 		
 		ProjectionList projection = Projections.projectionList();
 		projection.add(Projections.groupProperty("idPedido"));
+		projection.add(Projections.groupProperty("idOpcaoEntrega"));
+		projection.add(Projections.groupProperty("opcaoEntrega.desOpcaoEntrega"));
 		projection.add(Projections.groupProperty("cliente.idCliente"));
 		projection.add(Projections.groupProperty("cliente.desCliente"));
 		projection.add(Projections.groupProperty("cliente.numPrioridade"));
 		
 		criteria.createAlias("cliente", "cliente");
+		criteria.createAlias("opcaoEntrega", "opcaoEntrega", JoinType.LEFT_OUTER_JOIN);
 		criteria.createAlias("listaPedidoProduto", "listaPedidoProduto");
 		
 		criteria.add(Restrictions.eq("flgAtivo", "S"));
@@ -593,6 +597,7 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 			criteria.add(Restrictions.eq("idPedido", vo.getIdPedido()));
 		}
 		
+		criteria.addOrder(Order.desc("idOpcaoEntrega"));
 		criteria.addOrder(Order.asc("cliente.numPrioridade"));
 		
 		criteria.setProjection(projection);
@@ -608,6 +613,11 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 	    		
 	    		Pedido pedidoResult = new Pedido();
 	    		pedidoResult.setIdPedido((BigInteger) resultado.get(i)[j++]);
+	    		
+	    		pedidoResult.setIdOpcaoEntrega((BigInteger) resultado.get(i)[j++]);
+	    		pedidoResult.setOpcaoEntrega(new OpcaoEntrega());
+	    		pedidoResult.getOpcaoEntrega().setDesOpcaoEntrega((String) resultado.get(i)[j++]);
+	    		
 	    		pedidoResult.setCliente(new Cliente());
 	    		pedidoResult.getCliente().setIdCliente((BigInteger) resultado.get(i)[j++]);
 	    		pedidoResult.getCliente().setDesCliente((String) resultado.get(i)[j++]);
