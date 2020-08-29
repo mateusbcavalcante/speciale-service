@@ -7,6 +7,7 @@ export interface Pedido {
     idUsuario: number;
     idPedido: number;
     dataPedido: Date;
+    idOpcaoEntrega: number;
     observacao: string;
     flgAtivo?: string;
     produtos?: Produto[];
@@ -18,6 +19,7 @@ export function initializePedido(): Pedido {
         idCliente: 0,
         idUsuario: 0,
         idPedido: 0,
+        idOpcaoEntrega: 0,
         dataPedido: null,
         observacao: '',
     };

@@ -50,6 +50,7 @@ export class PedidoPage implements OnInit {
       dataPedido: [],
       idCliente: [0],
       idUsuario: [0],
+      idOpcaoEntrega: [0],
       observacao: []
     });
   }
@@ -74,6 +75,7 @@ export class PedidoPage implements OnInit {
       idCliente: pedido.idCliente,
       idUsuario: pedido.idUsuario,
       dataPedido: pedido.dataPedido.toISOString(),
+      idOpcaoEntrega: pedido.idOpcaoEntrega.toString(),
       observacao: pedido.observacao
     });
   }

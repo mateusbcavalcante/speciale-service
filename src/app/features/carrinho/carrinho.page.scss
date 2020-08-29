@@ -19,10 +19,26 @@ ion-label {
   color: #744e3f;
 }
 
+ion-select {
+  background-color: #9b592a1a !important;
+}
+
 .label-value {
   padding-top: 10px !important;
   font-size: 15px !important;
   margin-left: 0px !important;
   position: absolute !important;
   color: #744e3f !important;
+}
+
+.field-sepator {
+  margin-top: 40px !important;
+  // margin-bottom: 20px !important;
+}
+
+.message-sepator {
+  margin-top: 5px !important;
+  ion-label{
+    color: red !important;
+  }
 }

@@ -55,6 +55,7 @@ export class CarrinhoPage implements OnInit {
       dataPedido: toDateISOString(new Date()),
       idCliente: usuario.idCliente,
       idUsuario: usuario.idUsuario,
+      idOpcaoEntrega: '1',
       observacao: '',
       idPedido: 0
     };
