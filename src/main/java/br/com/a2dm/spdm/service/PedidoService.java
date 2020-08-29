@@ -128,7 +128,7 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 		
 		int dia = calendar.get(Calendar.DAY_OF_WEEK);
 		
-		if (!isClienteEvento(sessao) && dia == Calendar.SUNDAY) 
+		if (!isClienteEvento(sessao, vo) && dia == Calendar.SUNDAY) 
 		{
 			throw new Exception("Não é possível realizar pedido para o dia de Domingo!");
 		}
@@ -137,19 +137,24 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 		
 		for (Produto produto : vo.getListaProduto())
 		{
+			Produto produtoBD = new Produto();
+			produtoBD.setIdProduto(produto.getIdProduto());
+			
+			produtoBD = ProdutoService.getInstancia().get(sessao, produtoBD, 0);
+			
 			if(produto.getQtdSolicitada() == null
 					|| produto.getQtdSolicitada().intValue() <= 0)
 			{
 				throw new Exception("A Quantidade do produto " + produto.getDesProduto() + " não foi preenchida!");
 			}
 			
-			if (!isClienteEvento(sessao)) {
-				if(produto.getQtdLoteMinimo().intValue() > produto.getQtdSolicitada().intValue())
+			if (!isClienteEvento(sessao, vo)) {
+				if(produtoBD.getQtdLoteMinimo().intValue() > produto.getQtdSolicitada().intValue())
 				{
 					throw new Exception("O Lote Mínimo do produto " + produto.getDesProduto() + " não foi atingida! Quantidade de Lote Mínimo: " + produto.getQtdLoteMinimo());
 				}
 				
-				if(produto.getQtdSolicitada().intValue() % produto.getQtdMultiplo().intValue() != 0)
+				if(produto.getQtdSolicitada().intValue() % produtoBD.getQtdMultiplo().intValue() != 0)
 				{
 					throw new Exception("A Quantidade do produto " + produto.getDesProduto() + " deve ser solicitada em múltiplo de "+ produto.getQtdMultiplo() +"!");
 				}
@@ -157,14 +162,21 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 			qtdTotalSolicitada = qtdTotalSolicitada.add(produto.getQtdSolicitada());
 		}
 		
-		if (!isClienteEvento(sessao) && !isMaster(sessao) && qtdTotalSolicitada.intValue() < 60) {
+		if (!isClienteEvento(sessao, vo) && !isMaster(sessao, vo) && qtdTotalSolicitada.intValue() < 60) {
 			throw new Exception("É necessário solicitar, no mínimo, 60 pães!");
 		}
 	}
 	
-	private boolean isClienteEvento(Session sessao) throws Exception {
+	private boolean isClienteEvento(Session sessao, Pedido vo) throws Exception {
+		
+		BigInteger idCliente = vo.getIdCliente();
+		
+		if (util != null && util.getUsuarioLogado() != null) {
+			idCliente = util.getUsuarioLogado().getIdCliente();
+		}
+		
 		Cliente cliente = new Cliente();
-		cliente.setIdCliente(util.getUsuarioLogado().getIdCliente());
+		cliente.setIdCliente(idCliente);
 		
 		cliente = ClienteService.getInstancia().get(sessao, cliente, 0);
 		
@@ -174,9 +186,16 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 		return false;
 	}
 	
-	private boolean isMaster(Session sessao) throws Exception {
+	private boolean isMaster(Session sessao, Pedido vo) throws Exception {
+		
+		BigInteger idCliente = vo.getIdCliente();
+		
+		if (util != null && util.getUsuarioLogado() != null) {
+			idCliente = util.getUsuarioLogado().getIdCliente();
+		}
+		
 		Cliente cliente = new Cliente();
-		cliente.setIdCliente(util.getUsuarioLogado().getIdCliente());
+		cliente.setIdCliente(idCliente);
 		
 		cliente = ClienteService.getInstancia().get(sessao, cliente, 0);
 		

@@ -100,6 +100,7 @@ public class Pedido implements Serializable
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_opcao_entrega", insertable = false, updatable = false)
+	@JsonIgnore
 	private OpcaoEntrega opcaoEntrega;
 	
 	@OneToMany(mappedBy="pedido", fetch = FetchType.LAZY)
