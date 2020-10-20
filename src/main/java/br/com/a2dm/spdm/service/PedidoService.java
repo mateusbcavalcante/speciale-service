@@ -89,6 +89,7 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 	
 	protected void validacoes(Session sessao, Pedido vo) throws Exception
 	{
+		
 		if(vo == null
 				|| vo.getDatPedido() == null
 				|| vo.getDatPedido().toString().trim().equals(""))
@@ -96,11 +97,16 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 			throw new Exception("O campo Data da Produção é obrigatório!");
 		}
 		
-		if (vo.getIdOpcaoEntrega() == null
-				|| vo.getIdOpcaoEntrega().intValue() <= 0) 
+		Cliente cliente = new Cliente();
+		cliente.setIdCliente(vo.getIdCliente());
+		
+		cliente = ClienteService.getInstancia().get(sessao, cliente, 0);
+		
+		if (cliente.getFlgAtivo() == null 
+				|| cliente.getFlgAtivo().equalsIgnoreCase("N"))
 		{
-			throw new Exception("O campo Opção de Entrega é obrigatório!");
-		} 
+			throw new Exception("Não é possível realizar pedido. Entre em contato com o administrador.");
+		}
 		
 		if(vo.getListaProduto() == null
 				|| vo.getListaProduto().size() <= 0)
@@ -264,6 +270,29 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 		if(dataAtual.after(dataLimite))
 		{
 			throw new Exception("Para o cliente "+ cliente.getDesCliente() + ", o pedido não pode ser realizado, pois a hora limite do pedido foi ultrapassada! Hora limite: " + new SimpleDateFormat("dd/MM/yyyy HH:mm").format(dataLimite));
+		}
+	}
+	
+	@Override
+	public Pedido inserir(Pedido vo) throws Exception
+	{
+		Session sessao = HibernateUtil.getSession();
+		sessao.setFlushMode(FlushMode.COMMIT);
+		Transaction tx = sessao.beginTransaction();
+		try
+		{
+			vo = inserir(sessao, vo);
+			tx.commit();
+			return vo;
+		}
+		catch (Exception e)
+		{
+			tx.rollback();
+			throw e;
+		}
+		finally
+		{
+			sessao.close();
 		}
 	}
 	
@@ -904,7 +933,7 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 		
 		if ((join & JOIN_PEDIDO_OPCAO_ENTREGA) != 0)
 	    {
-			criteria.createAlias("opcaoEntrega", "opcaoEntrega");
+			criteria.createAlias("opcaoEntrega", "opcaoEntrega", JoinType.LEFT_OUTER_JOIN);
 	    }
 		
 		return criteria;
