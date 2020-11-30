@@ -112,6 +112,9 @@ public class Cliente implements Serializable
 	@Column(name = "id_externo")
 	private BigInteger idExterno;
 	
+	@Column(name = "id_tabela_preco_omie")
+	private BigInteger idTabelaPrecoOmie;
+	
 	@Column(name = "flg_sinc")
 	private String flgSinc;
 	
@@ -320,6 +323,14 @@ public class Cliente implements Serializable
 
 	public void setFlgMaster(String flgMaster) {
 		this.flgMaster = flgMaster;
+	}
+
+	public BigInteger getIdTabelaPrecoOmie() {
+		return idTabelaPrecoOmie;
+	}
+
+	public void setIdTabelaPrecoOmie(BigInteger idTabelaPrecoOmie) {
+		this.idTabelaPrecoOmie = idTabelaPrecoOmie;
 	}
 
 	@Override
