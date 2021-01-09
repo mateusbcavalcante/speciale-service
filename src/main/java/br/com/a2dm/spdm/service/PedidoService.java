@@ -97,6 +97,10 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 			throw new Exception("O campo Data da Produção é obrigatório!");
 		}
 		
+		if (vo.getIdOpcaoEntrega() == null) {
+			throw new Exception("O campo Opção é obrigatório!");
+		}
+		
 		Cliente cliente = new Cliente();
 		cliente.setIdCliente(vo.getIdCliente());
 		
