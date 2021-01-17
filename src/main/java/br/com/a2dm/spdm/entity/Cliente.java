@@ -112,6 +112,9 @@ public class Cliente implements Serializable
 	@Column(name = "id_externo")
 	private BigInteger idExterno;
 	
+	@Column(name = "id_externo_omie")
+	private BigInteger idExternoOmie;
+	
 	@Column(name = "id_tabela_preco_omie")
 	private BigInteger idTabelaPrecoOmie;
 	
@@ -332,6 +335,14 @@ public class Cliente implements Serializable
 	public void setIdTabelaPrecoOmie(BigInteger idTabelaPrecoOmie) {
 		this.idTabelaPrecoOmie = idTabelaPrecoOmie;
 	}
+	
+	public BigInteger getIdExternoOmie() {
+		return idExternoOmie;
+	}
+
+	public void setIdExternoOmie(BigInteger idExternoOmie) {
+		this.idExternoOmie = idExternoOmie;
+	}
 
 	@Override
 	public int hashCode() {
@@ -342,12 +353,16 @@ public class Cliente implements Serializable
 		result = prime * result + ((desCliente == null) ? 0 : desCliente.hashCode());
 		result = prime * result + ((filtroMap == null) ? 0 : filtroMap.hashCode());
 		result = prime * result + ((flgAtivo == null) ? 0 : flgAtivo.hashCode());
+		result = prime * result + ((flgEvento == null) ? 0 : flgEvento.hashCode());
+		result = prime * result + ((flgMaster == null) ? 0 : flgMaster.hashCode());
 		result = prime * result + ((flgSinc == null) ? 0 : flgSinc.hashCode());
 		result = prime * result + ((formaPagamento == null) ? 0 : formaPagamento.hashCode());
 		result = prime * result + ((horLimite == null) ? 0 : horLimite.hashCode());
 		result = prime * result + ((idCliente == null) ? 0 : idCliente.hashCode());
 		result = prime * result + ((idExterno == null) ? 0 : idExterno.hashCode());
+		result = prime * result + ((idExternoOmie == null) ? 0 : idExternoOmie.hashCode());
 		result = prime * result + ((idFormaPagamento == null) ? 0 : idFormaPagamento.hashCode());
+		result = prime * result + ((idTabelaPrecoOmie == null) ? 0 : idTabelaPrecoOmie.hashCode());
 		result = prime * result + ((idTipo == null) ? 0 : idTipo.hashCode());
 		result = prime * result + ((idUsuarioAlt == null) ? 0 : idUsuarioAlt.hashCode());
 		result = prime * result + ((idUsuarioCad == null) ? 0 : idUsuarioCad.hashCode());
@@ -396,6 +411,16 @@ public class Cliente implements Serializable
 				return false;
 		} else if (!flgAtivo.equals(other.flgAtivo))
 			return false;
+		if (flgEvento == null) {
+			if (other.flgEvento != null)
+				return false;
+		} else if (!flgEvento.equals(other.flgEvento))
+			return false;
+		if (flgMaster == null) {
+			if (other.flgMaster != null)
+				return false;
+		} else if (!flgMaster.equals(other.flgMaster))
+			return false;
 		if (flgSinc == null) {
 			if (other.flgSinc != null)
 				return false;
@@ -421,10 +446,20 @@ public class Cliente implements Serializable
 				return false;
 		} else if (!idExterno.equals(other.idExterno))
 			return false;
+		if (idExternoOmie == null) {
+			if (other.idExternoOmie != null)
+				return false;
+		} else if (!idExternoOmie.equals(other.idExternoOmie))
+			return false;
 		if (idFormaPagamento == null) {
 			if (other.idFormaPagamento != null)
 				return false;
 		} else if (!idFormaPagamento.equals(other.idFormaPagamento))
+			return false;
+		if (idTabelaPrecoOmie == null) {
+			if (other.idTabelaPrecoOmie != null)
+				return false;
+		} else if (!idTabelaPrecoOmie.equals(other.idTabelaPrecoOmie))
 			return false;
 		if (idTipo == null) {
 			if (other.idTipo != null)
