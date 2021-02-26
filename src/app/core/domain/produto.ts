@@ -8,6 +8,7 @@ export interface Produto {
     qtdMultiplo: number;
     qtdSolicitada: number;
     flgAtivo: string;
+    valorUnitario?: number;
 }
 
 

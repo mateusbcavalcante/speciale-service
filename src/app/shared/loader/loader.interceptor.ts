@@ -1,61 +1,33 @@
-import {
-    HttpRequest,
-    HttpHandler,
-    HttpEvent,
-    HttpInterceptor,
-    HttpResponse,
-    HttpErrorResponse
-} from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { LoadingController } from '@ionic/angular';
+import { from, Observable } from 'rxjs';
+import { finalize, switchMap, tap } from 'rxjs/operators';
 
 @Injectable()
 
 export class LoaderInterceptor implements HttpInterceptor {
 
-    isLoading = false;
-
     constructor(
         public loadingCtrl: LoadingController
     ) { }
 
-
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-
-        this.presentLoading();
-
-        return next.handle(request).pipe(
-            map((event: HttpEvent<any>) => {
-                if (event instanceof HttpResponse) {
-                    this.dismissLoading();
-                }
-                return event;
-            }),
-            catchError((error: HttpErrorResponse) => {
-                this.dismissLoading();
-                return throwError(error);
-            })
-        );
-    }
-
-    async presentLoading() {
-        this.isLoading = true;
-        return await this.loadingCtrl.create({
+        return from(this.loadingCtrl.create({
             mode: 'ios',
             duration: 10000
-        }).then(a => {
-            a.present().then(() => {
-                if (!this.isLoading) {
-                    a.dismiss().then(() => console.log('Dismissed...'));
-                }
-            });
-        });
-    }
-
-    async dismissLoading() {
-        this.isLoading = false;
-        return await this.loadingCtrl.dismiss().then(() => console.log('Dismissed...'));
+        }))
+            .pipe(
+                tap((loading) => {
+                    return loading.present();
+                }),
+                switchMap((loading) => {
+                    return next.handle(request).pipe(
+                        finalize(() => {
+                            loading.dismiss();
+                        })
+                    );
+                })
+            );
     }
 }
