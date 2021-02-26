@@ -14,6 +14,6 @@ export class ResponsePedidoAdapter implements Adapter<Pedido> {
     }
 
     private formataDataPedido(dataPedido: string): Date {
-        return !!dataPedido ? parseToISODateTime(dataPedido) : null;
+        return new Date(dataPedido);
     }
 }

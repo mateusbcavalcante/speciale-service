@@ -14,12 +14,6 @@
     </ion-item>
     <ion-item>
         <ion-label>
-            <h6>Cadastrado por</h6>
-            <p>{{pedido?.usuarioCadastro?.nome}}</p>
-        </ion-label>
-    </ion-item>
-    <ion-item>
-        <ion-label>
             <h6>Opção</h6>
             <p>{{pedido?.idOpcaoEntrega | pedidoOpcao}}</p>
         </ion-label>
@@ -53,9 +47,6 @@
     </ion-list>
 
     <ion-row class='menu-acao-pedido'>
-        <ion-col>
-            <ion-button color="danger" expande="full" size='small' (click)="inativarEvent(pedido)">Inativar</ion-button>
-        </ion-col>
         <ion-col>
             <ion-button color="primary" size='small' (click)="editarEvent(pedido)">Editar</ion-button>
         </ion-col>
