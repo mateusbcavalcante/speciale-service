@@ -49,6 +49,9 @@ export class PedidoPage implements OnInit {
       idPedido: [0],
       dataPedido: [],
       idCliente: [0],
+      codigoPedido: [0],
+      codigoPedidoIntegracao: [0],
+      flgAtivo: [],
       idUsuario: [0],
       idOpcaoEntrega: [0],
       observacao: []
@@ -73,6 +76,9 @@ export class PedidoPage implements OnInit {
     this.pedidoForm.patchValue({
       idPedido: pedido.idPedido,
       idCliente: pedido.idCliente,
+      codigoPedido: pedido.codigoPedido,
+      codigoPedidoIntegracao: pedido.codigoPedidoIntegracao,
+      flgAtivo: pedido.flgAtivo,
       idUsuario: pedido.idUsuario,
       dataPedido: pedido.dataPedido.toISOString(),
       idOpcaoEntrega: pedido.idOpcaoEntrega.toString(),

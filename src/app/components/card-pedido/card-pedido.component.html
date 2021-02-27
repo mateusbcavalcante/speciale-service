@@ -20,7 +20,7 @@
     </ion-item>
     <ion-item>
         <ion-label>
-            <h6>Situação</h6>
+            <h6>Cancelado</h6>
             <p>{{pedido?.flgAtivo | pedidoSituacao}}</p>
         </ion-label>
     </ion-item>
@@ -46,7 +46,11 @@
         </ion-item>
     </ion-list>
 
-    <ion-row class='menu-acao-pedido'>
+    <ion-row class='menu-acao-pedido' [hidden]="pedido.flgAtivo === 'N'">
+        <ion-col >
+            <ion-button color="danger" expande="full" size='small' (click)="inativarEvent(pedido)">Cancelar</ion-button>
+        </ion-col>
+        
         <ion-col>
             <ion-button color="primary" size='small' (click)="editarEvent(pedido)">Editar</ion-button>
         </ion-col>

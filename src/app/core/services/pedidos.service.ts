@@ -124,16 +124,14 @@ export class PedidosService {
   }
 
   removerProdutoPedido(produto: Produto) {
-    produto.qtdSolicitada = 0;
-    if (produto.idPedidoProduto) {
-      produto.flgAtivo = 'N';
-    } else {
-      this.pedidoStore.removerProdutoPedido(produto);
-    }
+    // produto.qtdSolicitada = 0;
+    produto.flgAtivo = 'N';
+    this.pedidoStore.atualizarPedido();
     this.pedidoStore.addProduto(produto);
   }
 
   addProdutoPedido(produto: Produto) {
+    produto.flgAtivo = 'S';
     this.pedidoStore.addProdutoPedido(produto);
     this.pedidoStore.removerProduto(produto);
   }
@@ -190,11 +188,11 @@ export class PedidosService {
   }
 
   private montarObservacaoNovoPedido(pedido: Pedido): string {
-    let observacoes = !!pedido.observacao ? `OBSERVAÇÃO GERAL: ${pedido.observacao}\n` : '';
+    let observacoes = !!pedido.observacao ? `OBSERVACAO GERAL: ${pedido.observacao}.` : '';
     this.carrinhoStore.state.itens.forEach(
       item => {
         if (item.observacao) {
-          observacoes += `${item.produto.desProduto}: ${item.observacao}\n`;
+          observacoes += `${item.produto.desProduto}: ${item.observacao}.`;
         }
       });
     return observacoes;

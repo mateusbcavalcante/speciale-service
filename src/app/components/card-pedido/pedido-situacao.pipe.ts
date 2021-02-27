@@ -6,8 +6,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class PedidoSituacaoPipe implements PipeTransform {
   transform(value: string): string {
     switch (value) {
-      case 'S': return 'ATIVO';
-      case 'N': return 'INATIVO';
+      case 'S': return 'NÃO';
+      case 'N': return 'SIM';
       default: return value;
     }
   }

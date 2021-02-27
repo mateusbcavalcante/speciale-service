@@ -38,15 +38,18 @@ export class PedidoStore extends Store<PedidoState> {
     this.setProdutos(this.state.produtos);
   }
 
-  removerProdutoPedido(produto: Produto) {
-    _.remove(this.state.pedidoEdicao.produtos, { idProduto: produto.idProduto });
+  atualizarPedido() {
+    // const resp = _.find(this.state.pedidoEdicao.produtos, { idProduto: produto.idProduto });
     this.setPedidoEdicao(this.state.pedidoEdicao);
   }
 
   addProdutoPedido(produto: Produto) {
-    this.state.pedidoEdicao.produtos.push(produto);
+    const resp = _.find(this.state.pedidoEdicao.produtos, { idProduto: produto.idProduto });
+    if (!resp) {
+      this.state.pedidoEdicao.produtos.push(produto);
+    }
     this.ordenarProdutosPedido();
-    // this.setPedidoEdicao(this.state.pedidoEdicao);
+    this.setPedidoEdicao(this.state.pedidoEdicao);
   }
 
   ordenarProdutos() {

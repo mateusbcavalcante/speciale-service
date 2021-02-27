@@ -19,7 +19,7 @@ export const MENSAGENS = {
     },
 
     INATIVAR_PEDIDO: (pedido: Pedido) => {
-        return `Deseja realmente inativar o pedido ${pedido.idPedido} ?`;
+        return `Deseja realmente cancelar o pedido ${pedido.idPedido} ?`;
     },
 
     CRIACAO_NOVO_PEDIDO: (pedido: Pedido) => {

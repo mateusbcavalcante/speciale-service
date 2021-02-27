@@ -6,6 +6,8 @@ export interface Pedido {
     idCliente: number;
     idUsuario: number;
     idPedido: number;
+    codigoPedido: number;
+    codigoPedidoIntegracao: number;
     dataPedido: Date;
     idOpcaoEntrega: number;
     observacao: string;
@@ -19,6 +21,8 @@ export function initializePedido(): Pedido {
         idCliente: 0,
         idUsuario: 0,
         idPedido: 0,
+        codigoPedido: 0,
+        codigoPedidoIntegracao: 0,
         idOpcaoEntrega: 0,
         dataPedido: null,
         observacao: '',
