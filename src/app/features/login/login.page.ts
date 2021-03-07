@@ -4,6 +4,9 @@ import { NavController } from '@ionic/angular';
 import { AuthService } from '../../core/services/auth.service';
 import { NotificacaoService } from '../../shared/notificacao/notificacao.service';
 import { MENSAGENS } from '../../shared/mensagens/mensagens';
+import { ClientesService } from 'src/app/core/services/clientes.service';
+import { Cliente } from 'src/app/core/domain/cliente';
+import { Usuario } from 'src/app/core/domain/usuario';
 
 @Component({
   selector: 'app-login',
@@ -21,7 +24,8 @@ export class LoginPage implements OnInit {
     private navCtrl: NavController,
     private formBuilder: FormBuilder,
     private authService: AuthService,
-    private notificacaoService: NotificacaoService
+    private notificacaoService: NotificacaoService,
+    private clientesService: ClientesService
   ) { }
 
   ngOnInit(): void {
@@ -48,8 +52,27 @@ export class LoginPage implements OnInit {
 
   login() {
     this.authService.login(this.loginForm.value).subscribe(
-      usuario => this.navCtrl.navigateRoot('/app')
+      usuario => {
+        console.log(usuario);
+        if (this.authService.isCliente()) {
+          const cliente = this.montarCliente(usuario);
+          this.clientesService.setCliente(cliente);
+          this.navCtrl.navigateRoot('/app');
+        } else if (this.authService.isAdmin()) {
+          this.navCtrl.navigateRoot('/app/cliente-pesquisar');
+        }
+      }
     );
+  }
+
+  montarCliente(usuario: any): Cliente {
+    return {
+      idCliente: usuario.idCliente,
+      idExternoOmie: usuario.idExternoOmie,
+      idTabelaPrecoOmie: usuario.idTabelaPrecoOmie,
+      nomeCliente: "",
+      cadastroIncompleto: false
+    };
   }
 
   esqueceuSenha() {

@@ -2,12 +2,12 @@
 
     <ion-tab-bar slot="bottom" mode="md" >
 
-        <ion-tab-button tab="produtos">
+        <ion-tab-button tab="produtos" [hidden]="isCadastroIncompleto()">
             <ion-icon name="list-outline"></ion-icon>
             <ion-label>Produtos</ion-label>
         </ion-tab-button>
 
-        <ion-tab-button tab="carrinho">
+        <ion-tab-button tab="carrinho" [hidden]="isCadastroIncompleto()">
             <ion-icon name="cart-outline"></ion-icon>
             <ion-badge mode='ios' color="danger" [hidden]="(itens$ | async).length === 0">
                 {{(itens$ | async).length}}
@@ -15,9 +15,14 @@
             <ion-label>Carrinho</ion-label>
         </ion-tab-button>
 
-        <ion-tab-button tab="pedidos">
+        <ion-tab-button tab="pedidos" [hidden]="isCadastroIncompleto()">
             <ion-icon name="search"></ion-icon>
             <ion-label>Pedidos</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button tab="cliente-pesquisar" [hidden]="isUsuarioLogadoCliente()">
+            <ion-icon name="people-outline"></ion-icon>
+            <ion-label>Cliente</ion-label>
         </ion-tab-button>
 
         <ion-tab-button tab="perfil">

@@ -65,6 +65,16 @@ const routes: Routes = [
         ]
       },
       {
+        path: 'cliente-pesquisar',
+        children: [
+          {
+            path: '',
+            loadChildren: () =>
+              import('../cliente-pesquisar/cliente-pesquisar.module').then(m => m.ClientePesquisarPageModule)
+          }
+        ]
+      },
+      {
         path: '',
         redirectTo: '/app/produtos',
         pathMatch: 'full'

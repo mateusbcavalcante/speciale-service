@@ -112,10 +112,18 @@ export class PedidosService {
       .subscribe(
         data => this.pedidoStore.carregarPedido(this.responsePedidoAdapter.adapt(data)),
         error => {
-          this.pedidoStore.carregarPedido(initializePedido());
+          this.resetarPedido();
           throw error;
         }
       );
+  }
+
+  resetarPedido() {
+    this.pedidoStore.carregarPedido(initializePedido());
+  }
+
+  resetarPedidoEdicao() {
+    this.pedidoStore.carregarPedidoEdicao(initializePedido());
   }
 
   inativarPedido(pedido: Pedido) {

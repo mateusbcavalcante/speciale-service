@@ -21,6 +21,7 @@
       <div class="user-meta ion-text-center">
         <h3 class="name">{{usuario.login}}</h3>
         <h6 class="info">{{usuario.email}}</h6>
+        <h6 class="info" style="color: green">{{(cliente$ | async).nomeCliente}}</h6>
       </div>
 
       <ion-row class='menu-acao'>

@@ -1,6 +1,7 @@
 import { Produto } from '../../core/domain/produto';
 import { Usuario } from '../../core/domain/usuario';
 import { Pedido } from '../../core/domain/pedido';
+import { Cliente } from 'src/app/core/domain/cliente';
 
 export const MENSAGENS = {
 
@@ -29,5 +30,11 @@ export const MENSAGENS = {
     VALIDACAO_OBS: 'As observações não podem conter mais do que 400 caracteres. Você precisa reduzir o tamanhho desse(s) campo(s)',
 
     PESQUISA_PEDIDO_VALIDACAO: 'É necessário preencher pelo menos 1 campo para realizar a pesquisa!',
+
+    PESQUISA_CLIENTE_VALIDACAO: 'É necessário informar pelo menos 3 caracteres para o Nome do Cliente!',
+
+    CLIENTE_SELECIONADO: (cliente: Cliente) => {
+        return `O cliente ${cliente.nomeCliente} foi selecionado com sucesso!`;
+    }
 
 };

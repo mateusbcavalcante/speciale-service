@@ -6,6 +6,7 @@ import { Usuario } from '../domain/usuario';
 import { LoginDto } from '../domain/login.dto';
 import { tap } from 'rxjs/operators';
 import { AlteraSenhaDto } from '../domain/altera-senha.dto';
+import { ClientesService } from './clientes.service';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +15,8 @@ export class AuthService {
 
   constructor(
     private apiService: ApiService,
-    private storageService: StorageService) {
+    private storageService: StorageService,
+    private clientesService: ClientesService) {
   }
 
   login(login: LoginDto): Observable<Usuario> {
@@ -32,12 +34,25 @@ export class AuthService {
     return this.apiService.put<Usuario>(`/seguranca/alterarSenha`, alterarSenhaDto);
   }
 
+  isCliente() {
+    return this.getUsuarioLogado().idGrupo === 10;
+  }
+
+  isAdmin() {
+    return this.getUsuarioLogado().idGrupo === 11;
+  }
+
   getUsuarioLogado(): Usuario {
     return this.storageService.getJson('usuario');
   }
 
+  setUsuario(usuario: Usuario) {
+    this.storageService.setJson('usuario', usuario);
+  }
+
   logout(): void {
     this.storageService.clear();
+    this.clientesService.resetarCliente();
   }
 
 }
