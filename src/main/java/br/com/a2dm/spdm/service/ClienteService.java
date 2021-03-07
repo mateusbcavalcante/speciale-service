@@ -46,6 +46,7 @@ public class ClienteService extends A2DMHbNgc<Cliente>
 	{
 		adicionarFiltro("idCliente", RestritorHb.RESTRITOR_EQ,"idCliente");
 		adicionarFiltro("idCliente", RestritorHb.RESTRITOR_NE, "filtroMap.idClienteNotEq");
+		adicionarFiltro("idExternoOmie", RestritorHb.RESTRITOR_EQ,"idExternoOmie");
 		adicionarFiltro("desCliente", RestritorHb.RESTRITOR_LIKE, "desCliente");
 		adicionarFiltro("desCliente", RestritorHb.RESTRITOR_EQ, "filtroMap.desCliente");
 		adicionarFiltro("flgAtivo", RestritorHb.RESTRITOR_EQ, "flgAtivo");		
