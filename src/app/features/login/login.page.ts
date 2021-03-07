@@ -53,7 +53,6 @@ export class LoginPage implements OnInit {
   login() {
     this.authService.login(this.loginForm.value).subscribe(
       usuario => {
-        console.log(usuario);
         if (this.authService.isCliente()) {
           const cliente = this.montarCliente(usuario);
           this.clientesService.setCliente(cliente);

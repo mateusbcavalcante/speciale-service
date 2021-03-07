@@ -13,6 +13,7 @@ import { Produto } from '../domain/produto';
 import { CarrinhoStore } from '../store/carrinho.store';
 import { PedidoStore } from '../store/pedido.store';
 import { ProdutosStore } from '../store/produtos.store';
+import { removeAcento } from '../../shared/utils/string-utils';
 import { ApiService } from './api.service';
 import { AuthService } from './auth.service';
 
@@ -203,7 +204,7 @@ export class PedidosService {
           observacoes += `${item.produto.desProduto}: ${item.observacao}.`;
         }
       });
-    return observacoes;
+    return removeAcento(observacoes);
   }
 
   montarPedido(data: any): Pedido {
