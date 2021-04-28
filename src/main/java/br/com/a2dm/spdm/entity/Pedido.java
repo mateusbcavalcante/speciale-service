@@ -131,7 +131,13 @@ public class Pedido implements Serializable
 	
 	@Transient
 	private String vlrFreteFormatado;
-
+	
+	@Transient
+	private BigInteger idCodigoPedido;
+	
+	@Transient
+	private BigInteger idCodigoPedidoIntegracao;
+	
 	public BigInteger getIdPedido() {
 		return idPedido;
 	}
@@ -330,5 +336,21 @@ public class Pedido implements Serializable
 
 	public void setVlrFreteFormatado(String vlrFreteFormatado) {
 		this.vlrFreteFormatado = vlrFreteFormatado;
+	}
+
+	public BigInteger getIdCodigoPedido() {
+		return idCodigoPedido;
+	}
+
+	public void setIdCodigoPedido(BigInteger idCodigoPedido) {
+		this.idCodigoPedido = idCodigoPedido;
+	}
+
+	public BigInteger getIdCodigoPedidoIntegracao() {
+		return idCodigoPedidoIntegracao;
+	}
+
+	public void setIdCodigoPedidoIntegracao(BigInteger idCodigoPedidoIntegracao) {
+		this.idCodigoPedidoIntegracao = idCodigoPedidoIntegracao;
 	}
 }

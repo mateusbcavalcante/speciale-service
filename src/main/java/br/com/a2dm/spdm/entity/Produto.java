@@ -153,6 +153,9 @@ public class Produto implements Serializable {
 	
 	@Transient
 	private String qtdMassaTotalStr;
+	
+	@Transient
+	private Double valorUnitario;
 
 	public BigInteger getIdProduto() {
 		return idProduto;
@@ -416,5 +419,13 @@ public class Produto implements Serializable {
 
 	public void setQtdMassaTotalStr(String qtdMassaTotalStr) {
 		this.qtdMassaTotalStr = qtdMassaTotalStr;
+	}
+
+	public Double getValorUnitario() {
+		return valorUnitario;
+	}
+
+	public void setValorUnitario(Double valorUnitario) {
+		this.valorUnitario = valorUnitario;
 	}
 }

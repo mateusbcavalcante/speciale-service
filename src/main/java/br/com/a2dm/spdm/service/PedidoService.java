@@ -22,6 +22,8 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
 
+import br.com.a2dm.brcmn.dto.PedidoDTO;
+import br.com.a2dm.brcmn.dto.ProdutoDTO;
 import br.com.a2dm.brcmn.util.A2DMHbNgc;
 import br.com.a2dm.brcmn.util.HibernateUtil;
 import br.com.a2dm.brcmn.util.RestritorHb;
@@ -31,6 +33,8 @@ import br.com.a2dm.spdm.entity.OpcaoEntrega;
 import br.com.a2dm.spdm.entity.Pedido;
 import br.com.a2dm.spdm.entity.PedidoProduto;
 import br.com.a2dm.spdm.entity.Produto;
+import br.com.a2dm.spdm.omie.service.OmiePedidoService;
+import br.com.a2dm.spdm.omie.service.OmieServiceException;
 
 public class PedidoService extends A2DMHbNgc<Pedido>
 {
@@ -956,117 +960,58 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 	{
 		return filtroPropriedade;
 	}
-	
-	public void inserirGeradorPedido(List<Pedido> listaPedidoResult) throws Exception {
-		Session sessao = HibernateUtil.getSession();
-		sessao.setFlushMode(FlushMode.COMMIT);
-		Transaction tx = sessao.beginTransaction();
-		try
-		{
-			inserirGeradorPedido(sessao, listaPedidoResult);
-			tx.commit();
-		}
-		catch (Exception e)
-		{
-			tx.rollback();
-			throw e;
-		}
-		finally
-		{
-			sessao.close();
-		}
-	}
-
-	private void inserirGeradorPedido(Session sessao, List<Pedido> listaPedidoResult) throws Exception {
-		for (Pedido element : listaPedidoResult) {
-			util.getUsuarioLogado().setIdCliente(element.getCliente().getIdCliente());
-			element.setIdCliente(element.getCliente().getIdCliente());
-			element.setListaProduto(element.getCliente().getListaProduto());
-			element.setPlataforma(PedidoService.PLATAFORMA_WEB);
-			
-			element.setVlrFreteFormatado(this.buscarInformacoesOpcaoEntrega(sessao, element.getCliente().getIdCliente(), element.getIdOpcaoEntrega()));
-			element.setVlrFrete(new Double(element.getVlrFreteFormatado().toString().replace(".", "").replace(",", ".")));
-			
-			this.inserir(sessao, element);
-		}
-	}
 
 	public void alterarGeradorPedido(List<Pedido> listaPedidoResult) throws Exception {
-		Session sessao = HibernateUtil.getSession();
-		sessao.setFlushMode(FlushMode.COMMIT);
-		Transaction tx = sessao.beginTransaction();
-		try
-		{
-			alterarGeradorPedido(sessao, listaPedidoResult);
-			tx.commit();
-		}
-		catch (Exception e)
-		{
-			tx.rollback();
-			throw e;
-		}
-		finally
-		{
-			sessao.close();
+		for (Pedido element : listaPedidoResult) {
+			PedidoDTO pedidoDTO = buildPedido(element);
+			this.alterarPedidoDTO(pedidoDTO);
 		}
 	}
-
-	private void alterarGeradorPedido(Session sessao, List<Pedido> listaPedidoResult) throws Exception {
+	
+	public void inserirGeradorPedido(List<Pedido> listaPedidoResult) throws Exception {
 		for (Pedido element : listaPedidoResult) {
-			util.getUsuarioLogado().setIdCliente(element.getCliente().getIdCliente());
-			element.setIdCliente(element.getCliente().getIdCliente());
-			
-			validarAlterar(sessao, element);
-			
-			Pedido pedido = new Pedido();
-			pedido.setIdPedido(element.getIdPedido());
-			
-			pedido = this.get(sessao, pedido, 0);
-			
-			pedido.setDatPedido(element.getDatPedido());
-			pedido.setDatAlteracao(element.getDatAlteracao());
-			pedido.setIdUsuarioAlt(util.getUsuarioLogado().getIdUsuario());
-			pedido.setObsPedido(element.getObsPedido());
-			pedido.setIdOpcaoEntrega(element.getIdOpcaoEntrega());
-			pedido.setVlrFreteFormatado(this.buscarInformacoesOpcaoEntrega(sessao, element.getCliente().getIdCliente(), element.getIdOpcaoEntrega()));
-			pedido.setVlrFrete(new Double(pedido.getVlrFreteFormatado().toString().replace(".", "").replace(",", ".")));
-			pedido.setPlataforma(PedidoService.PLATAFORMA_WEB);
-			
-			sessao.merge(pedido);
-			
-			// INATIVANDO TODOS OS PRODUTOS DA BASE DE DADOS 
-			PedidoProduto pedidoProduto = new PedidoProduto();
-			pedidoProduto.setIdPedido(element.getIdPedido());
-			pedidoProduto.setFlgAtivo("S");
-			
-			List<PedidoProduto> listaPedidoProduto = PedidoProdutoService.getInstancia().pesquisar(sessao, pedidoProduto, 0);
-			
-			if (listaPedidoProduto != null && listaPedidoProduto.size() > 0) {
-				for (PedidoProduto elementPedidoProduto : listaPedidoProduto) {
-					PedidoProduto pedidoProdutoAlt = new PedidoProduto();
-					pedidoProdutoAlt.setIdPedidoProduto(elementPedidoProduto.getIdPedidoProduto());
-					
-					pedidoProdutoAlt = PedidoProdutoService.getInstancia().get(sessao, pedidoProdutoAlt, 0);
-					pedidoProdutoAlt.setFlgAtivo("N");
-					
-					PedidoProdutoService.getInstancia().alterar(sessao, pedidoProdutoAlt);
-				}
-			}
-			
-			// INSERINDO OS NOVOS PRODUTOS
-			for (Produto produto : element.getCliente().getListaProduto()) {
-				PedidoProduto pedidoProdutoInserir = new PedidoProduto();
-				pedidoProdutoInserir.setIdPedido(element.getIdPedido());
-				pedidoProdutoInserir.setIdProduto(produto.getIdProduto());
-				pedidoProdutoInserir.setQtdSolicitada(produto.getQtdSolicitada());
-				pedidoProdutoInserir.setDatCadastro(new Date());
-				pedidoProdutoInserir.setDatAlteracao(new Date());
-				pedidoProdutoInserir.setFlgAtivo("S");
-				pedidoProdutoInserir.setIdUsuarioCad(util.getUsuarioLogado().getIdUsuario());
-				pedidoProdutoInserir.setIdUsuarioAlt(util.getUsuarioLogado().getIdUsuario());
-				
-				PedidoProdutoService.getInstancia().inserir(sessao, pedidoProdutoInserir);
-			}
+			PedidoDTO pedidoDTO = buildPedido(element);
+			this.inserirPedidoDTO(pedidoDTO);
 		}
+	}
+	
+	public PedidoDTO inserirPedido(Pedido pedido) throws OmieServiceException {
+		PedidoDTO pedidoDTO = buildPedido(pedido);
+		return this.inserirPedidoDTO(pedidoDTO);
+	}
+	
+	public PedidoDTO inserirPedidoDTO(PedidoDTO pedidoDTO) throws OmieServiceException {
+		return OmiePedidoService.getInstance().cadastrarPedido(pedidoDTO);
+	}
+	
+	public PedidoDTO alterarPedido(Pedido pedido) throws OmieServiceException {
+		PedidoDTO pedidoDTO = buildPedido(pedido);
+		return this.alterarPedidoDTO(pedidoDTO);
+	}
+	
+	public PedidoDTO alterarPedidoDTO(PedidoDTO pedidoDTO) throws OmieServiceException {
+		return OmiePedidoService.getInstance().alterarPedido(pedidoDTO);
+	}
+
+	private PedidoDTO buildPedido(Pedido element) {
+		PedidoDTO pedidoDTO = new PedidoDTO();
+		pedidoDTO.setIdCliente(element.getCliente().getIdCliente());
+		pedidoDTO.setCodigoPedidoIntegracao(element.getIdCodigoPedidoIntegracao());
+		pedidoDTO.setDataPedido(element.getDatPedido());
+		pedidoDTO.setIdOpcaoEntrega(element.getIdOpcaoEntrega());
+		pedidoDTO.setObservacao(element.getObsPedido());
+		pedidoDTO.setProdutos(new ArrayList<>());
+		
+		for (Produto produto: element.getCliente().getListaProduto()) {
+			ProdutoDTO produtoDTO = new ProdutoDTO();
+			produtoDTO.setIdProduto(produto.getIdProduto());
+			produtoDTO.setDesProduto(produto.getDesProduto());
+			produtoDTO.setQtdSolicitada(produto.getQtdSolicitada());
+			produtoDTO.setFlgAtivo(produto.getFlgAtivo());
+			produtoDTO.setValorUnitario(produto.getValorUnitario());
+			
+			pedidoDTO.getProdutos().add(produtoDTO);
+		}
+		return pedidoDTO;
 	}
 }
