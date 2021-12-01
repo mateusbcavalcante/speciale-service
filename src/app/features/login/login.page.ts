@@ -58,7 +58,9 @@ export class LoginPage implements OnInit {
           this.clientesService.setCliente(cliente);
           this.navCtrl.navigateRoot('/app');
         } else if (this.authService.isAdmin()) {
-          this.navCtrl.navigateRoot('/app/cliente-pesquisar');
+          this.authService.logout();
+          this.notificacaoService.showInfoToaster(MENSAGENS.ACESSO_NAO_PERMITIDO);
+          return;
         }
       }
     );

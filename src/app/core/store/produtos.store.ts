@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Produto, ProdutosState } from '../domain/produto';
+import { Produto } from '../domain/produto';
 import { Store } from './store';
 import { CarrinhoStore } from './carrinho.store';
 import * as _ from 'lodash';
@@ -62,4 +62,8 @@ export class ProdutosStore extends Store<ProdutosState> {
     return _.pullAllBy(produtos, this.carrinhoStore.state.produtos, 'idProduto');
   }
 
+}
+
+export class ProdutosState {
+  disponiveis: Produto[] = [];
 }

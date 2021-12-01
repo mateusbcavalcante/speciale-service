@@ -21,7 +21,6 @@
       <div class="user-meta ion-text-center">
         <h3 class="name">{{usuario.login}}</h3>
         <h6 class="info">{{usuario.email}}</h6>
-        <h6 class="info" style="color: green">{{(cliente$ | async).nomeCliente}}</h6>
       </div>
 
       <ion-row class='menu-acao'>
@@ -32,6 +31,12 @@
           <ion-button color="danger" size='small' (click)="logout()">Sair</ion-button>
         </ion-col>
       </ion-row>
+
+      <ion-footer>
+        <div class="user-meta ion-text-center">
+          <h6 class="info">v2.01</h6>
+        </div>
+      </ion-footer>
 
     </div>
 

@@ -7,6 +7,8 @@ export const MENSAGENS = {
 
     SENHA_ALTERADA_OK: 'Sua senha foi alterada com sucesso!',
 
+    ACESSO_NAO_PERMITIDO: 'Você não tem permissão para acessar o aplicativo!',
+
     CONFIMAR_REMOVER_ITEM_CARRINHO: (produto: Produto): string => {
         return `Deseja remover o item ${produto.desProduto} ?`;
     },
@@ -29,7 +31,7 @@ export const MENSAGENS = {
 
     VALIDACAO_OBS: 'As observações não podem conter mais do que 400 caracteres. Você precisa reduzir o tamanhho desse(s) campo(s)',
 
-    PESQUISA_PEDIDO_VALIDACAO: 'É necessário preencher pelo menos 1 campo para realizar a pesquisa!',
+    PESQUISA_PEDIDO_VALIDACAO: 'Pelo menos um dos campos com * é obrigatório.',
 
     PESQUISA_CLIENTE_VALIDACAO: 'É necessário informar pelo menos 3 caracteres para o Nome do Cliente!',
 

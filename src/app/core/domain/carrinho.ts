@@ -16,6 +16,9 @@ export class CarrinhoState {
 
     itens: Item[] = [];
     produtos: Produto[] = [];
+    subTotal: Number = 0;
+    desconto: Number = 0;
+    total: Number = 0;
     status = CarrinhoStatus.EMPTY;
 
 }
