@@ -12,6 +12,7 @@ public class ExceptionUtils {
 		if(e instanceof ApiException) {
 			return (ApiException)e;
 		}
+		
 		return new ApiException(500, e.getMessage(), e);
 	}
 	

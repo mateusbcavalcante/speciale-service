@@ -1,5 +1,6 @@
 package br.com.a2dm.spdm.omie.service;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,6 +26,23 @@ public class OmieClienteService {
 			instance = new OmieClienteService();
 		}
 		return instance;
+	}
+	
+	public List<String> pesquisarClientesList(List<String> clientes) throws OmieServiceException {
+		try {
+			List<String> clientesExistentes = new ArrayList<>();
+			for (String cliente : clientes) {
+				List<ClienteDTO> clientesDTO = this.pesquisarClientes(cliente);
+				if (clientesDTO != null && clientesDTO.size() > 0) {
+					for (ClienteDTO element : clientesDTO) {
+						clientesExistentes.add(element.getNomeCliente());
+					}
+				}
+			}
+			return clientesExistentes;
+		} catch (Exception e) {
+			throw new OmieServiceException(e);
+		}
 	}
 
 	public List<ClienteDTO> pesquisarClientes(String nomeCliente) throws OmieServiceException {
@@ -55,11 +73,12 @@ public class OmieClienteService {
 			throw new OmieServiceException(e);
 		}
 	}
-
-	public void processar(ClienteWebhookPayload clienteWebhookPayload) throws OmieServiceException {
+	
+	public void processar(ClienteWebhookPayload clienteWebhookPayload) throws OmieServiceException, IOException {
+		
 		try {
 			
-			String nomeTabelaPreco = obterTabelaPreco(clienteWebhookPayload.getEvent().getTags());
+			String nomeTabelaPreco = "TP " + clienteWebhookPayload.getEvent().getNome_fantasia();
 			TabelaPrecoPayload tabelaPreco = OmieTabelaPrecoService.getInstance().obterTabelaPreco(nomeTabelaPreco);
 			
 			Cliente cliente = new Cliente();
@@ -69,14 +88,17 @@ public class OmieClienteService {
 
 			if (cliente == null) {
 				cliente = new Cliente();
+				
+				cliente.setFlgAtivo("S");
 				cliente.setDesCliente(clienteWebhookPayload.getEvent().getNome_fantasia());
 
-				cliente = ClienteService.getInstancia().get(cliente, 0);
+				List<Cliente> clientes = ClienteService.getInstancia().pesquisar(cliente, 0);
 
-				if (cliente == null) {
+				if (clientes == null
+						|| clientes.size() <= 0) {
 					inserirCliente(clienteWebhookPayload, tabelaPreco);
-				} else {
-					alterarCliente(clienteWebhookPayload, cliente, tabelaPreco);
+				} else if (clientes.size() == 1) {
+					alterarCliente(clienteWebhookPayload, clientes.get(0), tabelaPreco);
 				}
 			} else {
 				alterarCliente(clienteWebhookPayload, cliente, tabelaPreco);
@@ -99,17 +121,55 @@ public class OmieClienteService {
 		Cliente clienteInsert = new Cliente();
 		clienteInsert.setDesCliente(clienteWebhookPayload.getEvent().getNome_fantasia());
 		clienteInsert.setIdExternoOmie(clienteWebhookPayload.getEvent().getCodigo_cliente_omie());
-		clienteInsert.setIdTabelaPrecoOmie(tabelaPreco.getnCodTabPreco());
+		
+		if (clienteWebhookPayload.getEvent().getRecomendacoes() != null) {
+			if (clienteWebhookPayload.getEvent().getRecomendacoes().getCodigo_vendedor() != null
+					&& clienteWebhookPayload.getEvent().getRecomendacoes().getCodigo_vendedor().intValue() > 0) {
+				clienteInsert.setCodVendedor(clienteWebhookPayload.getEvent().getRecomendacoes().getCodigo_vendedor());
+			}
+			
+			if (clienteWebhookPayload.getEvent().getRecomendacoes().getNumero_parcelas() != null
+					&& !clienteWebhookPayload.getEvent().getRecomendacoes().getNumero_parcelas().equalsIgnoreCase("")) {
+				clienteInsert.setCodParcelas(clienteWebhookPayload.getEvent().getRecomendacoes().getNumero_parcelas());
+			}
+		}
+		
+		if (tabelaPreco != null 
+				&& tabelaPreco.getnCodTabPreco() != null 
+				&& tabelaPreco.getnCodTabPreco().intValue() > 0) 
+		{
+			clienteInsert.setIdTabelaPrecoOmie(tabelaPreco.getnCodTabPreco());
+		}
 		clienteInsert.setFlgAtivo("S");
 		clienteInsert.setDatCadastro(new Date());
 		clienteInsert.setIdUsuarioCad(new BigInteger("1"));
+		clienteInsert.setHorLimite("06:00");
 		ClienteService.getInstancia().inserir(clienteInsert);
 	}
 
 	private void alterarCliente(ClienteWebhookPayload clienteWebhookPayload, Cliente cliente, TabelaPrecoPayload tabelaPreco) throws Exception {
 		cliente.setDesCliente(clienteWebhookPayload.getEvent().getNome_fantasia());
 		cliente.setIdExternoOmie(clienteWebhookPayload.getEvent().getCodigo_cliente_omie());
-		cliente.setIdTabelaPrecoOmie(tabelaPreco.getnCodTabPreco());
+		cliente.setFlgAtivo("S");
+
+		if (clienteWebhookPayload.getEvent().getRecomendacoes() != null) {
+			if (clienteWebhookPayload.getEvent().getRecomendacoes().getCodigo_vendedor() != null
+					&& clienteWebhookPayload.getEvent().getRecomendacoes().getCodigo_vendedor().intValue() > 0) {
+				cliente.setCodVendedor(clienteWebhookPayload.getEvent().getRecomendacoes().getCodigo_vendedor());
+			}
+			
+			if (clienteWebhookPayload.getEvent().getRecomendacoes().getNumero_parcelas() != null
+					&& !clienteWebhookPayload.getEvent().getRecomendacoes().getNumero_parcelas().equalsIgnoreCase("")) {
+				cliente.setCodParcelas(clienteWebhookPayload.getEvent().getRecomendacoes().getNumero_parcelas());
+			}
+		}
+		
+		if (tabelaPreco != null 
+				&& tabelaPreco.getnCodTabPreco() != null 
+				&& tabelaPreco.getnCodTabPreco().intValue() > 0) 
+		{
+			cliente.setIdTabelaPrecoOmie(tabelaPreco.getnCodTabPreco());
+		}
 		if (isTopicExcluido(clienteWebhookPayload)) {
 			cliente.setFlgAtivo("N");
 		}

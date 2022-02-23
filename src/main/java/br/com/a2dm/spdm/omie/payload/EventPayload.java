@@ -48,11 +48,13 @@ public class EventPayload {
 	private String telefone2_numero;
 	private String tipo_atividade;
 	private String valor_limite_credito;
+	private String cidade_ibge;
 	private DadosBancariosPayload dadosBancarios;
 
 	public EventPayload() {
 		super();
 	}
+
 
 	public EventPayload(BigInteger codigo_cliente_omie, String nome_fantasia, String obs_detalhadas, String bairro,
 			String bloqueado, String bloquear_faturamento, String cep, String cidade, String cnae, String cnpj_cpf,
@@ -63,7 +65,7 @@ public class EventPayload {
 			String optante_simples_nacional, String pessoa_fisica, String produtor_rural, String razao_social,
 			String recomendacao_atraso, RecomendacoesPayload recomendacoes, List<TagPayload> tags, String telefone1_ddd,
 			String telefone1_numero, String telefone2_ddd, String telefone2_numero, String tipo_atividade,
-			String valor_limite_credito, DadosBancariosPayload dadosBancarios) {
+			String valor_limite_credito, String cidade_ibge, DadosBancariosPayload dadosBancarios) {
 		super();
 		this.codigo_cliente_omie = codigo_cliente_omie;
 		this.nome_fantasia = nome_fantasia;
@@ -108,8 +110,10 @@ public class EventPayload {
 		this.telefone2_numero = telefone2_numero;
 		this.tipo_atividade = tipo_atividade;
 		this.valor_limite_credito = valor_limite_credito;
+		this.cidade_ibge = cidade_ibge;
 		this.dadosBancarios = dadosBancarios;
 	}
+
 
 	public BigInteger getCodigo_cliente_omie() {
 		return codigo_cliente_omie;
@@ -462,6 +466,18 @@ public class EventPayload {
 	public void setDadosBancarios(DadosBancariosPayload dadosBancarios) {
 		this.dadosBancarios = dadosBancarios;
 	}
+	
+	
+
+	public String getCidade_ibge() {
+		return cidade_ibge;
+	}
+
+
+	public void setCidade_ibge(String cidade_ibge) {
+		this.cidade_ibge = cidade_ibge;
+	}
+
 
 	@Override
 	public String toString() {
@@ -481,7 +497,30 @@ public class EventPayload {
 				+ recomendacoes + ", tags=" + tags + ", telefone1_ddd=" + telefone1_ddd + ", telefone1_numero="
 				+ telefone1_numero + ", telefone2_ddd=" + telefone2_ddd + ", telefone2_numero=" + telefone2_numero
 				+ ", tipo_atividade=" + tipo_atividade + ", valor_limite_credito=" + valor_limite_credito
-				+ ", dadosBancarios=" + dadosBancarios + "]";
+				+ ", cidade_ibge=" + cidade_ibge + ", dadosBancarios=" + dadosBancarios + ", getCodigo_cliente_omie()="
+				+ getCodigo_cliente_omie() + ", getNome_fantasia()=" + getNome_fantasia() + ", getObs_detalhadas()="
+				+ getObs_detalhadas() + ", getBairro()=" + getBairro() + ", getBloqueado()=" + getBloqueado()
+				+ ", getBloquear_faturamento()=" + getBloquear_faturamento() + ", getCep()=" + getCep()
+				+ ", getCidade()=" + getCidade() + ", getCnae()=" + getCnae() + ", getCnpj_cpf()=" + getCnpj_cpf()
+				+ ", getCodigo_cliente_integracao()=" + getCodigo_cliente_integracao() + ", getCodigo_pais()="
+				+ getCodigo_pais() + ", getComplemento()=" + getComplemento() + ", getContato()=" + getContato()
+				+ ", getContribuinte()=" + getContribuinte() + ", getEmail()=" + getEmail() + ", getEndereco()="
+				+ getEndereco() + ", getEndereco_numero()=" + getEndereco_numero() + ", getEstado()=" + getEstado()
+				+ ", getExterior()=" + getExterior() + ", getFax_ddd()=" + getFax_ddd() + ", getFax_numero()="
+				+ getFax_numero() + ", getHomepage()=" + getHomepage() + ", getInativo()=" + getInativo()
+				+ ", getInscricao_estadual()=" + getInscricao_estadual() + ", getInscricao_municipal()="
+				+ getInscricao_municipal() + ", getInscricao_suframa()=" + getInscricao_suframa() + ", getLogradouro()="
+				+ getLogradouro() + ", getNif()=" + getNif() + ", getObservacao()=" + getObservacao()
+				+ ", getOptante_simples_nacional()=" + getOptante_simples_nacional() + ", getPessoa_fisica()="
+				+ getPessoa_fisica() + ", getProdutor_rural()=" + getProdutor_rural() + ", getRazao_social()="
+				+ getRazao_social() + ", getRecomendacao_atraso()=" + getRecomendacao_atraso() + ", getRecomendacoes()="
+				+ getRecomendacoes() + ", getTags()=" + getTags() + ", getTelefone1_ddd()=" + getTelefone1_ddd()
+				+ ", getTelefone1_numero()=" + getTelefone1_numero() + ", getTelefone2_ddd()=" + getTelefone2_ddd()
+				+ ", getTelefone2_numero()=" + getTelefone2_numero() + ", getTipo_atividade()=" + getTipo_atividade()
+				+ ", getValor_limite_credito()=" + getValor_limite_credito() + ", getDadosBancarios()="
+				+ getDadosBancarios() + ", getCidade_ibge()=" + getCidade_ibge() + ", getClass()=" + getClass()
+				+ ", hashCode()=" + hashCode() + ", toString()=" + super.toString() + "]";
 	}
+
 
 }

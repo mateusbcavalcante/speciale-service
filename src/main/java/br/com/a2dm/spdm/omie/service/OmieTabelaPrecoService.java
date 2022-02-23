@@ -1,5 +1,6 @@
 package br.com.a2dm.spdm.omie.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,21 +30,24 @@ public class OmieTabelaPrecoService {
 	}
 	
 	public TabelaPrecoPayload obterTabelaPreco(String tabelaPreco) throws OmieServiceException {
+		List<TabelaPrecoPayload> listTabelaPrecoFiltrada = new ArrayList<>();
 		List<TabelaPrecoPayload> listTabelaPreco = listarTabelasPrecos();
 		
-		List<TabelaPrecoPayload> sortedList = listTabelaPreco.stream()
-												             .sorted((o1, o2)-> o1.getcNome().compareTo(o2.getcNome()))
-												             .collect(Collectors.toList());
-        sortedList.forEach(System.out::println);
-		
-		List<TabelaPrecoPayload> listTabelaPrecoFiltrada = listTabelaPreco.stream()
-																		  .filter(x -> x.getcNome().equalsIgnoreCase(tabelaPreco))
-																		  .collect(Collectors.toList());
+		if (listTabelaPreco != null && listTabelaPreco.size() > 0) {
+			List<TabelaPrecoPayload> sortedList = listTabelaPreco.stream()
+					.sorted((o1, o2)-> o1.getcNome().compareTo(o2.getcNome()))
+					.collect(Collectors.toList());
+			sortedList.forEach(System.out::println);
+			
+			listTabelaPrecoFiltrada = listTabelaPreco.stream()
+					.filter(x -> x.getcNome().equalsIgnoreCase(tabelaPreco))
+					.collect(Collectors.toList());
+		}
 		
 		return isResultTabelaPreco(listTabelaPrecoFiltrada) ? listTabelaPrecoFiltrada.get(0) : null;
 	}
 
 	private boolean isResultTabelaPreco(List<TabelaPrecoPayload> listTabelaPrecoFiltrada) {
-		return listTabelaPrecoFiltrada != null;
+		return listTabelaPrecoFiltrada != null && listTabelaPrecoFiltrada.size() > 0;
 	}
 }

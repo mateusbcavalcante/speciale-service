@@ -12,7 +12,6 @@ import br.com.a2dm.spdm.omie.builder.OmiePedidoBuilder;
 import br.com.a2dm.spdm.omie.payload.InativarPayloadPedido;
 import br.com.a2dm.spdm.omie.payload.PedidoPayload;
 import br.com.a2dm.spdm.omie.payload.PesquisarPayloadPedido;
-import br.com.a2dm.spdm.service.ClienteService;
 import br.com.a2dm.spdm.utils.JsonUtils;
 
 public class OmiePedidoRepository {
@@ -29,11 +28,8 @@ public class OmiePedidoRepository {
 		return instance;
 	}
 	
-	public PedidoDTO pesquisarPedidoCliente(BigInteger idCliente, BigInteger idPedido, String dataPedido) throws OmieRepositoryException {
+	public PedidoDTO pesquisarPedidoCliente(BigInteger idCliente, Cliente cliente, BigInteger idPedido, String dataPedido) throws OmieRepositoryException {
 		try {
-			Cliente cliente = new Cliente();
-			cliente.setIdCliente(idCliente);
-			cliente = ClienteService.getInstancia().get(cliente, 0);
 			return this.pesquisarPedido(idCliente, cliente.getIdExternoOmie(), idPedido, dataPedido);
 		} catch (Exception e) {
 			throw new OmieRepositoryException(e);
@@ -53,13 +49,9 @@ public class OmiePedidoRepository {
 	
 	public PedidoDTO cadastrarPedidoCliente(PedidoDTO pedidoDTO) throws OmieRepositoryException {
 		try {
-			Cliente cliente = new Cliente();
-			cliente.setIdCliente(pedidoDTO.getIdCliente());
-			cliente = ClienteService.getInstancia().get(cliente, 0);
-			pedidoDTO.setIdExternoOmie(cliente.getIdExternoOmie());
 			return this.cadastrarPedido(pedidoDTO);
 		} catch (Exception e) {
-			throw new OmieRepositoryException(String.format("Erro ao cadastrar pedido para cliente %d", pedidoDTO.getIdCliente()), e);
+			throw new OmieRepositoryException(e.getCause().getMessage(), e);
 		}
 	}
 	
@@ -67,22 +59,20 @@ public class OmiePedidoRepository {
 		try {
 			PedidoPayload pedidoOmie = new OmiePedidoBuilder().buildPedido(pedidoDTO);
 			OmieApiClient apiClient = new OmieApiClient();
+			String jsonRequest = JsonUtils.toJson(pedidoOmie);
+			System.out.print(jsonRequest);
 			ApiClientResponse response = apiClient.post("/produtos/pedido/", "IncluirPedido", pedidoOmie);
 			JSONObject json = JsonUtils.parse(response.getBody());
 			BigInteger numeroPedido = new BigInteger(json.getString("numero_pedido"));
 			pedidoDTO.setIdPedido(numeroPedido);
 			return pedidoDTO;
 		} catch (Exception e) {
-			throw new OmieRepositoryException(String.format("Erro ao cadastrar pedido para cliente %d", pedidoDTO.getIdCliente()), e);
+			throw new OmieRepositoryException(e.getCause().getMessage(), e);
 		}
 	}
 	
 	public PedidoDTO alterarPedidoCliente(PedidoDTO pedidoDTO) throws OmieRepositoryException {
 		try {
-			Cliente cliente = new Cliente();
-			cliente.setIdCliente(pedidoDTO.getIdCliente());
-			cliente = ClienteService.getInstancia().get(cliente, 0);
-			pedidoDTO.setIdExternoOmie(cliente.getIdExternoOmie());
 			return this.alterarPedido(pedidoDTO);
 		} catch (Exception e) {
 			throw new OmieRepositoryException(String.format("Erro ao alterar pedido para cliente %d", pedidoDTO.getIdCliente()), e);

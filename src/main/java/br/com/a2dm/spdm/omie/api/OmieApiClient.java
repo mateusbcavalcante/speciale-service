@@ -1,5 +1,7 @@
 package br.com.a2dm.spdm.omie.api;
 
+import org.codehaus.jettison.json.JSONObject;
+
 import br.com.a2dm.spdm.api.ApiClient;
 import br.com.a2dm.spdm.api.ApiClientException;
 import br.com.a2dm.spdm.api.ApiClientResponse;
@@ -24,8 +26,15 @@ public class OmieApiClient {
 			apiPayload.setCall(call);
 			apiPayload.addParam(param);
 			ApiClientResponse response = this.apiClient.post(resource, apiPayload);
+			
 			if (!response.isOk()) {
-				throwApiException(response);
+				JSONObject jsonObject = JsonUtils.parse(response.getBody());
+				if (jsonObject.has("faultcode")) {
+					String faultCode = (String) jsonObject.get("faultcode");
+					if (!faultCode.equalsIgnoreCase("SOAP-ENV:Client-5113")) {					
+						throwApiException(response);
+					}
+				}
 			}
 			return response;
 		} catch (Exception e) {

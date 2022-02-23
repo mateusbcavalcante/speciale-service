@@ -44,6 +44,10 @@ public class OmiePedidoBuilder {
 				Date data = DateUtils.parseDate(dataPedido, "yyyy-MM-dd");
 				dataStr = DateUtils.formatDate(data, "dd/MM/yyyy");
 			}
+			
+			if (idPedido == null) {
+				return new PesquisarPayloadPedido(idExternoOmie, dataStr);
+			}
 			return new PesquisarPayloadPedido(idExternoOmie, idPedido, dataStr);
 		} catch (Exception e) {
 			throw new OmieBuilderException("Erro ao montar json para Pesquisar Pedido", e);
@@ -54,6 +58,14 @@ public class OmiePedidoBuilder {
 		try {
 			PedidoDTO pedidoDTO = new PedidoDTO();
 			JSONObject jsonObject = JsonUtils.parse(json);
+			
+			if (!jsonObject.has("total_de_registros") && jsonObject.has("faultcode")) {
+				String faultCode = (String) jsonObject.get("faultcode");
+				if (faultCode.equalsIgnoreCase("SOAP-ENV:Client-5113")) {
+					return null;
+				}
+			}
+			
 			JSONArray pedidosVendaProduto = (JSONArray) jsonObject.getJSONArray("pedido_venda_produto");
 			
 			for (int i = 0; i < pedidosVendaProduto.length(); i++) {
@@ -139,7 +151,7 @@ public class OmiePedidoBuilder {
 					          		 buildProdutos(pedidoDTO),
 					                 buildFretePedido(pedidoDTO),
 					                 buildObservacoesPedido(pedidoDTO),
-					                 buildInformacoesAdicionaisPedido());
+					                 buildInformacoesAdicionaisPedido(pedidoDTO));
 		} catch (Exception e) {
 			throw new OmieBuilderException("Erro ao montar json para Pedido", e);
 		}
@@ -150,7 +162,7 @@ public class OmiePedidoBuilder {
 									pedidoDTO.getIdExternoOmie(),
 									DateUtils.formatDatePtBr(pedidoDTO.getDataPedido()),
 									"10",
-									"000",
+									pedidoDTO.getCodParcelas(),
 									pedidoDTO.getProdutos().size());
 	}
 	
@@ -197,8 +209,8 @@ public class OmiePedidoBuilder {
 		return new FretePayload(getOpcaoFrete(pedidoDTO));
 	}
 	
-	protected InformacoesAdicionaisPayload buildInformacoesAdicionaisPedido() throws JSONException {
-		return new InformacoesAdicionaisPayload("1.01.02", 1617989193, "S", "N");
+	protected InformacoesAdicionaisPayload buildInformacoesAdicionaisPedido(PedidoDTO pedidoDTO) throws JSONException {
+		return new InformacoesAdicionaisPayload("1.01.02", 1617989193, "S", "N", pedidoDTO.getCodVend());
 	}
 	
 	protected ObservacoesPayload buildObservacoesPedido(PedidoDTO pedidoDTO) throws JSONException {

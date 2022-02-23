@@ -47,7 +47,7 @@ public class ClienteService extends A2DMHbNgc<Cliente>
 		adicionarFiltro("idCliente", RestritorHb.RESTRITOR_EQ,"idCliente");
 		adicionarFiltro("idCliente", RestritorHb.RESTRITOR_NE, "filtroMap.idClienteNotEq");
 		adicionarFiltro("idExternoOmie", RestritorHb.RESTRITOR_EQ,"idExternoOmie");
-		adicionarFiltro("desCliente", RestritorHb.RESTRITOR_LIKE, "desCliente");
+		adicionarFiltro("desCliente", RestritorHb.RESTRITOR_EQ, "desCliente");
 		adicionarFiltro("desCliente", RestritorHb.RESTRITOR_EQ, "filtroMap.desCliente");
 		adicionarFiltro("flgAtivo", RestritorHb.RESTRITOR_EQ, "flgAtivo");		
 	}
@@ -286,6 +286,44 @@ public class ClienteService extends A2DMHbNgc<Cliente>
 		if (clienteBD != null)
 		{
 			clienteBD.setIdTabelaPrecoOmie(cliente.getIdTabelaPrecoOmie());
+			clienteBD.setIdUsuarioAlt(util.getUsuarioLogado().getIdUsuario());
+			clienteBD.setDatAlteracao(new Date());
+			
+			super.alterar(sessao, clienteBD);
+		}
+	}
+	
+	public void atualizarHorLimite(Cliente cliente) throws Exception
+	{
+		Session sessao = HibernateUtil.getSession();
+		sessao.setFlushMode(FlushMode.COMMIT);
+		Transaction tx = sessao.beginTransaction();
+		try
+		{
+			atualizarHorLimite(sessao, cliente);
+			tx.commit();
+		}
+		catch (Exception e)
+		{
+			tx.rollback();
+			throw e;
+		}
+		finally
+		{
+			sessao.close();
+		}
+	}
+	
+	public void atualizarHorLimite(Session sessao, Cliente cliente) throws Exception 
+	{
+		Cliente clienteBD = new Cliente();
+		clienteBD.setIdCliente(cliente.getIdCliente());
+		
+		clienteBD = super.get(sessao, clienteBD, 0);
+		
+		if (clienteBD != null)
+		{
+			clienteBD.setHorLimite(cliente.getHorLimite());
 			clienteBD.setIdUsuarioAlt(util.getUsuarioLogado().getIdUsuario());
 			clienteBD.setDatAlteracao(new Date());
 			

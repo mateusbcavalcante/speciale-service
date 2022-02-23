@@ -115,6 +115,12 @@ public class Cliente implements Serializable
 	@Column(name = "id_externo_omie")
 	private BigInteger idExternoOmie;
 	
+	@Column(name = "cod_vendedor")
+	private BigInteger codVendedor;
+	
+	@Column(name = "cod_parcelas")
+	private String codParcelas;
+	
 	@Column(name = "id_tabela_preco_omie")
 	private BigInteger idTabelaPrecoOmie;
 	
@@ -344,10 +350,28 @@ public class Cliente implements Serializable
 		this.idExternoOmie = idExternoOmie;
 	}
 
+	public BigInteger getCodVendedor() {
+		return codVendedor;
+	}
+
+	public void setCodVendedor(BigInteger codVendedor) {
+		this.codVendedor = codVendedor;
+	}
+
+	public String getCodParcelas() {
+		return codParcelas;
+	}
+
+	public void setCodParcelas(String codParcelas) {
+		this.codParcelas = codParcelas;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((codParcelas == null) ? 0 : codParcelas.hashCode());
+		result = prime * result + ((codVendedor == null) ? 0 : codVendedor.hashCode());
 		result = prime * result + ((datAlteracao == null) ? 0 : datAlteracao.hashCode());
 		result = prime * result + ((datCadastro == null) ? 0 : datCadastro.hashCode());
 		result = prime * result + ((desCliente == null) ? 0 : desCliente.hashCode());
@@ -386,6 +410,16 @@ public class Cliente implements Serializable
 		if (getClass() != obj.getClass())
 			return false;
 		Cliente other = (Cliente) obj;
+		if (codParcelas == null) {
+			if (other.codParcelas != null)
+				return false;
+		} else if (!codParcelas.equals(other.codParcelas))
+			return false;
+		if (codVendedor == null) {
+			if (other.codVendedor != null)
+				return false;
+		} else if (!codVendedor.equals(other.codVendedor))
+			return false;
 		if (datAlteracao == null) {
 			if (other.datAlteracao != null)
 				return false;
