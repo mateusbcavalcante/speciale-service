@@ -181,6 +181,18 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 		}
 	}
 	
+	public boolean isClienteEvento(BigInteger idCliente) throws Exception {
+		Cliente cliente = new Cliente();
+		cliente.setIdCliente(idCliente);
+		
+		cliente = ClienteService.getInstancia().get(cliente, 0);
+		
+		if (cliente != null) {
+			return cliente.getFlgEvento() != null && !cliente.getFlgEvento().equalsIgnoreCase("") && cliente.getFlgEvento().equalsIgnoreCase("S");
+		}
+		return false;
+	}
+	
     public boolean isClienteEvento() throws Exception {
 		Cliente cliente = new Cliente();
 		cliente.setIdCliente(util.getUsuarioLogado().getIdCliente());

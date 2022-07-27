@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import br.com.a2dm.spdm.omie.payload.TabelaPrecoPayload;
+import br.com.a2dm.spdm.omie.payload.TabelaPrecoPayloadObj;
 import br.com.a2dm.spdm.omie.repository.OmieTabelasPrecosRepository;;
 
 public class OmieTabelaPrecoService {
@@ -23,7 +24,16 @@ public class OmieTabelaPrecoService {
 
 	public List<TabelaPrecoPayload> listarTabelasPrecos() throws OmieServiceException {
 		try {
-			return OmieTabelasPrecosRepository.getInstance().listarTabelasPrecos();
+			List<TabelaPrecoPayload> listTabelaPrecoPayload = new ArrayList<>();
+			
+			for (int i = 1; i <= 2; i++) {
+				TabelaPrecoPayloadObj tabelaPrecoPayloadObjIn = OmieTabelasPrecosRepository.getInstance().listarTabelasPrecos(i);
+				
+				if (tabelaPrecoPayloadObjIn.getListaTabelasPreco() != null && tabelaPrecoPayloadObjIn.getListaTabelasPreco().size() > 0) {
+					listTabelaPrecoPayload.addAll(tabelaPrecoPayloadObjIn.getListaTabelasPreco());
+				}
+			}
+			return listTabelaPrecoPayload;
 		} catch (Exception e) {
 			throw new OmieServiceException(e);
 		}

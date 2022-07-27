@@ -182,8 +182,8 @@ public class OmiePedidoService {
 			qtdTotalSolicitada = qtdTotalSolicitada.add(produto.getQtdSolicitada());
 		}
 		
-		if (!isClienteEvento(pedidoDTO) && !isMaster(pedidoDTO) && qtdTotalSolicitada.intValue() < 32) {
-			throw new Exception("É necessário solicitar, no mínimo, 32 pacotes!");
+		if (!isClienteEvento(pedidoDTO) && !isMaster(pedidoDTO) && qtdTotalSolicitada.intValue() < 36) {
+			throw new Exception("É necessário solicitar, no mínimo, 36 pacotes!");
 		}
 	}
 	

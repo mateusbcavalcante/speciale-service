@@ -29,6 +29,9 @@ public class EventPayload {
 	private String fax_numero;
 	private String homepage;
 	private String inativo;
+	private String inativo_data;
+	private String inativo_hora;
+	private String inativo_usuario;
 	private String inscricao_estadual;
 	private String inscricao_municipal;
 	private String inscricao_suframa;
@@ -60,8 +63,8 @@ public class EventPayload {
 			String bloqueado, String bloquear_faturamento, String cep, String cidade, String cnae, String cnpj_cpf,
 			String codigo_cliente_integracao, String codigo_pais, String complemento, String contato,
 			String contribuinte, String email, String endereco, String endereco_numero, String estado, String exterior,
-			String fax_ddd, String fax_numero, String homepage, String inativo, String inscricao_estadual,
-			String inscricao_municipal, String inscricao_suframa, String logradouro, String nif, String observacao,
+			String fax_ddd, String fax_numero, String homepage, String inativo, String inativo_data, String inativo_hora, String inativo_usuario,
+			String inscricao_estadual, String inscricao_municipal, String inscricao_suframa, String logradouro, String nif, String observacao,
 			String optante_simples_nacional, String pessoa_fisica, String produtor_rural, String razao_social,
 			String recomendacao_atraso, RecomendacoesPayload recomendacoes, List<TagPayload> tags, String telefone1_ddd,
 			String telefone1_numero, String telefone2_ddd, String telefone2_numero, String tipo_atividade,
@@ -91,6 +94,9 @@ public class EventPayload {
 		this.fax_numero = fax_numero;
 		this.homepage = homepage;
 		this.inativo = inativo;
+		this.inativo_data = inativo_data;
+		this.inativo_hora = inativo_hora;
+		this.inativo_usuario = inativo_usuario;
 		this.inscricao_estadual = inscricao_estadual;
 		this.inscricao_municipal = inscricao_municipal;
 		this.inscricao_suframa = inscricao_suframa;
@@ -306,6 +312,31 @@ public class EventPayload {
 	public void setInativo(String inativo) {
 		this.inativo = inativo;
 	}
+	
+	public String getInativo_data() {
+		return inativo_data;
+	}
+
+	public void setInativo_data(String inativo_data) {
+		this.inativo_data = inativo_data;
+	}
+	
+	public String getInativo_hora() {
+		return inativo_hora;
+	}
+
+	public void setInativo_hora(String inativo_hora) {
+		this.inativo_hora = inativo_hora;
+	}
+
+	public String getInativo_usuario() {
+		return inativo_usuario;
+	}
+
+	public void setInativo_usuario(String inativo_usuario) {
+		this.inativo_usuario = inativo_usuario;
+	}
+
 
 	public String getInscricao_estadual() {
 		return inscricao_estadual;
@@ -489,7 +520,8 @@ public class EventPayload {
 				+ ", contribuinte=" + contribuinte + ", email=" + email + ", endereco=" + endereco
 				+ ", endereco_numero=" + endereco_numero + ", estado=" + estado + ", exterior=" + exterior
 				+ ", fax_ddd=" + fax_ddd + ", fax_numero=" + fax_numero + ", homepage=" + homepage + ", inativo="
-				+ inativo + ", inscricao_estadual=" + inscricao_estadual + ", inscricao_municipal="
+				+ inativo + ", inativo_data=" + inativo_data + ", inativo_hora=" + inativo_hora + ", inativo_usuario="
+				+ inativo_usuario + ", inscricao_estadual=" + inscricao_estadual + ", inscricao_municipal="
 				+ inscricao_municipal + ", inscricao_suframa=" + inscricao_suframa + ", logradouro=" + logradouro
 				+ ", nif=" + nif + ", observacao=" + observacao + ", optante_simples_nacional="
 				+ optante_simples_nacional + ", pessoa_fisica=" + pessoa_fisica + ", produtor_rural=" + produtor_rural
@@ -497,30 +529,6 @@ public class EventPayload {
 				+ recomendacoes + ", tags=" + tags + ", telefone1_ddd=" + telefone1_ddd + ", telefone1_numero="
 				+ telefone1_numero + ", telefone2_ddd=" + telefone2_ddd + ", telefone2_numero=" + telefone2_numero
 				+ ", tipo_atividade=" + tipo_atividade + ", valor_limite_credito=" + valor_limite_credito
-				+ ", cidade_ibge=" + cidade_ibge + ", dadosBancarios=" + dadosBancarios + ", getCodigo_cliente_omie()="
-				+ getCodigo_cliente_omie() + ", getNome_fantasia()=" + getNome_fantasia() + ", getObs_detalhadas()="
-				+ getObs_detalhadas() + ", getBairro()=" + getBairro() + ", getBloqueado()=" + getBloqueado()
-				+ ", getBloquear_faturamento()=" + getBloquear_faturamento() + ", getCep()=" + getCep()
-				+ ", getCidade()=" + getCidade() + ", getCnae()=" + getCnae() + ", getCnpj_cpf()=" + getCnpj_cpf()
-				+ ", getCodigo_cliente_integracao()=" + getCodigo_cliente_integracao() + ", getCodigo_pais()="
-				+ getCodigo_pais() + ", getComplemento()=" + getComplemento() + ", getContato()=" + getContato()
-				+ ", getContribuinte()=" + getContribuinte() + ", getEmail()=" + getEmail() + ", getEndereco()="
-				+ getEndereco() + ", getEndereco_numero()=" + getEndereco_numero() + ", getEstado()=" + getEstado()
-				+ ", getExterior()=" + getExterior() + ", getFax_ddd()=" + getFax_ddd() + ", getFax_numero()="
-				+ getFax_numero() + ", getHomepage()=" + getHomepage() + ", getInativo()=" + getInativo()
-				+ ", getInscricao_estadual()=" + getInscricao_estadual() + ", getInscricao_municipal()="
-				+ getInscricao_municipal() + ", getInscricao_suframa()=" + getInscricao_suframa() + ", getLogradouro()="
-				+ getLogradouro() + ", getNif()=" + getNif() + ", getObservacao()=" + getObservacao()
-				+ ", getOptante_simples_nacional()=" + getOptante_simples_nacional() + ", getPessoa_fisica()="
-				+ getPessoa_fisica() + ", getProdutor_rural()=" + getProdutor_rural() + ", getRazao_social()="
-				+ getRazao_social() + ", getRecomendacao_atraso()=" + getRecomendacao_atraso() + ", getRecomendacoes()="
-				+ getRecomendacoes() + ", getTags()=" + getTags() + ", getTelefone1_ddd()=" + getTelefone1_ddd()
-				+ ", getTelefone1_numero()=" + getTelefone1_numero() + ", getTelefone2_ddd()=" + getTelefone2_ddd()
-				+ ", getTelefone2_numero()=" + getTelefone2_numero() + ", getTipo_atividade()=" + getTipo_atividade()
-				+ ", getValor_limite_credito()=" + getValor_limite_credito() + ", getDadosBancarios()="
-				+ getDadosBancarios() + ", getCidade_ibge()=" + getCidade_ibge() + ", getClass()=" + getClass()
-				+ ", hashCode()=" + hashCode() + ", toString()=" + super.toString() + "]";
+				+ ", cidade_ibge=" + cidade_ibge + ", dadosBancarios=" + dadosBancarios + "]";
 	}
-
-
 }
