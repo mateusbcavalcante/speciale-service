@@ -1,0 +1,18 @@
+.card-message {
+  text-align: center;
+  ion-card-header {
+    overflow: hidden;
+    transition: all 0.2s ease-in-out;
+    background: linear-gradient(0deg, #d7d8da00, #e4c57452);
+    height: auto;
+    
+    img{
+      width: 80px !important;
+    }
+
+    h3 {
+      font-size: 18px !important;
+      color: var(--ion-color-primary) !important;
+    }
+  }
+}

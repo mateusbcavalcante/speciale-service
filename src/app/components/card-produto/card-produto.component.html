@@ -1,0 +1,28 @@
+<ion-card mode="ios" *ngIf="produto" class='card-overlay-paralax-component'>
+    <ion-card-header>
+        <ion-card-title>{{produto.desProduto}}</ion-card-title>
+    </ion-card-header>
+    <ion-list>
+        <ion-item>
+            <ion-label>Qtd. Lote Mínimo</ion-label>
+            <ion-badge fill="outline" slot="end">{{produto.qtdLoteMinimo}}</ion-badge>
+        </ion-item>
+        <ion-item>
+            <ion-label>Qtd. Múltiplo</ion-label>
+            <ion-badge slot="end">{{produto.qtdMultiplo}}</ion-badge>
+        </ion-item>
+    </ion-list>
+    <ion-card-content>
+        <ion-row>
+            <ion-col size="8">
+                <app-contador-item [item]="produto"></app-contador-item>
+            </ion-col>
+            <ion-col size="4" style="padding-top: 0px;">
+                <ion-button class="align-right" color="success" size='small' [disabled]="produto.qtdSolicitada === 0"
+                    (click)="addItemEvent(produto)">
+                    <ion-icon [name]="icon"></ion-icon>
+                </ion-button>
+            </ion-col>
+        </ion-row>
+    </ion-card-content>
+</ion-card>

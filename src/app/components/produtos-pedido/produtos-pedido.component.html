@@ -1,0 +1,34 @@
+<ion-card mode="ios" class='card-overlay-paralax-component'>
+
+    <ion-card-header>
+        <ion-card-title>
+            Lista de Produtos
+            <ion-button style="float: right;" color="success" size='small' (click)="addProdutoEvent()">
+                <ion-icon name="add"></ion-icon>
+            </ion-button>
+        </ion-card-title>
+    </ion-card-header>
+
+    <ion-grid>
+
+        <ion-row *ngFor="let produto of pedido.produtos" [hidden]="produto.flgAtivo === 'N'">
+
+            <ion-col size="12">
+                <h6>{{produto.desProduto}}</h6>
+            </ion-col>
+
+            <ion-col size="8">
+                <app-contador-item [minValue]="produto.qtdLoteMinimo" [item]="produto"></app-contador-item>
+            </ion-col>
+
+            <ion-col size="4" style="padding-top: 0px;">
+                <ion-button style="float: right;" color="danger" size='small' (click)="removerProdutoEvent(produto)">
+                    <ion-icon name="trash"></ion-icon>
+                </ion-button>
+            </ion-col>
+
+        </ion-row>
+
+    </ion-grid>
+
+</ion-card>

@@ -1,0 +1,135 @@
+.card-form {
+  // background: linear-gradient(0deg, #d7d8da00, #e4c57452);
+  ion-card-header {
+    overflow: hidden;
+    transition: all 0.2s ease-in-out;
+    background: linear-gradient(0deg, #d7d8da00, #e4c57452);
+    height: auto;
+  }
+
+  form,
+  .form-wrapper {
+    margin-top: -30px;
+
+    ion-input {
+      background-color: #9b592a1a;
+      width: 95%;
+      display: block;
+      margin: 0 auto;
+      border-radius: 5px;
+      color: #744e3f;
+      font-size: 15px;
+      // --padding-top: 15px;
+      // --padding-bottom: 15px;
+      --padding-start: 16px;
+      // --placeholder-opacity: 0.8;
+    }
+
+    ion-datetime {
+      background-color: #9b592a1a;
+      width: 95%;
+      display: block;
+      border-radius: 5px;
+      color: #744e3f;
+      font-size: 15px;
+    }
+  }
+}
+
+.card-form-login {
+  background: linear-gradient(180deg, #de9d5abf, #f4f5f8b8);
+  border-radius: 20px;
+  form {
+    margin-top: 20px;
+
+    ion-input {
+      background-color: #ffffffb5;
+      width: 95%;
+      display: block;
+      margin: 0 auto;
+      border-radius: 5px;
+      color: #744e3f;
+      font-size: 15px;
+      --padding-top: 15px;
+      --padding-bottom: 15px;
+      --padding-start: 16px;
+      --placeholder-opacity: 0.8;
+    }
+
+    ion-datetime {
+      background-color: #9b592a1a;
+      width: 95%;
+      display: block;
+      border-radius: 5px;
+      color: #744e3f;
+      font-size: 15px;
+      margin: 0 auto;
+    }
+
+    ion-textarea {
+      border: 1px solid var(--ion-color-light-shade);
+      border-radius: 5px;
+      margin-top: 10px;
+      overflow: hidden;
+      transition: border-color 0.2s;
+      --padding-top: 10px;
+      --padding-end: 10px;
+      --padding-bottom: 10px;
+      --padding-start: 10px;
+      background: #9b592a1a;
+    }
+  }
+}
+
+.card-form,
+.card-form-login {
+  form,
+  .form-wrapper {
+    .card-form-title {
+      text-align: center;
+      font-size: 25px;
+      color: #775141;
+    }
+    ion-grid {
+      ion-row {
+        width: 100%;
+        ion-col {
+          ion-label,
+          .label-value {
+            padding-top: 10px !important;
+            font-size: 15px;
+            margin-left: 15px;
+            position: absolute;
+            color: #744e3f;
+          }
+        }
+      }
+    }
+
+    .card-form-btn {
+      width: 95%;
+      display: block;
+      margin: 0 auto;
+      border-radius: 5px;
+      background-color: #775141;
+      margin-top: 15px;
+    }
+
+    .card-form-btn-link {
+      color: #744e40;
+      text-transform: initial;
+      cursor: pointer;
+    }
+
+    .card-form-field-invalido {
+      margin: 0 auto;
+      padding-bottom: 5px;
+      width: 95%;
+
+      ion-col {
+        color: rgb(226, 68, 68);
+        font-size: 12px;
+      }
+    }
+  }
+}

@@ -1,0 +1,16 @@
+<ion-header parallax maximumHeight="140">
+    <ion-toolbar>
+        <ion-buttons slot="end">
+            <ion-button (click)="fechar()">Fechar</ion-button>
+        </ion-buttons>
+        <ion-title >Lista Produtos</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+    <app-card-produto *ngFor="let produto of (produtos | async)" (addItem)="selecionarProdutoEvent($event)" [produto]="produto"
+        icon="add-outline">
+    </app-card-produto>
+
+</ion-content>

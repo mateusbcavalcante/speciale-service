@@ -1,0 +1,122 @@
+<ion-content >
+
+  <div class="header">
+    <div class="logo">
+      <img src="assets/images/logo.png" alt="">
+    </div>
+  </div>
+
+  <ion-card mode="ios" class="card-form-login">
+    <form [formGroup]="loginForm" *ngIf="formIndex === 0">
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <h1 class="card-form-title">
+              Autenticação
+            </h1>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col>
+            <ion-input placeholder="Usuário" inputmode="text" formControlName="login"></ion-input>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="card-form-field-invalido"
+          *ngIf="loginForm.get('login').hasError('required') && loginForm.get('login').touched ">
+          <ion-col>
+            Usuário é obrigatório
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col>
+            <ion-input placeholder="Senha" type="password" formControlName="senha"></ion-input>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="card-form-field-invalido"
+          *ngIf="loginForm.get('senha').hasError('required') && loginForm.get('senha').touched ">
+          <ion-col>
+            Senha é obrigatório
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col>
+            <ion-button color="primary" (click)="login()" class="card-form-btn" [disabled]="!loginForm.valid">
+              Login
+            </ion-button>
+          </ion-col>
+        </ion-row>
+
+        <ion-row style="margin-top: 25px;">
+          <ion-col>
+            <ion-button class="card-form-btn-link" expand="full" fill="clear" (click)="showForm(1)">
+              <b>Esqueci minha Senha</b>
+            </ion-button>
+          </ion-col>
+        </ion-row>
+
+
+      </ion-grid>
+
+    </form>
+
+    <form [formGroup]="esqueceuSenhaForm" *ngIf="formIndex === 1">
+
+      <ion-grid>
+
+        <ion-row>
+          <ion-col>
+            <h1 class="card-form-title">
+              Solicitar Senha
+            </h1>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col>
+            <ion-input placeholder="Email" type="email" formControlName="email"></ion-input>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="card-form-field-invalido"
+          *ngIf="esqueceuSenhaForm.get('email').hasError('required') && esqueceuSenhaForm.get('email').touched ">
+          <ion-col>
+            Email é obrigatório
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="card-form-field-invalido"
+          *ngIf="esqueceuSenhaForm.get('email').hasError('email') && esqueceuSenhaForm.get('email').touched ">
+          <ion-col>
+            Email está inválido
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col>
+            <ion-button color="primary" (click)="esqueceuSenha()" class="card-form-btn"
+              [disabled]="!esqueceuSenhaForm.valid">
+              Enviar
+            </ion-button>
+          </ion-col>
+        </ion-row>
+
+        <ion-row style="margin-top: 80px;">
+          <ion-col>
+            <ion-button class="card-form-btn-link" expand="full" fill="clear" (click)="showForm(0)">
+              <b>Voltar para Login</b>
+            </ion-button>
+          </ion-col>
+        </ion-row>
+
+      </ion-grid>
+
+    </form>
+
+  </ion-card>
+
+</ion-content>

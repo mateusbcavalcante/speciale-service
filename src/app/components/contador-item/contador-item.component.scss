@@ -1,0 +1,42 @@
+input[type="button"] {
+  -webkit-appearance: button;
+  cursor: pointer;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+input {
+  border: 1px solid #eeeeee;
+  box-sizing: border-box;
+  margin: 0;
+  outline: none;
+}
+
+.input-group {
+  clear: both;
+  position: relative;
+  padding: 0px;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.input-group input[type="button"] {
+  background-color: #eeeeee;
+  min-width: 38px;
+  width: auto;
+  transition: all 300ms ease;
+}
+
+.input-group .button-minus,
+.input-group .button-plus {
+  font-weight: bold;
+}
+
+.input-group .quantity-field {
+  position: relative;
+  text-align: center;
+  width: 75px;
+}

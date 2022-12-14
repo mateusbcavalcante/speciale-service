@@ -1,0 +1,26 @@
+:host {
+  ion-content {
+    --background: url("/assets/images/bg-login.jpg") no-repeat center/cover fixed;
+
+    .header {
+      height: 130px; // 20vh;
+
+      .logo {
+        width: 130px; //40vw
+        height: 120px;
+        position: relative;
+        margin: 0 auto;
+
+        img {
+          display: block;
+          border-radius: 50%;
+          position: absolute;
+          bottom: calc(-1 * (60px + 4px)); // -42px;
+          border: 8px solid #e6daad;
+          background-color: #fff;
+          z-index: 199;
+        }
+      }
+    }
+  }
+}

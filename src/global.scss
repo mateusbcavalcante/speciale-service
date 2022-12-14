@@ -1,0 +1,118 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "~@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "~@ionic/angular/css/normalize.css";
+@import "~@ionic/angular/css/structure.css";
+@import "~@ionic/angular/css/typography.css";
+@import "~@ionic/angular/css/display.css";
+
+/* Optional CSS utils that can be commented out */
+@import "~@ionic/angular/css/padding.css";
+@import "~@ionic/angular/css/float-elements.css";
+@import "~@ionic/angular/css/text-alignment.css";
+@import "~@ionic/angular/css/text-transformation.css";
+@import "~@ionic/angular/css/flex-utils.css";
+@import "./theme/forms.scss";
+@import "./theme/messages.scss";
+@import "./theme/fonts.css";
+
+ion-content {
+  position: relative;
+  width: 100%;
+  padding: 20px;
+}
+
+div.toolbar-background {
+  background: linear-gradient(0deg, #ffffff, #d19a72c7) !important;
+}
+
+.header-md:after {
+  background-image: none !important;
+}
+
+.parallax-title {
+  font-size: 1.7em !important;
+  margin-bottom: 0px !important;
+  color: var(--ion-color-primary-shade) !important;
+  font-weight: 400;
+}
+
+.image-overlay,
+.color-overlay {
+  background: linear-gradient(0deg, #ffffff, #a56a3fc7) !important;
+}
+
+.card-overlay-paralax {
+  margin-top: -30px;
+  z-index: 200;
+}
+
+.card-overlay-paralax-component {
+  margin-top: -30px !important;
+  margin-bottom: 60px !important;
+  z-index: 200;
+}
+
+ion-spinner {
+  color: var(--ion-color-light) !important;
+  width: 50px !important;
+  height: 50px !important;
+}
+
+ion-loading {
+  --background: transparent !important;
+}
+
+.small-title {
+  font-size: 1em !important;
+}
+
+ion-toolbar {
+  --background: linear-gradient(0deg, #ffffff, #a56a3fc7) !important;
+
+  ion-title {
+    font-size: 1.2em !important;
+    margin-bottom: 0px !important;
+    color: var(--ion-color-primary-shade) !important;
+    font-weight: 400;
+  }
+}
+
+ion-tabs {
+  ion-tab-bar {
+    --background: linear-gradient(to bottom, var(--ion-color-light) 30%, #88563121 70%);
+  }
+}
+
+.fab-button-top {
+  margin-top: -20px;
+}
+
+.ripple-parent {
+  position: relative;
+  overflow: hidden;
+}
+
+.img-page {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+
+.text-page{
+  color: var(--ion-color-primary-tint);
+  text-align: center;
+}

@@ -1,0 +1,7 @@
+{
+  "name": "go-bread-app",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}
