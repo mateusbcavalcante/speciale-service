@@ -138,6 +138,9 @@ public class Pedido implements Serializable
 	@Transient
 	private BigInteger idCodigoPedidoIntegracao;
 	
+	@Transient
+	private Date datUltimoPedido;
+	
 	public BigInteger getIdPedido() {
 		return idPedido;
 	}
@@ -352,5 +355,13 @@ public class Pedido implements Serializable
 
 	public void setIdCodigoPedidoIntegracao(BigInteger idCodigoPedidoIntegracao) {
 		this.idCodigoPedidoIntegracao = idCodigoPedidoIntegracao;
+	}
+
+	public Date getDatUltimoPedido() {
+		return datUltimoPedido;
+	}
+
+	public void setDatUltimoPedido(Date datUltimoPedido) {
+		this.datUltimoPedido = datUltimoPedido;
 	}
 }

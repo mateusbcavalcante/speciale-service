@@ -666,13 +666,13 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 		criteria.add(Restrictions.eq("datPedido", vo.getDatPedido()));
 		
 		if(vo.getIdCliente() != null
-				&& vo.getIdCliente().intValue() > 0)
+				&& vo.getIdCliente().longValue() > 0)
 		{
 			criteria.add(Restrictions.eq("idCliente", vo.getIdCliente()));
 		}
 		
 		if (vo.getIdPedido() != null
-				&& vo.getIdPedido().intValue() > 0) 
+				&& vo.getIdPedido().longValue() > 0) 
 		{
 			criteria.add(Restrictions.eq("idPedido", vo.getIdPedido()));
 		}
@@ -838,13 +838,13 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 		}
 		
 		if(vo.getIdCliente() != null
-				&& vo.getIdCliente().intValue() > 0)
+				&& vo.getIdCliente().longValue() > 0)
 		{
 			criteria.add(Restrictions.eq("idCliente", vo.getIdCliente()));
 		}
 		
 		if (vo.getIdPedido() != null
-				&& vo.getIdPedido().intValue() > 0) 
+				&& vo.getIdPedido().longValue() > 0) 
 		{
 			criteria.add(Restrictions.eq("idPedido", vo.getIdPedido()));
 		}
@@ -903,7 +903,7 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 				pedidoProduto.getPedido().setFlgAtivo(pedido.getFlgAtivo());
 				
 				if (pedido.getIdPedido() != null
-						&& pedido.getIdPedido().intValue() > 0) 
+						&& pedido.getIdPedido().longValue() > 0) 
 				{
 					pedidoProduto.setIdPedido(pedido.getIdPedido());
 				}

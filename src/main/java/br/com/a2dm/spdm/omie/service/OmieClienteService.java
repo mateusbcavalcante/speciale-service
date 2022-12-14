@@ -63,7 +63,7 @@ public class OmieClienteService {
 				for (ClienteDTO clienteDto : listClienteDto) {
 					BigInteger codigoClienteOmie = OmieClientesRepository.getInstance().alterarCliente(clienteDto);
 					
-					if (codigoClienteOmie != null && codigoClienteOmie.intValue() > 0) {					
+					if (codigoClienteOmie != null && codigoClienteOmie.longValue() > 0) {					
 						listCodigoClienteOmie.add(codigoClienteOmie);
 					}
 				}
@@ -124,7 +124,7 @@ public class OmieClienteService {
 		
 		if (clienteWebhookPayload.getEvent().getRecomendacoes() != null) {
 			if (clienteWebhookPayload.getEvent().getRecomendacoes().getCodigo_vendedor() != null
-					&& clienteWebhookPayload.getEvent().getRecomendacoes().getCodigo_vendedor().intValue() > 0) {
+					&& clienteWebhookPayload.getEvent().getRecomendacoes().getCodigo_vendedor().longValue() > 0) {
 				clienteInsert.setCodVendedor(clienteWebhookPayload.getEvent().getRecomendacoes().getCodigo_vendedor());
 			}
 			
@@ -136,7 +136,7 @@ public class OmieClienteService {
 		
 		if (tabelaPreco != null 
 				&& tabelaPreco.getnCodTabPreco() != null 
-				&& tabelaPreco.getnCodTabPreco().intValue() > 0) 
+				&& tabelaPreco.getnCodTabPreco().longValue() > 0) 
 		{
 			clienteInsert.setIdTabelaPrecoOmie(tabelaPreco.getnCodTabPreco());
 		}
@@ -154,7 +154,7 @@ public class OmieClienteService {
 
 		if (clienteWebhookPayload.getEvent().getRecomendacoes() != null) {
 			if (clienteWebhookPayload.getEvent().getRecomendacoes().getCodigo_vendedor() != null
-					&& clienteWebhookPayload.getEvent().getRecomendacoes().getCodigo_vendedor().intValue() > 0) {
+					&& clienteWebhookPayload.getEvent().getRecomendacoes().getCodigo_vendedor().longValue() > 0) {
 				cliente.setCodVendedor(clienteWebhookPayload.getEvent().getRecomendacoes().getCodigo_vendedor());
 			}
 			
@@ -165,8 +165,7 @@ public class OmieClienteService {
 		}
 		
 		if (tabelaPreco != null 
-				&& tabelaPreco.getnCodTabPreco() != null 
-				&& tabelaPreco.getnCodTabPreco().intValue() > 0) 
+				&& tabelaPreco.getnCodTabPreco() != null) 
 		{
 			cliente.setIdTabelaPrecoOmie(tabelaPreco.getnCodTabPreco());
 		}

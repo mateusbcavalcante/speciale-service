@@ -1,6 +1,7 @@
 package br.com.a2dm.spdm.omie.service;
 
 import java.math.BigInteger;
+import java.text.Normalizer;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -10,12 +11,10 @@ import br.com.a2dm.brcmn.dto.PedidoDTO;
 import br.com.a2dm.brcmn.dto.ProdutoDTO;
 import br.com.a2dm.spdm.entity.Cliente;
 import br.com.a2dm.spdm.entity.Feriado;
-import br.com.a2dm.spdm.entity.Produto;
 import br.com.a2dm.spdm.omie.repository.OmiePedidoRepository;
 import br.com.a2dm.spdm.omie.repository.OmieRepositoryException;
 import br.com.a2dm.spdm.service.ClienteService;
 import br.com.a2dm.spdm.service.FeriadoService;
-import br.com.a2dm.spdm.service.ProdutoService;
 import br.com.a2dm.spdm.utils.DateUtils;
 
 public class OmiePedidoService {
@@ -57,6 +56,7 @@ public class OmiePedidoService {
 			pedidoDTO.setIdExternoOmie(cliente.getIdExternoOmie());
 			pedidoDTO.setCodVend(cliente.getCodVendedor());
 			pedidoDTO.setCodParcelas(cliente.getCodParcelas());
+			this.removerCaracteresEspeciais(pedidoDTO);
 			this.validarAtivo(cliente);
 			this.validarFeriado(pedidoDTO);
 			this.validarDuplicidade(pedidoDTO);
@@ -77,6 +77,7 @@ public class OmiePedidoService {
 			pedidoDTO.setIdExternoOmie(cliente.getIdExternoOmie());
 			pedidoDTO.setCodVend(cliente.getCodVendedor());
 			pedidoDTO.setCodParcelas(cliente.getCodParcelas());
+			this.removerCaracteresEspeciais(pedidoDTO);
 			this.validarAtivo(cliente);
 			this.validarFeriado(pedidoDTO);
 			this.validarDuplicidade(pedidoDTO);
@@ -86,6 +87,12 @@ public class OmiePedidoService {
 			return OmiePedidoRepository.getInstance().alterarPedidoCliente(pedidoDTO);
 		} catch (Exception e) {
 			throw new OmieServiceException(e);
+		}
+	}
+	
+	public void removerCaracteresEspeciais(PedidoDTO pedidoDTO) throws OmieServiceException {
+		if (pedidoDTO.getObservacao() != null && !pedidoDTO.getObservacao().equalsIgnoreCase("")) {			
+			pedidoDTO.setObservacao(Normalizer.normalize(pedidoDTO.getObservacao(), Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", ""));
 		}
 	}
 	
@@ -111,7 +118,7 @@ public class OmiePedidoService {
 		PedidoDTO pedidoDTO = OmiePedidoRepository.getInstance().pesquisarPedidoCliente(pedidoDTOReq.getIdCliente(), cliente, null, DateUtils.formatDate(pedidoDTOReq.getDataPedido(), "yyyy-MM-dd"));
 		
 		if (pedidoDTO != null && 
-				(pedidoDTOReq.getCodigoPedidoIntegracao() == null) || (pedidoDTOReq.getCodigoPedidoIntegracao() != null && pedidoDTOReq.getCodigoPedidoIntegracao().intValue() != pedidoDTO.getCodigoPedidoIntegracao().intValue())) {
+				(pedidoDTOReq.getCodigoPedidoIntegracao() == null) || (pedidoDTOReq.getCodigoPedidoIntegracao() != null && pedidoDTOReq.getCodigoPedidoIntegracao().longValue() != pedidoDTO.getCodigoPedidoIntegracao().longValue())) {
 			throw new OmieRepositoryException("Já existe um pedido para a data informada.");
 		}
 	}

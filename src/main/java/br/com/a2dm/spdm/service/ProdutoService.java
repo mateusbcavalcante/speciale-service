@@ -296,7 +296,7 @@ public class ProdutoService extends A2DMHbNgc<Produto>
 			
 			for (Produto objPrioridade : retorno)
 			{
-				if(produto.getIdProduto().intValue() == objPrioridade.getIdProduto().intValue())
+				if(produto.getIdProduto().longValue() == objPrioridade.getIdProduto().longValue())
 				{
 					if (objPrioridade.getNumPrioridade() != null && objPrioridade.getNumPrioridade().intValue() > 0)
 					{

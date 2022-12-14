@@ -114,7 +114,9 @@ public class OmiePedidoBuilder {
 		pedidoDTO.setIdCliente(idCliente);
 		pedidoDTO.setIdPedido(new BigInteger(cabecalho.getString("numero_pedido")));
 		pedidoDTO.setCodigoPedido(new BigInteger(cabecalho.getString("codigo_pedido")));
-		pedidoDTO.setCodigoPedidoIntegracao(new BigInteger(cabecalho.getString("codigo_pedido_integracao")));
+		if (cabecalho.getString("codigo_pedido_integracao") != null && !cabecalho.getString("codigo_pedido_integracao").equalsIgnoreCase("")) {			
+			pedidoDTO.setCodigoPedidoIntegracao(new BigInteger(cabecalho.getString("codigo_pedido_integracao")));
+		}
 		pedidoDTO.setIdOpcaoEntrega(new BigInteger(frete.getInt("modalidade") == 1 ? "2" : "1"));
 		pedidoDTO.setFlgAtivo(infoCadastro.getString("cancelado").equalsIgnoreCase("N") ? "S" : "N");
 		pedidoDTO.setProdutos(new ArrayList<>());
