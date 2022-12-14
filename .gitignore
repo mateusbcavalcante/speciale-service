@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Specifies intentionally untracked files to ignore when using Git
 # http://git-scm.com/docs/gitignore
 
@@ -29,3 +30,9 @@ npm-debug.log*
 /platforms
 /plugins
 /www
+=======
+/target/
+.project
+.settings
+.classpath
+>>>>>>> 00a01a18c5170699fa6d358f1e1fe75755318a8d
