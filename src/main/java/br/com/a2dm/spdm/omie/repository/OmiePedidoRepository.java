@@ -4,6 +4,7 @@ import java.math.BigInteger;
 
 import org.codehaus.jettison.json.JSONObject;
 
+import br.com.a2dm.brcmn.dto.ClienteIntegracaoDTO;
 import br.com.a2dm.brcmn.dto.PedidoDTO;
 import br.com.a2dm.spdm.api.ApiClientResponse;
 import br.com.a2dm.spdm.entity.Cliente;
@@ -47,17 +48,17 @@ public class OmiePedidoRepository {
 		}
 	}
 	
-	public PedidoDTO cadastrarPedidoCliente(PedidoDTO pedidoDTO) throws OmieRepositoryException {
+	public PedidoDTO cadastrarPedidoCliente(PedidoDTO pedidoDTO, ClienteIntegracaoDTO clienteIntegracaoDTO) throws OmieRepositoryException {
 		try {
-			return this.cadastrarPedido(pedidoDTO);
+			return this.cadastrarPedido(pedidoDTO, clienteIntegracaoDTO);
 		} catch (Exception e) {
 			throw new OmieRepositoryException(e.getCause().getMessage(), e);
 		}
 	}
 	
-	protected PedidoDTO cadastrarPedido(PedidoDTO pedidoDTO) throws OmieRepositoryException {
+	protected PedidoDTO cadastrarPedido(PedidoDTO pedidoDTO, ClienteIntegracaoDTO clienteIntegracaoDTO) throws OmieRepositoryException {
 		try {
-			PedidoPayload pedidoOmie = new OmiePedidoBuilder().buildPedido(pedidoDTO);
+			PedidoPayload pedidoOmie = new OmiePedidoBuilder().buildPedido(pedidoDTO, clienteIntegracaoDTO);
 			OmieApiClient apiClient = new OmieApiClient();
 			String jsonRequest = JsonUtils.toJson(pedidoOmie);
 			System.out.print(jsonRequest);
@@ -71,17 +72,17 @@ public class OmiePedidoRepository {
 		}
 	}
 	
-	public PedidoDTO alterarPedidoCliente(PedidoDTO pedidoDTO) throws OmieRepositoryException {
+	public PedidoDTO alterarPedidoCliente(PedidoDTO pedidoDTO, ClienteIntegracaoDTO clienteIntegracaoDTO) throws OmieRepositoryException {
 		try {
-			return this.alterarPedido(pedidoDTO);
+			return this.alterarPedido(pedidoDTO, clienteIntegracaoDTO);
 		} catch (Exception e) {
 			throw new OmieRepositoryException(String.format("Erro ao alterar pedido para cliente %d", pedidoDTO.getIdCliente()), e);
 		}
 	}
 	
-	protected PedidoDTO alterarPedido(PedidoDTO pedidoDTO) throws OmieRepositoryException {
+	protected PedidoDTO alterarPedido(PedidoDTO pedidoDTO, ClienteIntegracaoDTO clienteIntegracaoDTO) throws OmieRepositoryException {
 		try {
-			PedidoPayload pedidoOmie = new OmiePedidoBuilder().buildPedido(pedidoDTO);
+			PedidoPayload pedidoOmie = new OmiePedidoBuilder().buildPedido(pedidoDTO, clienteIntegracaoDTO);
 			OmieApiClient apiClient = new OmieApiClient();
 			ApiClientResponse response = apiClient.post("/produtos/pedido/", "AlterarPedidoVenda", pedidoOmie);
 			JSONObject json = JsonUtils.parse(response.getBody());

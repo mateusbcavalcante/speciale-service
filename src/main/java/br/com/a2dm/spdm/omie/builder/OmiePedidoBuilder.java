@@ -14,6 +14,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import br.com.a2dm.brcmn.domain.OmieCaracteristicaProduto;
+import br.com.a2dm.brcmn.dto.ClienteIntegracaoDTO;
 import br.com.a2dm.brcmn.dto.PedidoDTO;
 import br.com.a2dm.brcmn.dto.ProdutoDTO;
 import br.com.a2dm.spdm.omie.payload.CabecalhoPayload;
@@ -147,10 +148,10 @@ public class OmiePedidoBuilder {
 		return produtoDTO;
 	}
 	
-	public PedidoPayload buildPedido(PedidoDTO pedidoDTO) throws OmieBuilderException {
+	public PedidoPayload buildPedido(PedidoDTO pedidoDTO, ClienteIntegracaoDTO clienteIntegracaoDTO) throws OmieBuilderException {
 		try {
 			return new PedidoPayload(buildCabecalhoPedido(pedidoDTO),
-					          		 buildProdutos(pedidoDTO),
+					          		 buildProdutos(pedidoDTO, clienteIntegracaoDTO),
 					                 buildFretePedido(pedidoDTO),
 					                 buildObservacoesPedido(pedidoDTO),
 					                 buildInformacoesAdicionaisPedido(pedidoDTO));
@@ -172,20 +173,30 @@ public class OmiePedidoBuilder {
 		return System.currentTimeMillis();
 	}
 	
-	protected List<DetPayload> buildProdutos(PedidoDTO pedidoDTO) throws JSONException {
+	protected List<DetPayload> buildProdutos(PedidoDTO pedidoDTO, ClienteIntegracaoDTO clienteIntegracaoDTO) throws JSONException {
+		
+		String cfop = "5.401";
+		if (!this.isEstadoCeara(clienteIntegracaoDTO)) {
+			cfop = "6.401";
+		}
+		
 		List<DetPayload> dets = new ArrayList<>();
 		if (pedidoDTO.getProdutos() != null && !pedidoDTO.getProdutos().isEmpty()) {
 			for (ProdutoDTO produtoDTO : pedidoDTO.getProdutos()) {
-				dets.add(buildProdutoPedido(produtoDTO));				
+				dets.add(buildProdutoPedido(produtoDTO, cfop));				
 			}
 		}
 		return dets;
 	}
+
+	private boolean isEstadoCeara(ClienteIntegracaoDTO clienteIntegracaoDTO) {
+		return clienteIntegracaoDTO.getEstado().equalsIgnoreCase("CE");
+	}
 	
-	protected DetPayload buildProdutoPedido(ProdutoDTO produtoDTO) throws JSONException {
+	protected DetPayload buildProdutoPedido(ProdutoDTO produtoDTO, String cfop) throws JSONException {
 		IdePayload ide = new IdePayload(produtoDTO.getIdProduto(), buildAcaoItem(produtoDTO));
 		
-		ProdutoPayload produto = new ProdutoPayload("5.401",
+		ProdutoPayload produto = new ProdutoPayload(cfop,
 													"1905.20.90",
 													produtoDTO.getIdProduto(),
 													produtoDTO.getDesProduto(),

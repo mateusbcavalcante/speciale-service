@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import br.com.a2dm.brcmn.dto.ClienteIntegracaoDTO;
 import br.com.a2dm.brcmn.dto.PedidoDTO;
 import br.com.a2dm.brcmn.dto.ProdutoDTO;
 import br.com.a2dm.spdm.entity.Cliente;
@@ -63,7 +64,10 @@ public class OmiePedidoService {
 			this.validarDomingo(pedidoDTO);
 			this.validarHorarioLimite(cliente, pedidoDTO);
 			this.validarLimitePaes(pedidoDTO);
-			return OmiePedidoRepository.getInstance().cadastrarPedidoCliente(pedidoDTO);
+			
+			ClienteIntegracaoDTO clienteIntegracaoDTO = OmieClienteService.getInstance().pesquisarCliente(cliente.getIdExternoOmie());
+			
+			return OmiePedidoRepository.getInstance().cadastrarPedidoCliente(pedidoDTO, clienteIntegracaoDTO);
 		} catch (Exception e) {
 			throw new OmieServiceException(e);
 		}
@@ -84,7 +88,10 @@ public class OmiePedidoService {
 			this.validarDomingo(pedidoDTO);
 			this.validarHorarioLimite(cliente, pedidoDTO);
 			this.validarLimitePaes(pedidoDTO);
-			return OmiePedidoRepository.getInstance().alterarPedidoCliente(pedidoDTO);
+			
+			ClienteIntegracaoDTO clienteIntegracaoDTO = OmieClienteService.getInstance().pesquisarCliente(cliente.getIdExternoOmie());
+			
+			return OmiePedidoRepository.getInstance().alterarPedidoCliente(pedidoDTO, clienteIntegracaoDTO);
 		} catch (Exception e) {
 			throw new OmieServiceException(e);
 		}

@@ -8,10 +8,12 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 
 import br.com.a2dm.brcmn.dto.ClienteDTO;
+import br.com.a2dm.brcmn.dto.ClienteIntegracaoDTO;
 import br.com.a2dm.spdm.entity.Cliente;
 import br.com.a2dm.spdm.omie.payload.AlterarPayloadCliente;
 import br.com.a2dm.spdm.omie.payload.ClientesFiltroPayload;
 import br.com.a2dm.spdm.omie.payload.PesquisarPayloadCliente;
+import br.com.a2dm.spdm.omie.payload.PesquisarPayloadClienteIntegracao;
 import br.com.a2dm.spdm.service.ClienteService;
 import br.com.a2dm.spdm.utils.JsonUtils;
 
@@ -19,6 +21,14 @@ public class OmieClienteBuilder {
 
 	public OmieClienteBuilder() {
 		
+	}
+	
+	public PesquisarPayloadClienteIntegracao buildPesquisarClientePorIntegracao(BigInteger idExternoOmie) throws OmieBuilderException {
+		try {
+			return new PesquisarPayloadClienteIntegracao(idExternoOmie);
+		} catch (Exception e) {
+			throw new OmieBuilderException("Erro ao montar json para Pesquisar Pedido", e);
+		}
 	}
 	
 	public PesquisarPayloadCliente buildPesquisarCliente(String nomeCliente) throws OmieBuilderException {
@@ -32,6 +42,14 @@ public class OmieClienteBuilder {
 		}
 	}
 	
+	public ClienteIntegracaoDTO buildPesquisarClientePorIntegracaoResponse(String json) {
+		try {
+			JSONObject jsonObject = JsonUtils.parse(json);
+			return this.buildClienteIntegracaoDTO(jsonObject);
+		} catch (Exception e) {
+			throw new OmieBuilderException(e);
+		}
+	}
 	
 	public List<ClienteDTO> buildPesquisarClienteResponse(String json) {
 		try {
@@ -50,6 +68,16 @@ public class OmieClienteBuilder {
 		} catch (Exception e) {
 			throw new OmieBuilderException(e);
 		}
+	}
+	
+	public ClienteIntegracaoDTO buildClienteIntegracaoDTO(JSONObject clienteOMIE) throws Exception {
+		ClienteIntegracaoDTO clienteIntegracaoDTO = new ClienteIntegracaoDTO();
+		clienteIntegracaoDTO.setIdExternoOmie(new BigInteger(clienteOMIE.getString("codigo_cliente_omie")));
+		clienteIntegracaoDTO.setNomeCliente(clienteOMIE.getString("nome_fantasia"));
+		clienteIntegracaoDTO.setCidade(clienteOMIE.getString("cidade"));
+		clienteIntegracaoDTO.setEstado(clienteOMIE.getString("estado"));
+		
+		return clienteIntegracaoDTO;
 	}
 	
 	public ClienteDTO buildClienteDTO(JSONObject clienteOMIE) throws Exception {

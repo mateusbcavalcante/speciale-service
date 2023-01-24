@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 import br.com.a2dm.brcmn.dto.ClienteDTO;
+import br.com.a2dm.brcmn.dto.ClienteIntegracaoDTO;
 import br.com.a2dm.spdm.entity.Cliente;
 import br.com.a2dm.spdm.omie.payload.ClienteWebhookPayload;
 import br.com.a2dm.spdm.omie.payload.TabelaPrecoPayload;
@@ -48,6 +49,14 @@ public class OmieClienteService {
 	public List<ClienteDTO> pesquisarClientes(String nomeCliente) throws OmieServiceException {
 		try {
 			return OmieClientesRepository.getInstance().pesquisarClientes(nomeCliente);
+		} catch (Exception e) {
+			throw new OmieServiceException(e);
+		}
+	}
+	
+	public ClienteIntegracaoDTO pesquisarCliente(BigInteger idExternoOmie) throws OmieServiceException {
+		try {
+			return OmieClientesRepository.getInstance().pesquisarCliente(idExternoOmie);
 		} catch (Exception e) {
 			throw new OmieServiceException(e);
 		}
