@@ -995,6 +995,7 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 	public void inserirGeradorPedido(List<Pedido> listaPedidoResult) throws Exception {
 		for (Pedido element : listaPedidoResult) {
 			PedidoDTO pedidoDTO = buildPedido(element);
+			pedidoDTO.setAdmin(true);
 			this.inserirPedidoDTO(pedidoDTO);
 		}
 	}

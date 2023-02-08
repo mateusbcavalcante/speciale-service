@@ -59,11 +59,14 @@ public class OmiePedidoService {
 			pedidoDTO.setCodParcelas(cliente.getCodParcelas());
 			this.removerCaracteresEspeciais(pedidoDTO);
 			this.validarAtivo(cliente);
-			this.validarFeriado(pedidoDTO);
 			this.validarDuplicidade(pedidoDTO);
-			this.validarDomingo(pedidoDTO);
-			this.validarHorarioLimite(cliente, pedidoDTO);
-			this.validarLimitePaes(pedidoDTO);
+			
+			if (!isAdmin(pedidoDTO)) {
+				this.validarFeriado(pedidoDTO);
+				this.validarFinalDeSemana(pedidoDTO);
+				this.validarHorarioLimite(cliente, pedidoDTO);
+				this.validarLimitePaes(pedidoDTO);
+			}
 			
 			ClienteIntegracaoDTO clienteIntegracaoDTO = OmieClienteService.getInstance().pesquisarCliente(cliente.getIdExternoOmie());
 			
@@ -71,6 +74,10 @@ public class OmiePedidoService {
 		} catch (Exception e) {
 			throw new OmieServiceException(e);
 		}
+	}
+
+	private boolean isAdmin(PedidoDTO pedidoDTO) {
+		return pedidoDTO.isAdmin() == true;
 	}
 	
 	public PedidoDTO alterarPedido(PedidoDTO pedidoDTO) throws OmieServiceException {
@@ -83,11 +90,14 @@ public class OmiePedidoService {
 			pedidoDTO.setCodParcelas(cliente.getCodParcelas());
 			this.removerCaracteresEspeciais(pedidoDTO);
 			this.validarAtivo(cliente);
-			this.validarFeriado(pedidoDTO);
 			this.validarDuplicidade(pedidoDTO);
-			this.validarDomingo(pedidoDTO);
-			this.validarHorarioLimite(cliente, pedidoDTO);
-			this.validarLimitePaes(pedidoDTO);
+			
+			if (!isAdmin(pedidoDTO)) {
+				this.validarFeriado(pedidoDTO);
+				this.validarFinalDeSemana(pedidoDTO);
+				this.validarHorarioLimite(cliente, pedidoDTO);
+				this.validarLimitePaes(pedidoDTO);
+			}
 			
 			ClienteIntegracaoDTO clienteIntegracaoDTO = OmieClienteService.getInstance().pesquisarCliente(cliente.getIdExternoOmie());
 			
@@ -156,15 +166,15 @@ public class OmiePedidoService {
 		}
 	}
 	
-	private void validarDomingo(PedidoDTO pedidoDTO) throws Exception {
+	private void validarFinalDeSemana(PedidoDTO pedidoDTO) throws Exception {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(pedidoDTO.getDataPedido());
 		
 		int dia = calendar.get(Calendar.DAY_OF_WEEK);
 		
-		if (dia == Calendar.SUNDAY) {
-			throw new OmieRepositoryException("Não é possível realizar pedido para domingo.");
-		}
+		if (dia == Calendar.SUNDAY || dia == Calendar.SATURDAY) {
+			throw new OmieRepositoryException("Não é possível realizar pedido para sábado e/ou domingo.");
+		}			
 	}
 	
 	private void validarHorarioLimite(Cliente cliente, PedidoDTO pedidoDTO) throws Exception {
