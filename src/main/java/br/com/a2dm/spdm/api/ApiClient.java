@@ -1,6 +1,8 @@
 package br.com.a2dm.spdm.api;
 
+import br.com.a2dm.spdm.utils.AuthUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -32,6 +34,21 @@ public class ApiClient {
 			httpPost.setEntity(new StringEntity(json));
 			try (CloseableHttpClient client = HttpClients.createDefault();
 					CloseableHttpResponse response = client.execute(httpPost)) {
+				return new ApiClientResponse.Builder().build(response);
+			}
+		} catch (Exception e) {
+			throw new ApiClientException(e);
+		}
+	}
+
+	public ApiClientResponse get(String endpoint, AuthUtils<String, String> auth) {
+		try {
+			HttpGet httpGet = new HttpGet(this.buildResource(endpoint));
+			if (auth.getAuthKey() != null && auth.getAuthValue() != null) {
+				httpGet.addHeader(auth.getAuthKey(), auth.getAuthValue());
+			}
+			try (CloseableHttpClient client = HttpClients.createDefault();
+				 CloseableHttpResponse response = client.execute(httpGet)) {
 				return new ApiClientResponse.Builder().build(response);
 			}
 		} catch (Exception e) {
