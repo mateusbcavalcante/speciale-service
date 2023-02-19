@@ -1,23 +1,27 @@
 package br.com.a2dm.spdm.ativmob.repository;
 
-import br.com.a2dm.brcmn.entity.ativmob.Event;
-import br.com.a2dm.brcmn.util.A2DMHbNgc;
-import br.com.a2dm.brcmn.util.HibernateUtil;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.hibernate.Criteria;
 import org.hibernate.FlushMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import br.com.a2dm.brcmn.entity.ativmob.Event;
+import br.com.a2dm.brcmn.util.A2DMHbNgc;
+import br.com.a2dm.brcmn.util.HibernateUtil;
 
 public class AtivMobRepository extends A2DMHbNgc<br.com.a2dm.brcmn.entity.ativmob.Event> {
 
     private static AtivMobRepository instance;
 
-    private static Map restritores = new HashMap();
-    private static Map filtroPropriedade = new HashMap();
+    @SuppressWarnings("rawtypes")
+	private static Map restritores = new HashMap();
+    
+    @SuppressWarnings("rawtypes")
+	private static Map filtroPropriedade = new HashMap();
 
     private AtivMobRepository() {
     }
@@ -29,7 +33,7 @@ public class AtivMobRepository extends A2DMHbNgc<br.com.a2dm.brcmn.entity.ativmo
         return instance;
     }
 
-    public void salvarEvents(ArrayList<Event> events) throws AtivMobRepositoryException {
+    public void saveEvents(ArrayList<Event> events) throws AtivMobRepositoryException {
         Session sessao = HibernateUtil.getSession();
         sessao.setFlushMode(FlushMode.COMMIT);
         Transaction tx = sessao.beginTransaction();
@@ -53,12 +57,14 @@ public class AtivMobRepository extends A2DMHbNgc<br.com.a2dm.brcmn.entity.ativmo
         return criteria;
     }
 
-    @Override
+	@Override
+	@SuppressWarnings("rawtypes")
     protected Map restritores() {
         return restritores;
     }
 
-    @Override
+	@Override
+	@SuppressWarnings("rawtypes")
     protected Map filtroPropriedade() {
         return filtroPropriedade;
     }
