@@ -41,12 +41,26 @@ public class ApiClient {
 		}
 	}
 
+	public ApiClientResponse post(String resource, Object payload, AuthUtils<String, String> auth) {
+		try {
+			String json = toJson(payload);
+			HttpPost httpPost = new HttpPost(this.buildResource(resource));
+			httpPost.addHeader("content-type", "application/json");
+			httpPost.addHeader(auth.getAuthKey(), auth.getAuthValue());
+			httpPost.setEntity(new StringEntity(json));
+			try (CloseableHttpClient client = HttpClients.createDefault();
+				 CloseableHttpResponse response = client.execute(httpPost)) {
+				return new ApiClientResponse.Builder().build(response);
+			}
+		} catch (Exception e) {
+			throw new ApiClientException(e);
+		}
+	}
+
 	public ApiClientResponse get(String endpoint, AuthUtils<String, String> auth) {
 		try {
 			HttpGet httpGet = new HttpGet(this.buildResource(endpoint));
-			if (auth.getAuthKey() != null && auth.getAuthValue() != null) {
-				httpGet.addHeader(auth.getAuthKey(), auth.getAuthValue());
-			}
+			httpGet.addHeader(auth.getAuthKey(), auth.getAuthValue());
 			try (CloseableHttpClient client = HttpClients.createDefault();
 				 CloseableHttpResponse response = client.execute(httpGet)) {
 				return new ApiClientResponse.Builder().build(response);

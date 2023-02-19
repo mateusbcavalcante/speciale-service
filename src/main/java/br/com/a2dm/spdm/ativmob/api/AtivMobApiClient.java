@@ -20,6 +20,16 @@ public class AtivMobApiClient {
         this.apiClient = new ApiClient(ATIV_MOB_API_PATH);
     }
 
+    public ApiClientResponse post(String endpoint, Object payload) throws ApiClientException {
+        try {
+            AuthUtils<String, String> auth = new AuthUtils<>(ATIV_MOB_X_API_KEY, ATIV_MOB_X_API_VALUE);
+            ApiClientResponse response = this.apiClient.post(endpoint, payload, auth);
+            return response;
+        } catch (Exception e) {
+            throw new ApiClientException(e);
+        }
+    }
+
     public ApiClientResponse get(String endpoint) throws ApiClientException {
         try {
             AuthUtils<String, String> auth = new AuthUtils<>(ATIV_MOB_X_API_KEY, ATIV_MOB_X_API_VALUE);
