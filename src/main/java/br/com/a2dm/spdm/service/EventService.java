@@ -5,12 +5,18 @@ import java.util.Map;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.criterion.Order;
+import org.hibernate.sql.JoinType;
 
 import br.com.a2dm.brcmn.entity.ativmob.Event;
 import br.com.a2dm.brcmn.util.A2DMHbNgc;
+import br.com.a2dm.brcmn.util.RestritorHb;
 
 public class EventService extends A2DMHbNgc<Event>
 {
+	
+	public static final int JOIN_FORM = 1;
+	
 	private static EventService instancia = null;
 
 	@SuppressWarnings("rawtypes")
@@ -30,13 +36,19 @@ public class EventService extends A2DMHbNgc<Event>
 	
 	public EventService()
 	{
-		
+		adicionarFiltro("event_id", RestritorHb.RESTRITOR_EQ, "event_id");
+		adicionarFiltro("event_dth", RestritorHb.RESTRITOR_EQ, "event_dth");
 	}
 	
 	@Override
 	protected Criteria montaCriteria(Session sessao, int join)
 	{
 		Criteria criteria = sessao.createCriteria(Event.class);
+		
+		if ((join & JOIN_FORM) != 0)
+	    {
+			criteria.createAlias("forms", "forms", JoinType.LEFT_OUTER_JOIN);
+	    }
 		
 		return criteria;
 	}
@@ -53,5 +65,11 @@ public class EventService extends A2DMHbNgc<Event>
 	protected Map filtroPropriedade() 
 	{
 		return filtroPropriedade;
+	}
+	
+	@Override
+	protected void setarOrdenacao(Criteria criteria, Event vo, int join)
+	{
+		criteria.addOrder(Order.asc("event_dth"));
 	}
 }

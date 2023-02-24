@@ -8,9 +8,13 @@ import org.hibernate.Session;
 
 import br.com.a2dm.brcmn.entity.ativmob.Form;
 import br.com.a2dm.brcmn.util.A2DMHbNgc;
+import br.com.a2dm.brcmn.util.RestritorHb;
 
 public class FormService extends A2DMHbNgc<Form>
 {
+	
+	public static final String OBJECT_CAPTURE_IMAGE = "CAPTURE UMA IMAGEM";
+	
 	private static FormService instancia = null;
 
 	@SuppressWarnings("rawtypes")
@@ -30,7 +34,7 @@ public class FormService extends A2DMHbNgc<Form>
 	
 	public FormService()
 	{
-		
+		adicionarFiltro("idEvent", RestritorHb.RESTRITOR_EQ, "idEvent");
 	}
 	
 	@Override

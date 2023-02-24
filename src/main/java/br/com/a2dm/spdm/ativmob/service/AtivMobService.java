@@ -5,11 +5,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.hibernate.FlushMode;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+
 import br.com.a2dm.brcmn.dto.ativmob.EventDTO;
 import br.com.a2dm.brcmn.dto.ativmob.FormDTO;
 import br.com.a2dm.brcmn.dto.ativmob.OrderDTO;
 import br.com.a2dm.brcmn.entity.ativmob.Event;
 import br.com.a2dm.brcmn.entity.ativmob.Form;
+import br.com.a2dm.brcmn.util.HibernateUtil;
 import br.com.a2dm.spdm.api.ApiClientResponse;
 import br.com.a2dm.spdm.ativmob.api.AtivMobApiClient;
 import br.com.a2dm.spdm.ativmob.builder.AtivMobBuilder;
@@ -81,13 +86,7 @@ public class AtivMobService {
         	if (eventsDTO != null && eventsDTO.size() > 0) {
             	for (EventDTO eventDTO : eventsDTO) {
             		Event event = buildEventDtoToEvent(eventDTO);
-            		Event eventInserted = EventService.getInstancia().inserir(event);
-            		
-            		for (FormDTO formDTO : eventDTO.getForm()) {
-            			Form form = buildFormDtoToForm(eventInserted, formDTO);
-            			FormService.getInstancia().inserir(form);
-            		}
-            		events.add(eventInserted);
+            		events = this.insertEvents(event, eventDTO);
             	}
         	}
         	return events;
@@ -95,7 +94,44 @@ public class AtivMobService {
             throw new AtivMobServiceException(e);
         }
     }
-
+    
+    private List<Event> insertEvents(Event event, EventDTO eventDTO) throws Exception {
+    	Session sessao = HibernateUtil.getSession();
+		sessao.setFlushMode(FlushMode.COMMIT);
+		Transaction tx = sessao.beginTransaction();
+		
+		try
+		{
+			List<Event> events = new ArrayList<>();
+	    	Event eventInserted = EventService.getInstancia().inserir(sessao, event);
+			
+			for (FormDTO formDTO : eventDTO.getForm()) {
+				Event eventFind = new Event();
+				eventFind.setEvent_id(eventInserted.getEvent_id());
+				
+				event = EventService.getInstancia().get(sessao, event, 0);
+				
+				if (event == null) {
+					Form form = buildFormDtoToForm(eventInserted, formDTO);
+					FormService.getInstancia().inserir(sessao, form);
+					events.add(eventInserted);
+				}
+			}
+			
+			tx.commit();
+			return events;
+		}
+		catch (Exception e)
+		{
+			tx.rollback();
+			throw e;
+		}
+		finally
+		{
+			sessao.close();
+		}
+    }
+    
 	private Event buildEventDtoToEvent(EventDTO eventDTO) {
 		Event event = new Event();
 		event.setStoreCNPJ(eventDTO.getStoreCNPJ());
