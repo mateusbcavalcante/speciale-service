@@ -40,4 +40,5 @@ public class AtivMobBuilder {
             throw new AtivMobBuilderException(e);
         }
     }
+	
 }

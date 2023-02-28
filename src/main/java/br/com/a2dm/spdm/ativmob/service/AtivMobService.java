@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import org.hibernate.FlushMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-
 import br.com.a2dm.brcmn.dto.ativmob.EventDTO;
 import br.com.a2dm.brcmn.dto.ativmob.FormDTO;
 import br.com.a2dm.brcmn.dto.ativmob.OrderDTO;
@@ -78,61 +77,72 @@ public class AtivMobService {
             throw new AtivMobServiceException(e);
         }
     }
-
-    private List<Event> saveEvents(List<EventDTO> eventsDTO) throws AtivMobServiceException {
-        try {
-        	List<Event> events = new ArrayList<>();
-        	
-        	if (eventsDTO != null && eventsDTO.size() > 0) {
-            	for (EventDTO eventDTO : eventsDTO) {
-            		Event event = buildEventDtoToEvent(eventDTO);
-            		events = this.insertEvents(event, eventDTO);
-            	}
-        	}
-        	return events;
-        } catch (Exception e) {
-            throw new AtivMobServiceException(e);
-        }
-    }
     
-    private List<Event> insertEvents(Event event, EventDTO eventDTO) throws Exception {
+    private List<Event> saveEvents(List<EventDTO> eventsDTO) throws AtivMobServiceException {
     	Session sessao = HibernateUtil.getSession();
 		sessao.setFlushMode(FlushMode.COMMIT);
 		Transaction tx = sessao.beginTransaction();
 		
-		try
-		{
-			List<Event> events = new ArrayList<>();
-	    	Event eventInserted = EventService.getInstancia().inserir(sessao, event);
-			
-			for (FormDTO formDTO : eventDTO.getForm()) {
-				Event eventFind = new Event();
-				eventFind.setEvent_id(eventInserted.getEvent_id());
-				
-				event = EventService.getInstancia().get(sessao, event, 0);
-				
-				if (event == null) {
-					Form form = buildFormDtoToForm(eventInserted, formDTO);
-					FormService.getInstancia().inserir(sessao, form);
-					events.add(eventInserted);
-				}
-			}
-			
-			tx.commit();
-			return events;
-		}
-		catch (Exception e)
-		{
-			tx.rollback();
-			throw e;
-		}
-		finally
-		{
+		List<Event> events = new ArrayList<>();
+    	
+        try 
+        {	
+        	if (eventsDTO != null && eventsDTO.size() > 0) {
+            	for (EventDTO eventDTO : eventsDTO) {
+            		Event event = this.buildEventDTOToEvent(eventDTO);
+            		Event eventInserted = this.insertEvent(sessao, event, eventDTO.getForms());
+            		if (eventInserted != null) {
+            			events.add(eventInserted);
+            		}
+            	}
+        	}
+        	tx.commit();
+        	return events;
+        } 
+        catch (Exception e) 
+        {
+        	tx.rollback();
+            throw new AtivMobServiceException(e);
+        } 
+        finally 
+        {
 			sessao.close();
 		}
     }
     
-	private Event buildEventDtoToEvent(EventDTO eventDTO) {
+    private Event insertEvent(Session sessao, Event event, List<FormDTO> formsDTO) throws Exception {
+    	try {
+    		EventService eventService = EventService.getInstancia();
+    		
+    		if (eventService.get(event, 0) == null) {
+    			Event eventInserted = eventService.inserir(sessao, event);
+    			List<Form> formsInserted = new ArrayList<Form>();
+    			for (FormDTO form : formsDTO) {
+					Form formInserted = this.insertForm(sessao, eventInserted, form);
+					formsInserted.add(formInserted);
+				}
+    			eventInserted.setForms(formsInserted);
+        		return eventInserted;
+    		} else {
+    			return null;
+    		}
+    	} catch (Exception e) {
+            throw e;
+        }
+    }
+    
+    private Form insertForm(Session sessao, Event eventInserted, FormDTO formDTO) throws Exception {
+    	try {
+    		FormService formService = FormService.getInstancia();
+    		Form form = this.buildFormDTOToForm(eventInserted.getId_event(), formDTO);
+    		Form formInserted = formService.inserir(sessao, form);
+    		return formInserted;
+    	} catch (Exception e) {
+            throw e;
+        }
+    }
+    
+    private Event buildEventDTOToEvent(EventDTO eventDTO) {
 		Event event = new Event();
 		event.setStoreCNPJ(eventDTO.getStoreCNPJ());
 		event.setEvent_id(eventDTO.getEvent_id());
@@ -147,16 +157,16 @@ public class AtivMobService {
 		event.setLng(eventDTO.getLng());
 		event.setCodigo_roteiro(eventDTO.getCodigo_roteiro());
 		event.setLink_rastreamento(eventDTO.getLink_rastreamento());
-		return event;
-	}
+	    return event;
+    }
 	
-	private Form buildFormDtoToForm(Event eventInserted, FormDTO formDTO) {
+	private Form buildFormDTOToForm(BigInteger idEvent, FormDTO formDTO) {
 		Form form = new Form();
-		form.setType(formDTO.getType());
 		form.setLabel(formDTO.getLabel());
+		form.setType(formDTO.getType());
 		form.setUrl(formDTO.getUrl());
-		form.setValue(formDTO.getValue());
-		form.setEvent(eventInserted);
+		form.setValue(form.getValue());
+		form.setIdEvent(idEvent);
 		return form;
 	}
 }
