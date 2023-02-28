@@ -41,8 +41,9 @@ public class AtivMobService {
     public List<Event> proccessEvents(BigInteger cnpj) throws AtivMobServiceException {
         try {
             List<EventDTO> events = this.findEvents(cnpj);
+            List<Event> eventsInserted = this.saveEvents(events);
             this.makeEvents(events);
-            return this.saveEvents(events);
+            return eventsInserted;
         } catch (Exception e) {
             throw new AtivMobServiceException(e);
         }
@@ -157,6 +158,7 @@ public class AtivMobService {
 		event.setLng(eventDTO.getLng());
 		event.setCodigo_roteiro(eventDTO.getCodigo_roteiro());
 		event.setLink_rastreamento(eventDTO.getLink_rastreamento());
+		event.setStatus("Pendente");
 	    return event;
     }
 	
