@@ -16,7 +16,7 @@ public class AtivMobBuilder {
     public OrderDTO buildBuscarOrderResponse(String json) throws AtivMobBuilderException {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+            objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
             objectMapper.setSerializationInclusion(JsonSerialize.Inclusion.NON_NULL);
             OrderDTO orderDTO = objectMapper.readValue(json, OrderDTO.class);
             return orderDTO;
