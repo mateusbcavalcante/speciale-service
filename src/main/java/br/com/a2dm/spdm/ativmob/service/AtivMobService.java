@@ -167,7 +167,11 @@ public class AtivMobService {
 		form.setLabel(formDTO.getLabel());
 		form.setType(formDTO.getType());
 		form.setUrl(formDTO.getUrl());
-		form.setValue(formDTO.getValue());
+		if (formDTO.getValue() != null && formDTO.getValue() != "") {
+			form.setValue(Integer.parseInt(formDTO.getValue()));
+		} else {
+			form.setValue(null);
+		}
 		form.setIdEvent(idEvent);
 		return form;
 	}
