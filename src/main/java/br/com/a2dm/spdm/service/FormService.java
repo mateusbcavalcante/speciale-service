@@ -6,9 +6,9 @@ import java.util.Map;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 
-import br.com.a2dm.brcmn.entity.ativmob.Form;
 import br.com.a2dm.brcmn.util.A2DMHbNgc;
 import br.com.a2dm.brcmn.util.RestritorHb;
+import br.com.a2dm.spdm.entity.Form;
 
 public class FormService extends A2DMHbNgc<Form>
 {

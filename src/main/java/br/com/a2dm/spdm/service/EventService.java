@@ -10,15 +10,19 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
 import org.hibernate.sql.JoinType;
 
-import br.com.a2dm.brcmn.entity.ativmob.Event;
+import br.com.a2dm.brcmn.dto.PedidoDTO;
 import br.com.a2dm.brcmn.util.A2DMHbNgc;
 import br.com.a2dm.brcmn.util.HibernateUtil;
 import br.com.a2dm.brcmn.util.RestritorHb;
+import br.com.a2dm.spdm.entity.Event;
+import br.com.a2dm.spdm.omie.service.OmiePedidoService;
 
 public class EventService extends A2DMHbNgc<Event>
 {
 	
 	public static final int JOIN_FORM = 1;
+	
+	public static final int JOIN_CLIENTE = 2;
 	
 	private static EventService instancia = null;
 
@@ -53,6 +57,11 @@ public class EventService extends A2DMHbNgc<Event>
 			criteria.createAlias("forms", "forms", JoinType.LEFT_OUTER_JOIN);
 	    }
 		
+		if ((join & JOIN_CLIENTE) != 0)
+	    {
+			criteria.createAlias("cliente", "cliente", JoinType.LEFT_OUTER_JOIN);
+	    }
+		
 		return criteria;
 	}
 	
@@ -80,10 +89,20 @@ public class EventService extends A2DMHbNgc<Event>
 	
 	public Event aprovar(Session sessao, Event vo) throws Exception
 	{	
-		vo.setStatus("Aprovado");
-		sessao.merge(vo);
+		PedidoDTO pedidoDTO = this.buildPedidoDto(vo);
+		PedidoDTO pedidoDTOCriado = OmiePedidoService.getInstance().cadastrarPedido(pedidoDTO);
 		
+		if (pedidoDTOCriado != null) {
+			vo.setStatus("Aprovado");
+			sessao.merge(vo);			
+		}
 		return vo;
+	}
+	
+	public PedidoDTO buildPedidoDto(Event vo) {
+		PedidoDTO pedidoDTO = new PedidoDTO();
+		pedidoDTO.setIdCliente(vo.getIdCliente());
+		return pedidoDTO;
 	}
 	
 	public Event reprovar(Event vo) throws Exception
@@ -110,6 +129,7 @@ public class EventService extends A2DMHbNgc<Event>
 	
 	public Event reprovar(Session sessao, Event vo) throws Exception
 	{
+		vo.setForms(null);
 		vo.setStatus("Reprovado");
 		sessao.merge(vo);
 		
