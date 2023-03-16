@@ -1,6 +1,5 @@
 package br.com.a2dm.spdm.service;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,23 +7,16 @@ import org.hibernate.Criteria;
 import org.hibernate.FlushMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Order;
 
 import br.com.a2dm.brcmn.util.A2DMHbNgc;
 import br.com.a2dm.brcmn.util.HibernateUtil;
 import br.com.a2dm.brcmn.util.RestritorHb;
 import br.com.a2dm.spdm.entity.Aviso;
-import br.com.a2dm.spdm.entity.Event;
-import br.com.a2dm.spdm.entity.Feriado;
 
 public class AvisoService extends A2DMHbNgc<Aviso>{
 	
 	private static AvisoService instancia = null;
-	
-	@SuppressWarnings("rawtypes")
-	private static Map filtroPropriedade = new HashMap();
-	
-	@SuppressWarnings("rawtypes")
-	private static Map restritores = new HashMap();
 	
 	public static AvisoService getInstancia()
 	{
@@ -37,29 +29,10 @@ public class AvisoService extends A2DMHbNgc<Aviso>{
 	
 	public AvisoService()
 	{
+		adicionarFiltro("id_aviso", RestritorHb.RESTRITOR_EQ, "id_aviso");
 		adicionarFiltro("dat_aviso", RestritorHb.RESTRITOR_EQ, "dat_aviso");
 	}
-
-	@Override
-	protected Criteria montaCriteria(Session sessao, int join) {
-		Criteria criteria = sessao.createCriteria(Aviso.class);
-		return criteria;
-	}
-
-	@Override
-	@SuppressWarnings("rawtypes")
-	protected Map restritores() {
-		// TODO Auto-generated method stub
-		return restritores;
-	}
-
-	@Override
-	@SuppressWarnings("rawtypes")
-	protected Map filtroPropriedade() {
-		// TODO Auto-generated method stub
-		return filtroPropriedade;
-	}
-
+	
 	public Aviso ativar(Aviso vo) throws Exception
 	{
 		Session sessao = HibernateUtil.getSession();
@@ -130,6 +103,39 @@ public class AvisoService extends A2DMHbNgc<Aviso>{
 		super.alterar(sessao, vo);
 		
 		return vo;
+	}
+	
+	@SuppressWarnings("rawtypes")
+	private static Map filtroPropriedade = new HashMap();
+	
+	@SuppressWarnings("rawtypes")
+	private static Map restritores = new HashMap();
+	
+
+	@Override
+	protected Criteria montaCriteria(Session sessao, int join) {
+		Criteria criteria = sessao.createCriteria(Aviso.class);
+		return criteria;
+	}
+
+	@Override
+	@SuppressWarnings("rawtypes")
+	protected Map restritores() {
+		// TODO Auto-generated method stub
+		return restritores;
+	}
+
+	@Override
+	@SuppressWarnings("rawtypes")
+	protected Map filtroPropriedade() {
+		// TODO Auto-generated method stub
+		return filtroPropriedade;
+	}
+	
+	@Override
+	protected void setarOrdenacao(Criteria criteria, Aviso vo, int join)
+	{
+		criteria.addOrder(Order.asc("dat_aviso"));
 	}
 
 }
