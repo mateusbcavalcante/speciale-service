@@ -31,6 +31,7 @@ public class AvisoService extends A2DMHbNgc<Aviso>{
 	{
 		adicionarFiltro("id_aviso", RestritorHb.RESTRITOR_EQ, "id_aviso");
 		adicionarFiltro("dat_aviso", RestritorHb.RESTRITOR_EQ, "dat_aviso");
+		adicionarFiltro("ativo", RestritorHb.RESTRITOR_EQ, "ativo");
 	}
 	
 	public Aviso ativar(Aviso vo) throws Exception
