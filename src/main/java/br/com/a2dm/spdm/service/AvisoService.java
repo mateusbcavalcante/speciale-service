@@ -30,7 +30,8 @@ public class AvisoService extends A2DMHbNgc<Aviso>{
 	public AvisoService()
 	{
 		adicionarFiltro("id_aviso", RestritorHb.RESTRITOR_EQ, "id_aviso");
-		adicionarFiltro("dat_aviso", RestritorHb.RESTRITOR_EQ, "dat_aviso");
+		adicionarFiltro("dat_inicial", RestritorHb.RESTRITOR_EQ, "dat_inicial");
+		adicionarFiltro("dat_final", RestritorHb.RESTRITOR_EQ, "dat_final");
 		adicionarFiltro("ativo", RestritorHb.RESTRITOR_EQ, "ativo");
 	}
 	
@@ -136,7 +137,7 @@ public class AvisoService extends A2DMHbNgc<Aviso>{
 	@Override
 	protected void setarOrdenacao(Criteria criteria, Aviso vo, int join)
 	{
-		criteria.addOrder(Order.asc("dat_aviso"));
+		criteria.addOrder(Order.asc("dat_inicial"));
 	}
 
 }

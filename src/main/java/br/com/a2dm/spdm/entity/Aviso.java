@@ -23,9 +23,12 @@ public class Aviso {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_AVISO")
     @Column(name = "id_aviso")
     private BigInteger id_aviso;
+
+	@Column(name = "dat_inicial")
+    private Date dat_inicial;
     
-    @Column(name = "dat_aviso")
-    private Date dat_aviso;
+    @Column(name = "dat_final")
+    private Date dat_final;
 
     @Column(name = "des_aviso")
     private String des_aviso;
@@ -41,12 +44,20 @@ public class Aviso {
 		this.id_aviso = id_aviso;
 	}
 
-	public Date getDat_aviso() {
-		return dat_aviso;
+    public Date getDat_inicial() {
+		return dat_inicial;
 	}
 
-	public void setDat_aviso(Date dat_aviso) {
-		this.dat_aviso = dat_aviso;
+	public void setDat_inicial(Date dat_inicial) {
+		this.dat_inicial = dat_inicial;
+	}
+
+	public Date getDat_final() {
+		return dat_final;
+	}
+
+	public void setDat_final(Date dat_final) {
+		this.dat_final = dat_final;
 	}
 
 	public String getDes_aviso() {
