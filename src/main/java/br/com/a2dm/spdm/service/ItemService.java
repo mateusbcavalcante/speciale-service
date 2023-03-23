@@ -8,14 +8,14 @@ import org.hibernate.Session;
 
 import br.com.a2dm.brcmn.util.A2DMHbNgc;
 import br.com.a2dm.brcmn.util.RestritorHb;
-import br.com.a2dm.spdm.entity.Form;
+import br.com.a2dm.spdm.entity.Item;
 
-public class FormService extends A2DMHbNgc<Form>
+public class ItemService extends A2DMHbNgc<Item>
 {
 	
 	public static final String OBJECT_CAPTURE_IMAGE = "CAPTURE UMA IMAGEM";
 	
-	private static FormService instancia = null;
+	private static ItemService instancia = null;
 
 	@SuppressWarnings("rawtypes")
 	private static Map filtroPropriedade = new HashMap();
@@ -23,24 +23,25 @@ public class FormService extends A2DMHbNgc<Form>
 	@SuppressWarnings("rawtypes")
 	private static Map restritores = new HashMap();
 	
-	public static FormService getInstancia()
+	public static ItemService getInstancia()
 	{
 		if (instancia == null)
 		{
-			instancia = new FormService();
+			instancia = new ItemService();
 		}
 		return instancia;
 	}
 	
-	public FormService()
+	public ItemService()
 	{
-		adicionarFiltro("idEvent", RestritorHb.RESTRITOR_EQ, "idEvent");
+		// Corrigir
+		adicionarFiltro("idSugestaoPedido", RestritorHb.RESTRITOR_EQ, "idSugestaoPedido");
 	}
 	
 	@Override
 	protected Criteria montaCriteria(Session sessao, int join)
 	{
-		Criteria criteria = sessao.createCriteria(Form.class);
+		Criteria criteria = sessao.createCriteria(Item.class);
 		
 		return criteria;
 	}

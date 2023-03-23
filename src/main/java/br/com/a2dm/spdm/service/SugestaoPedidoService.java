@@ -14,17 +14,17 @@ import br.com.a2dm.brcmn.dto.PedidoDTO;
 import br.com.a2dm.brcmn.util.A2DMHbNgc;
 import br.com.a2dm.brcmn.util.HibernateUtil;
 import br.com.a2dm.brcmn.util.RestritorHb;
-import br.com.a2dm.spdm.entity.Event;
+import br.com.a2dm.spdm.entity.SugestaoPedido;
 import br.com.a2dm.spdm.omie.service.OmiePedidoService;
 
-public class EventService extends A2DMHbNgc<Event>
+public class SugestaoPedidoService extends A2DMHbNgc<SugestaoPedido>
 {
 	
 	public static final int JOIN_FORM = 1;
 	
 	public static final int JOIN_CLIENTE = 2;
 	
-	private static EventService instancia = null;
+	private static SugestaoPedidoService instancia = null;
 
 	@SuppressWarnings("rawtypes")
 	private static Map filtroPropriedade = new HashMap();
@@ -32,40 +32,44 @@ public class EventService extends A2DMHbNgc<Event>
 	@SuppressWarnings("rawtypes")
 	private static Map restritores = new HashMap();
 	
-	public static EventService getInstancia()
+	public static SugestaoPedidoService getInstancia()
 	{
 		if (instancia == null)
 		{
-			instancia = new EventService();
+			instancia = new SugestaoPedidoService();
 		}
 		return instancia;
 	}
 	
-	public EventService()
+	public SugestaoPedidoService()
 	{
-		adicionarFiltro("event_id", RestritorHb.RESTRITOR_EQ, "event_id");
-		adicionarFiltro("event_dth", RestritorHb.RESTRITOR_EQ, "event_dth");
+		// Corrigir
+		adicionarFiltro("eventId", RestritorHb.RESTRITOR_EQ, "eventId");
+		adicionarFiltro("eventDth", RestritorHb.RESTRITOR_EQ, "eventDth");
 	}
 	
 	@Override
 	protected Criteria montaCriteria(Session sessao, int join)
 	{
-		Criteria criteria = sessao.createCriteria(Event.class);
+		Criteria criteria = sessao.createCriteria(SugestaoPedido.class);
 		
+		// Corrigir
+		/*
 		if ((join & JOIN_FORM) != 0)
 	    {
-			criteria.createAlias("forms", "forms", JoinType.LEFT_OUTER_JOIN);
+			criteria.createAlias("itens", "itens", JoinType.LEFT_OUTER_JOIN);
 	    }
 		
 		if ((join & JOIN_CLIENTE) != 0)
 	    {
 			criteria.createAlias("cliente", "cliente", JoinType.LEFT_OUTER_JOIN);
 	    }
+	    */
 		
 		return criteria;
 	}
 	
-	public Event aprovar(Event vo) throws Exception
+	public SugestaoPedido aprovar(SugestaoPedido vo) throws Exception
 	{
 		Session sessao = HibernateUtil.getSession();
 		sessao.setFlushMode(FlushMode.COMMIT);
@@ -87,7 +91,7 @@ public class EventService extends A2DMHbNgc<Event>
 		}
 	}
 	
-	public Event aprovar(Session sessao, Event vo) throws Exception
+	public SugestaoPedido aprovar(Session sessao, SugestaoPedido vo) throws Exception
 	{	
 		PedidoDTO pedidoDTO = this.buildPedidoDto(vo);
 		PedidoDTO pedidoDTOCriado = OmiePedidoService.getInstance().cadastrarPedido(pedidoDTO);
@@ -99,13 +103,13 @@ public class EventService extends A2DMHbNgc<Event>
 		return vo;
 	}
 	
-	public PedidoDTO buildPedidoDto(Event vo) {
+	public PedidoDTO buildPedidoDto(SugestaoPedido vo) {
 		PedidoDTO pedidoDTO = new PedidoDTO();
 		pedidoDTO.setIdCliente(vo.getIdCliente());
 		return pedidoDTO;
 	}
 	
-	public Event reprovar(Event vo) throws Exception
+	public SugestaoPedido reprovar(SugestaoPedido vo) throws Exception
 	{
 		Session sessao = HibernateUtil.getSession();
 		sessao.setFlushMode(FlushMode.COMMIT);
@@ -127,9 +131,9 @@ public class EventService extends A2DMHbNgc<Event>
 		}
 	}
 	
-	public Event reprovar(Session sessao, Event vo) throws Exception
+	public SugestaoPedido reprovar(Session sessao, SugestaoPedido vo) throws Exception
 	{
-		vo.setForms(null);
+		vo.setItens(null);
 		vo.setStatus("Reprovado");
 		sessao.merge(vo);
 		
@@ -151,8 +155,8 @@ public class EventService extends A2DMHbNgc<Event>
 	}
 	
 	@Override
-	protected void setarOrdenacao(Criteria criteria, Event vo, int join)
+	protected void setarOrdenacao(Criteria criteria, SugestaoPedido vo, int join)
 	{
-		criteria.addOrder(Order.asc("event_dth"));
+		criteria.addOrder(Order.asc("eventDth"));
 	}
 }

@@ -16,10 +16,10 @@ import br.com.a2dm.brcmn.util.HibernateUtil;
 import br.com.a2dm.spdm.api.ApiClientResponse;
 import br.com.a2dm.spdm.ativmob.api.AtivMobApiClient;
 import br.com.a2dm.spdm.ativmob.builder.AtivMobBuilder;
-import br.com.a2dm.spdm.entity.Event;
-import br.com.a2dm.spdm.entity.Form;
-import br.com.a2dm.spdm.service.EventService;
-import br.com.a2dm.spdm.service.FormService;
+import br.com.a2dm.spdm.entity.Item;
+import br.com.a2dm.spdm.entity.SugestaoPedido;
+import br.com.a2dm.spdm.service.ItemService;
+import br.com.a2dm.spdm.service.SugestaoPedidoService;
 
 public class AtivMobService {
 
@@ -39,31 +39,31 @@ public class AtivMobService {
         return instance;
     }
     
-    public List<Event> proccessEvents(BigInteger cnpj) throws AtivMobServiceException {
+    public List<SugestaoPedido> proccessSugestoesPedido(BigInteger cnpj) throws AtivMobServiceException {
         try {
-            List<EventDTO> events = this.findEvents(cnpj);
-            List<Event> eventsInserted = this.saveEvents(events);
-            this.makeEvents(events);
-            return eventsInserted;
+            List<EventDTO> sugestoesPedidoDTO = this.findSugestoesPedido(cnpj);
+            List<SugestaoPedido> sugestoesInserted = this.saveSugestoesPedido(sugestoesPedidoDTO);
+            this.makeEvents(sugestoesPedidoDTO);
+            return sugestoesInserted;
         } catch (Exception e) {
             throw new AtivMobServiceException(e);
         }
     } 
     
-    private List<EventDTO> findEvents(BigInteger cnpj) throws AtivMobServiceException {
+    private List<EventDTO> findSugestoesPedido(BigInteger cnpj) throws AtivMobServiceException {
         try {
             AtivMobApiClient apiClient = new AtivMobApiClient();
             ApiClientResponse response = apiClient.get(resource + getEventsEndpoint + cnpj);
             OrderDTO orderDTO = new AtivMobBuilder().buildBuscarOrderResponse(response.getBody());
             List<EventDTO> events = orderDTO.getEvents();
-            events = FilteredsEventsBySugestao(events);
+            events = filterSugestoesPedido(events);
             return events;
         } catch (Exception e) {
             throw new AtivMobServiceException(e);
         }
     }
 
-	private List<EventDTO> FilteredsEventsBySugestao(List<EventDTO> events) {
+	private List<EventDTO> filterSugestoesPedido(List<EventDTO> events) {
 		return events.stream()
 				     .filter(event -> event.getEvent_code().equalsIgnoreCase("sugestao"))
 				     .collect(Collectors.toList());
@@ -80,26 +80,26 @@ public class AtivMobService {
         }
     }
     
-    private List<Event> saveEvents(List<EventDTO> eventsDTO) throws AtivMobServiceException {
+    private List<SugestaoPedido> saveSugestoesPedido(List<EventDTO> sugestoesPedidoDTO) throws AtivMobServiceException {
     	Session sessao = HibernateUtil.getSession();
 		sessao.setFlushMode(FlushMode.COMMIT);
 		Transaction tx = sessao.beginTransaction();
 		
-		List<Event> events = new ArrayList<>();
+		List<SugestaoPedido> sugestoesPedido = new ArrayList<>();
     	
         try 
         {	
-        	if (eventsDTO != null && eventsDTO.size() > 0) {
-            	for (EventDTO eventDTO : eventsDTO) {
-            		Event event = this.buildEventDTOToEvent(eventDTO);
-            		Event eventInserted = this.insertEvent(sessao, event, eventDTO.getForms());
-            		if (eventInserted != null) {
-            			events.add(eventInserted);
+        	if (sugestoesPedidoDTO != null && sugestoesPedidoDTO.size() > 0) {
+            	for (EventDTO sugestaoPedidoDTO : sugestoesPedidoDTO) {
+            		SugestaoPedido sugestaoPedido = this.buildSugestaoPedidoDTOToSugestaoPedido(sugestaoPedidoDTO);
+            		SugestaoPedido sugestaoPedidoInserted = this.insertSugestaoPedido(sessao, sugestaoPedido, sugestaoPedidoDTO.getForms());
+            		if (sugestaoPedidoInserted != null) {
+            			sugestoesPedido.add(sugestaoPedidoInserted);
             		}
             	}
         	}
         	tx.commit();
-        	return events;
+        	return sugestoesPedido;
         } 
         catch (Exception e) 
         {
@@ -112,19 +112,19 @@ public class AtivMobService {
 		}
     }
     
-    private Event insertEvent(Session sessao, Event event, List<FormDTO> formsDTO) throws Exception {
+    private SugestaoPedido insertSugestaoPedido(Session sessao, SugestaoPedido sugestaoPedido, List<FormDTO> itensDTO) throws Exception {
     	try {
-    		EventService eventService = EventService.getInstancia();
+    		SugestaoPedidoService sugestaoPedidoService = SugestaoPedidoService.getInstancia();
     		
-    		if (eventService.get(event, 0) == null) {
-    			Event eventInserted = eventService.inserir(sessao, event);
-    			List<Form> formsInserted = new ArrayList<Form>();
-    			for (FormDTO form : formsDTO) {
-					Form formInserted = this.insertForm(sessao, eventInserted, form);
-					formsInserted.add(formInserted);
+    		if (sugestaoPedidoService.get(sugestaoPedido, 0) == null) {
+    			SugestaoPedido sugestaoPedidoInserted = sugestaoPedidoService.inserir(sessao, sugestaoPedido);
+    			List<Item> itensInserted = new ArrayList<Item>();
+    			for (FormDTO itemDTO : itensDTO) {
+					Item itemInserted = this.insertItem(sessao, sugestaoPedidoInserted, itemDTO);
+					itensInserted.add(itemInserted);
 				}
-    			eventInserted.setForms(formsInserted);
-        		return eventInserted;
+    			sugestaoPedidoInserted.setItens(itensInserted);
+        		return sugestaoPedidoInserted;
     		} else {
     			return null;
     		}
@@ -133,47 +133,72 @@ public class AtivMobService {
         }
     }
     
-    private Form insertForm(Session sessao, Event eventInserted, FormDTO formDTO) throws Exception {
+    private Item insertItem(Session sessao, SugestaoPedido sugestaoPedidoInserted, FormDTO itemDTO) throws Exception {
     	try {
-    		FormService formService = FormService.getInstancia();
-    		Form form = this.buildFormDTOToForm(eventInserted.getId_event(), formDTO);
-    		Form formInserted = formService.inserir(sessao, form);
-    		return formInserted;
+    		ItemService itemService = ItemService.getInstancia();
+    		Item item = this.buildItemDTOToItem(sugestaoPedidoInserted.getIdSugestaoPedido(), itemDTO);
+    		Item itemInserted = itemService.inserir(sessao, item);
+    		return itemInserted;
     	} catch (Exception e) {
             throw e;
         }
     }
     
-    private Event buildEventDTOToEvent(EventDTO eventDTO) {
-		Event event = new Event();
-		event.setStoreCNPJ(eventDTO.getStoreCNPJ());
-		event.setEvent_id(eventDTO.getEvent_id());
-		event.setEvent_code(eventDTO.getEvent_code());
-		event.setEvent_title(eventDTO.getEvent_title());
-		event.setEvent_dth(eventDTO.getEvent_dth());
-		event.setOrder_number(eventDTO.getOrder_number());
-		event.setInvoice_number(eventDTO.getInvoice_number());
-		event.setAgent_code(eventDTO.getAgent_code());
-		event.setAgent_name(eventDTO.getAgent_name());
-		event.setLat(eventDTO.getLat());
-		event.setLng(eventDTO.getLng());
-		event.setCodigo_roteiro(eventDTO.getCodigo_roteiro());
-		event.setLink_rastreamento(eventDTO.getLink_rastreamento());
-		event.setStatus("Pendente");
-	    return event;
+	private SugestaoPedido buildSugestaoPedidoDTOToSugestaoPedido(EventDTO sugestaoPedidoDTO) {
+		SugestaoPedido sugestaoPedido = new SugestaoPedido();
+		sugestaoPedido.setStoreCNPJ(sugestaoPedidoDTO.getStoreCNPJ());
+		sugestaoPedido.setEventId(sugestaoPedidoDTO.getEvent_id());
+		sugestaoPedido.setEventCode(sugestaoPedidoDTO.getEvent_code());
+		sugestaoPedido.setEventTitle(sugestaoPedidoDTO.getEvent_title());
+		sugestaoPedido.setEventDth(sugestaoPedidoDTO.getEvent_dth());
+		sugestaoPedido.setOrderNumber(sugestaoPedidoDTO.getOrder_number());
+		sugestaoPedido.setInvoiceNumber(sugestaoPedidoDTO.getInvoice_number());
+		sugestaoPedido.setAgentCode(sugestaoPedidoDTO.getAgent_code());
+		sugestaoPedido.setAgentName(sugestaoPedidoDTO.getAgent_name());
+		sugestaoPedido.setLat(sugestaoPedidoDTO.getLat());
+		sugestaoPedido.setLng(sugestaoPedidoDTO.getLng());
+		sugestaoPedido.setCodigoRoteiro(sugestaoPedidoDTO.getCodigo_roteiro());
+		sugestaoPedido.setLinkRastreamento(sugestaoPedidoDTO.getLink_rastreamento());
+		sugestaoPedido.setRazaoSocialDest(sugestaoPedidoDTO.getRazao_social_dest());
+		sugestaoPedido.setNomeFantasiaDest(sugestaoPedidoDTO.getNome_fantasia_dest());
+		
+		if (sugestaoPedidoDTO.getCodigo_destino() != null && sugestaoPedidoDTO.getCodigo_destino() != "") {
+			sugestaoPedido.setCodigoDestino(new BigInteger(sugestaoPedidoDTO.getCodigo_destino()));
+		} else {
+			sugestaoPedido.setCodigoDestino(null);
+		}
+		
+		sugestaoPedido.setStatus("Pendente");
+		
+	    return sugestaoPedido;
     }
 	
-	private Form buildFormDTOToForm(BigInteger idEvent, FormDTO formDTO) {
-		Form form = new Form();
-		form.setLabel(formDTO.getLabel());
-		form.setType(formDTO.getType());
-		form.setUrl(formDTO.getUrl());
-		if (formDTO.getValue() != null && formDTO.getValue() != "") {
-			form.setValue(Integer.parseInt(formDTO.getValue()));
+	private Item buildItemDTOToItem(BigInteger idSugestaoPedido, FormDTO itemDTO) {
+		Item item = new Item();
+		item.setLabel(itemDTO.getLabel());
+		item.setType(itemDTO.getType());
+		item.setUrl(itemDTO.getUrl());
+		
+		if (itemDTO.getValue() != null && itemDTO.getValue() != "") {
+			item.setValue(Integer.parseInt(itemDTO.getValue()));
 		} else {
-			form.setValue(null);
+			item.setValue(null);
 		}
-		form.setIdEvent(idEvent);
-		return form;
+		
+		if (itemDTO.getCodigo() != null && itemDTO.getCodigo() != "") {
+			item.setCodigo(Integer.parseInt(itemDTO.getCodigo()));
+		} else {
+			item.setCodigo(null);
+		}
+		
+		if (itemDTO.getInteg_id() != null && itemDTO.getInteg_id() != "") {
+			item.setIntegId(Integer.parseInt(itemDTO.getInteg_id()));
+		} else {
+			item.setIntegId(null);
+		}
+		
+		item.setIdSugestaoPedido(idSugestaoPedido);
+		
+		return item;
 	}
 }
