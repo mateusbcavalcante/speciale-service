@@ -34,7 +34,6 @@ public class ItemService extends A2DMHbNgc<Item>
 	
 	public ItemService()
 	{
-		// Corrigir
 		adicionarFiltro("idSugestaoPedido", RestritorHb.RESTRITOR_EQ, "idSugestaoPedido");
 	}
 	

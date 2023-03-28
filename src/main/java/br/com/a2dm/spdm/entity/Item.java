@@ -58,18 +58,20 @@ public class Item {
 		super();
 	}
 
-	public Item(String type, String label, String url, Integer value, BigInteger idSugestaoPedido,
-			SugestaoPedido sugestaoPedido) {
+    public Item(String type, String label, String url, Integer value, Integer codigo, Integer integId,
+			BigInteger idSugestaoPedido, SugestaoPedido sugestaoPedido) {
 		super();
 		this.type = type;
 		this.label = label;
 		this.url = url;
 		this.value = value;
+		this.codigo = codigo;
+		this.integId = integId;
 		this.idSugestaoPedido = idSugestaoPedido;
 		this.sugestaoPedido = sugestaoPedido;
 	}
 
-    public BigInteger getIdItem() {
+	public BigInteger getIdItem() {
 		return idItem;
 	}
 

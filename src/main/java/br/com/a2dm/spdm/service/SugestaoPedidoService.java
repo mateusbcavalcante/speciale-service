@@ -22,7 +22,9 @@ public class SugestaoPedidoService extends A2DMHbNgc<SugestaoPedido>
 	
 	public static final int JOIN_FORM = 1;
 	
-	public static final int JOIN_CLIENTE = 2;
+	public static final int JOIN_PEDIDO_OPCAO_ENTREGA = 2;
+	
+	// public static final int JOIN_CLIENTE = 4;
 	
 	private static SugestaoPedidoService instancia = null;
 
@@ -43,7 +45,6 @@ public class SugestaoPedidoService extends A2DMHbNgc<SugestaoPedido>
 	
 	public SugestaoPedidoService()
 	{
-		// Corrigir
 		adicionarFiltro("eventId", RestritorHb.RESTRITOR_EQ, "eventId");
 		adicionarFiltro("eventDth", RestritorHb.RESTRITOR_EQ, "eventDth");
 	}
@@ -53,13 +54,19 @@ public class SugestaoPedidoService extends A2DMHbNgc<SugestaoPedido>
 	{
 		Criteria criteria = sessao.createCriteria(SugestaoPedido.class);
 		
-		// Corrigir
-		/*
+		
 		if ((join & JOIN_FORM) != 0)
 	    {
 			criteria.createAlias("itens", "itens", JoinType.LEFT_OUTER_JOIN);
 	    }
 		
+		if ((join & JOIN_PEDIDO_OPCAO_ENTREGA) != 0)
+	    {
+			criteria.createAlias("opcaoEntrega", "opcaoEntrega", JoinType.LEFT_OUTER_JOIN);
+	    }
+		
+		// Corrigir
+		/*
 		if ((join & JOIN_CLIENTE) != 0)
 	    {
 			criteria.createAlias("cliente", "cliente", JoinType.LEFT_OUTER_JOIN);
@@ -93,6 +100,10 @@ public class SugestaoPedidoService extends A2DMHbNgc<SugestaoPedido>
 	
 	public SugestaoPedido aprovar(Session sessao, SugestaoPedido vo) throws Exception
 	{	
+		System.out.println("Objeto de aprovação: " + vo.toString());
+		vo.setStatus("Aprovado");
+		sessao.merge(vo);
+		/*
 		PedidoDTO pedidoDTO = this.buildPedidoDto(vo);
 		PedidoDTO pedidoDTOCriado = OmiePedidoService.getInstance().cadastrarPedido(pedidoDTO);
 		
@@ -100,6 +111,7 @@ public class SugestaoPedidoService extends A2DMHbNgc<SugestaoPedido>
 			vo.setStatus("Aprovado");
 			sessao.merge(vo);			
 		}
+		*/
 		return vo;
 	}
 	
