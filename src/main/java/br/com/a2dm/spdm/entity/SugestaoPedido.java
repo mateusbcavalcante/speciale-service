@@ -95,15 +95,6 @@ public class SugestaoPedido implements Serializable {
     @Transient
 	private String imagem;
     
-    /*
-    @Column(name = "id_cliente")
-	private BigInteger idCliente;
-	
-    @ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_cliente", insertable = false, updatable = false)
-	private Cliente cliente;
-    */
-    
     @Column(name = "id_opcao_entrega")
 	private BigInteger idOpcaoEntrega;
     
@@ -281,24 +272,6 @@ public class SugestaoPedido implements Serializable {
 	public void setImagem(String imagem) {
 		this.imagem = imagem;
 	}
-
-	/*
-	public BigInteger getIdCliente() {
-		return idCliente;
-	}
-
-	public void setIdCliente(BigInteger idCliente) {
-		this.idCliente = idCliente;
-	}
-
-	public Cliente getCliente() {
-		return cliente;
-	}
-
-	public void setCliente(Cliente cliente) {
-		this.cliente = cliente;
-	}
-	*/
 
 	public BigInteger getIdOpcaoEntrega() {
 		return idOpcaoEntrega;
