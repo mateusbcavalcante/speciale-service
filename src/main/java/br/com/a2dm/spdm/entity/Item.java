@@ -38,13 +38,13 @@ public class Item {
     private String url;
 
     @Column(name = "value")
-    private Integer value;
+    private BigInteger value;
     
     @Column(name = "codigo")
     private Integer codigo;
     
     @Column(name = "integ_id")
-    private Integer integId;
+    private BigInteger integId;
     
     @Column(name = "id_sugestao_pedido")
 	private BigInteger idSugestaoPedido;
@@ -58,7 +58,7 @@ public class Item {
 		super();
 	}
 
-    public Item(String type, String label, String url, Integer value, Integer codigo, Integer integId,
+    public Item(String type, String label, String url, BigInteger value, Integer codigo, BigInteger integId,
 			BigInteger idSugestaoPedido, SugestaoPedido sugestaoPedido) {
 		super();
 		this.type = type;
@@ -103,11 +103,11 @@ public class Item {
         this.url = url;
     }
 
-    public Integer getValue() {
+    public BigInteger getValue() {
         return value;
     }
 
-    public void setValue(Integer value) {
+    public void setValue(BigInteger value) {
         this.value = value;
     }
 
@@ -119,11 +119,11 @@ public class Item {
 		this.codigo = codigo;
 	}
 
-	public Integer getIntegId() {
+	public BigInteger getIntegId() {
 		return integId;
 	}
 
-	public void setIntegId(Integer integId) {
+	public void setIntegId(BigInteger integId) {
 		this.integId = integId;
 	}
 

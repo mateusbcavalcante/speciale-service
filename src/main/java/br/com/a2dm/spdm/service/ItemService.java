@@ -13,7 +13,6 @@ import br.com.a2dm.brcmn.util.A2DMHbNgc;
 import br.com.a2dm.brcmn.util.HibernateUtil;
 import br.com.a2dm.brcmn.util.RestritorHb;
 import br.com.a2dm.spdm.entity.Item;
-import br.com.a2dm.spdm.entity.SugestaoPedido;
 
 public class ItemService extends A2DMHbNgc<Item>
 {
@@ -41,6 +40,7 @@ public class ItemService extends A2DMHbNgc<Item>
 	{
 		adicionarFiltro("idItem", RestritorHb.RESTRITOR_EQ, "idItem");
 		adicionarFiltro("idSugestaoPedido", RestritorHb.RESTRITOR_EQ, "idSugestaoPedido");
+		adicionarFiltro("integId", RestritorHb.RESTRITOR_EQ, "integId");
 	}
 	
 	@Override
@@ -123,13 +123,9 @@ public class ItemService extends A2DMHbNgc<Item>
 	}
 	
 	public Item removerItem(Session sessao, Item item) throws Exception {
-		Item itemFind = new Item();
-		itemFind.setIdItem(item.getIdItem());
-		
-		itemFind = get(sessao, itemFind, 0);
-		
-		sessao.delete(itemFind);
-		return itemFind;
+		item = get(sessao, item, 0);
+		sessao.delete(item);
+		return item;
 	}
 	
 	@Override
