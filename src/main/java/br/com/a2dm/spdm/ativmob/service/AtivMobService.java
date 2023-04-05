@@ -198,7 +198,6 @@ public class AtivMobService {
 		}
 		
 		item.setIdSugestaoPedido(idSugestaoPedido);
-		item.setAtivo(true);
 		
 		return item;
 	}
