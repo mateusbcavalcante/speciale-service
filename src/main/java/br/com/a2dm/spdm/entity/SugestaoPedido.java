@@ -95,12 +95,14 @@ public class SugestaoPedido implements Serializable {
     @Transient
 	private String imagem;
     
+    /*
     @Column(name = "id_cliente")
 	private BigInteger idCliente;
 	
     @ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_cliente", insertable = false, updatable = false)
 	private Cliente cliente;
+    */
     
     @Column(name = "id_opcao_entrega")
 	private BigInteger idOpcaoEntrega;
@@ -114,9 +116,10 @@ public class SugestaoPedido implements Serializable {
     	super();
     }
     
-	public SugestaoPedido(String imagem, List<Item> itens) {
+	public SugestaoPedido(String imagem, List<Item> itens, String status) {
 		this.imagem = imagem;
 		this.itens = itens;
+		this.status = status;
 	}
 
 	public BigInteger getIdSugestaoPedido() {
@@ -279,6 +282,7 @@ public class SugestaoPedido implements Serializable {
 		this.imagem = imagem;
 	}
 
+	/*
 	public BigInteger getIdCliente() {
 		return idCliente;
 	}
@@ -294,6 +298,7 @@ public class SugestaoPedido implements Serializable {
 	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
 	}
+	*/
 
 	public BigInteger getIdOpcaoEntrega() {
 		return idOpcaoEntrega;

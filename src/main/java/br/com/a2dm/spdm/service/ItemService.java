@@ -7,11 +7,13 @@ import org.hibernate.Criteria;
 import org.hibernate.FlushMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Order;
 
 import br.com.a2dm.brcmn.util.A2DMHbNgc;
 import br.com.a2dm.brcmn.util.HibernateUtil;
 import br.com.a2dm.brcmn.util.RestritorHb;
 import br.com.a2dm.spdm.entity.Item;
+import br.com.a2dm.spdm.entity.SugestaoPedido;
 
 public class ItemService extends A2DMHbNgc<Item>
 {
@@ -96,5 +98,43 @@ public class ItemService extends A2DMHbNgc<Item>
 		
 		sessao.merge(itemFind);
 		return itemFind;
-	}	
+	}
+
+	public Item removerItem(Item vo) throws Exception {
+		Session sessao = HibernateUtil.getSession();
+		sessao.setFlushMode(FlushMode.COMMIT);
+		Transaction tx = sessao.beginTransaction();
+		
+		try
+		{
+			vo = removerItem(sessao, vo);
+			tx.commit();
+			return vo;
+		}
+		catch (Exception e)
+		{
+			tx.rollback();
+			throw e;
+		}
+		finally
+		{
+			sessao.close();
+		}
+	}
+	
+	public Item removerItem(Session sessao, Item item) throws Exception {
+		Item itemFind = new Item();
+		itemFind.setIdItem(item.getIdItem());
+		
+		itemFind = get(sessao, itemFind, 0);
+		
+		sessao.delete(itemFind);
+		return itemFind;
+	}
+	
+	@Override
+	protected void setarOrdenacao(Criteria criteria, Item vo, int join)
+	{
+		criteria.addOrder(Order.asc("label"));
+	}
 }

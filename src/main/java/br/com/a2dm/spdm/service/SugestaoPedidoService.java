@@ -65,14 +65,6 @@ public class SugestaoPedidoService extends A2DMHbNgc<SugestaoPedido>
 			criteria.createAlias("opcaoEntrega", "opcaoEntrega", JoinType.LEFT_OUTER_JOIN);
 	    }
 		
-		// Corrigir
-		/*
-		if ((join & JOIN_CLIENTE) != 0)
-	    {
-			criteria.createAlias("cliente", "cliente", JoinType.LEFT_OUTER_JOIN);
-	    }
-	    */
-		
 		return criteria;
 	}
 	
@@ -117,7 +109,6 @@ public class SugestaoPedidoService extends A2DMHbNgc<SugestaoPedido>
 	
 	public PedidoDTO buildPedidoDto(SugestaoPedido vo) {
 		PedidoDTO pedidoDTO = new PedidoDTO();
-		pedidoDTO.setIdCliente(vo.getIdCliente());
 		return pedidoDTO;
 	}
 	
