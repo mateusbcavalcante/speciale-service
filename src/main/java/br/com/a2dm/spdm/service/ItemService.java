@@ -1,6 +1,7 @@
 package br.com.a2dm.spdm.service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.hibernate.Criteria;
@@ -65,6 +66,15 @@ public class ItemService extends A2DMHbNgc<Item>
 		return filtroPropriedade;
 	}
 	
+	@Override
+	protected void validarInserir(Session sessao, Item vo) throws Exception {
+		List<Item> itemSearch = this.pesquisar(vo, 0);
+		
+		if (itemSearch.size() > 0) {
+			throw new Exception("Este produto já está cadastrado na sua base de dados!");
+		}
+	}
+	
 	public Item atualizarQuantidade(Item vo) throws Exception
 	{
 		Session sessao = HibernateUtil.getSession();
@@ -90,9 +100,8 @@ public class ItemService extends A2DMHbNgc<Item>
 
 	public Item atualizarQuantidade(Session sessao, Item item) throws Exception {
 		Item itemFind = new Item();
-		itemFind.setIdItem(item.getIdItem());
 		
-		itemFind = get(sessao, itemFind, 0);
+		itemFind = get(sessao, item, 0);
 		
 		itemFind.setValue(item.getValue());
 		

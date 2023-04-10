@@ -180,7 +180,7 @@ public class AtivMobService {
 		item.setUrl(itemDTO.getUrl());
 		
 		if (itemDTO.getValue() != null && itemDTO.getValue() != "") {
-			item.setValue(Integer.parseInt(itemDTO.getValue()));
+			item.setValue(new BigInteger(itemDTO.getValue()));
 		} else {
 			item.setValue(null);
 		}
@@ -192,7 +192,7 @@ public class AtivMobService {
 		}
 		
 		if (itemDTO.getInteg_id() != null && itemDTO.getInteg_id() != "") {
-			item.setIntegId(Integer.parseInt(itemDTO.getInteg_id()));
+			item.setIntegId(new BigInteger(itemDTO.getInteg_id()));
 		} else {
 			item.setIntegId(null);
 		}
