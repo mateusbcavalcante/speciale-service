@@ -92,7 +92,6 @@ public class SugestaoPedidoService extends A2DMHbNgc<SugestaoPedido>
 	
 	public SugestaoPedido aprovar(Session sessao, SugestaoPedido vo) throws Exception
 	{	
-		System.out.println("Objeto de aprovação: " + vo.toString());
 		vo.setStatus("Aprovado");
 		sessao.merge(vo);
 		/*
