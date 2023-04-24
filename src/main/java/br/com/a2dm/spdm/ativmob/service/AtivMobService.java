@@ -91,8 +91,7 @@ public class AtivMobService {
         {	
         	if (sugestoesPedidoDTO != null && sugestoesPedidoDTO.size() > 0) {
             	for (EventDTO sugestaoPedidoDTO : sugestoesPedidoDTO) {
-            		SugestaoPedido sugestaoPedido = this.buildSugestaoPedidoDTOToSugestaoPedido(sugestaoPedidoDTO);
-            		SugestaoPedido sugestaoPedidoInserted = this.insertSugestaoPedido(sessao, sugestaoPedido, sugestaoPedidoDTO.getForms());
+            		SugestaoPedido sugestaoPedidoInserted = this.saveSugestaoPedido(sessao, sugestaoPedidoDTO);
             		if (sugestaoPedidoInserted != null) {
             			sugestoesPedido.add(sugestaoPedidoInserted);
             		}
@@ -111,6 +110,36 @@ public class AtivMobService {
 			sessao.close();
 		}
     }
+    
+    public SugestaoPedido saveSugestaoPedido(EventDTO sugestaoPedidoDTO) throws Exception {
+    	Session sessao = HibernateUtil.getSession();
+		sessao.setFlushMode(FlushMode.COMMIT);
+		Transaction tx = sessao.beginTransaction();
+		
+        try 
+        {	
+			SugestaoPedido sugestaoPedido = this.buildSugestaoPedidoDTOToSugestaoPedido(sugestaoPedidoDTO);
+			SugestaoPedido sugestaoPedidoInserted = this.insertSugestaoPedido(sessao, sugestaoPedido, sugestaoPedidoDTO.getForms());
+			
+			tx.commit();
+        	return sugestaoPedidoInserted;
+        } 
+        catch (Exception e) 
+        {
+        	tx.rollback();
+            throw new AtivMobServiceException(e);
+        } 
+        finally 
+        {
+			sessao.close();
+		}
+	}
+
+	private SugestaoPedido saveSugestaoPedido(Session sessao, EventDTO sugestaoPedidoDTO) throws Exception {
+		SugestaoPedido sugestaoPedido = this.buildSugestaoPedidoDTOToSugestaoPedido(sugestaoPedidoDTO);
+		SugestaoPedido sugestaoPedidoInserted = this.insertSugestaoPedido(sessao, sugestaoPedido, sugestaoPedidoDTO.getForms());
+		return sugestaoPedidoInserted;
+	}
     
     private SugestaoPedido insertSugestaoPedido(Session sessao, SugestaoPedido sugestaoPedido, List<FormDTO> itensDTO) throws Exception {
     	try {
