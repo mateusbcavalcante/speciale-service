@@ -156,6 +156,9 @@ public class Produto implements Serializable {
 	
 	@Transient
 	private Double valorUnitario;
+	
+	@Transient
+	private String unidade;
 
 	public BigInteger getIdProduto() {
 		return idProduto;
@@ -428,4 +431,13 @@ public class Produto implements Serializable {
 	public void setValorUnitario(Double valorUnitario) {
 		this.valorUnitario = valorUnitario;
 	}
+
+	public String getUnidade() {
+		return unidade;
+	}
+
+	public void setUnidade(String unidade) {
+		this.unidade = unidade;
+	}
+	
 }
