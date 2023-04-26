@@ -1,10 +1,8 @@
 package br.com.a2dm.spdm.ativmob.service;
 
 import java.math.BigInteger;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,6 +11,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import br.com.a2dm.brcmn.dto.ativmob.EventDTO;
+import br.com.a2dm.brcmn.dto.ativmob.EventRequestDTO;
 import br.com.a2dm.brcmn.dto.ativmob.FormDTO;
 import br.com.a2dm.brcmn.dto.ativmob.OrderDTO;
 import br.com.a2dm.brcmn.util.HibernateUtil;
@@ -81,6 +80,37 @@ public class AtivMobService {
         } catch (Exception e) {
             throw new AtivMobServiceException(e);
         }
+    }
+    
+    public List<SugestaoPedido> processarSugestaoPedidoRequest(EventRequestDTO eventRequestDTO) throws AtivMobServiceException {
+    	Session sessao = HibernateUtil.getSession();
+		sessao.setFlushMode(FlushMode.COMMIT);
+		Transaction tx = sessao.beginTransaction();
+		
+		List<SugestaoPedido> sugestoesPedido = new ArrayList<>();
+    	
+        try 
+        {	
+        	if (eventRequestDTO != null && eventRequestDTO.getEvents() != null && eventRequestDTO.getEvents().size() > 0) {
+            	for (EventDTO sugestaoPedidoDTO : eventRequestDTO.getEvents()) {
+            		SugestaoPedido sugestaoPedidoInserted = this.saveSugestaoPedido(sessao, sugestaoPedidoDTO);
+            		if (sugestaoPedidoInserted != null) {
+            			sugestoesPedido.add(sugestaoPedidoInserted);
+            		}
+            	}
+        	}
+        	tx.commit();
+        	return sugestoesPedido;
+        } 
+        catch (Exception e) 
+        {
+        	tx.rollback();
+            throw new AtivMobServiceException(e);
+        } 
+        finally 
+        {
+			sessao.close();
+		}
     }
     
     private List<SugestaoPedido> saveSugestoesPedido(List<EventDTO> sugestoesPedidoDTO) throws AtivMobServiceException {
