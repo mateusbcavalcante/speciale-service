@@ -17,6 +17,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.Proxy;
@@ -95,6 +97,10 @@ public class SugestaoPedido implements Serializable {
     
     @Column(name = "id_opcao_entrega")
 	private BigInteger idOpcaoEntrega;
+    
+    @Temporal(TemporalType.DATE)
+	@Column(name = "dat_pedido")
+	private Date datPedido;
     
     @ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_opcao_entrega", insertable = false, updatable = false)
@@ -269,6 +275,14 @@ public class SugestaoPedido implements Serializable {
 
 	public void setImagem(String imagem) {
 		this.imagem = imagem;
+	}
+	
+	public Date getDatPedido() {
+		return datPedido;
+	}
+
+	public void setDatPedido(Date datPedido) {
+		this.datPedido = datPedido;
 	}
 
 	public BigInteger getIdOpcaoEntrega() {

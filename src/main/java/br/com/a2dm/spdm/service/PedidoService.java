@@ -1021,13 +1021,12 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 	private PedidoDTO buildPedido(Pedido element) {
 		PedidoDTO pedidoDTO = new PedidoDTO();
 		pedidoDTO.setIdCliente(element.getCliente().getIdCliente());
-		pedidoDTO.setCodigoPedidoIntegracao(element.getIdCodigoPedidoIntegracao());
 		pedidoDTO.setDataPedido(element.getDatPedido());
 		pedidoDTO.setIdOpcaoEntrega(element.getIdOpcaoEntrega());
 		pedidoDTO.setObservacao(element.getObsPedido());
 		pedidoDTO.setProdutos(new ArrayList<>());
 		
-		for (Produto produto: element.getCliente().getListaProduto()) {
+		for (Produto produto: element.getListaProduto()) {
 			ProdutoDTO produtoDTO = new ProdutoDTO();
 			produtoDTO.setIdProduto(produto.getIdProduto());
 			produtoDTO.setDesProduto(produto.getDesProduto());
