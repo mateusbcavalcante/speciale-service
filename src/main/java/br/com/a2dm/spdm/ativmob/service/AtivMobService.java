@@ -1,7 +1,10 @@
 package br.com.a2dm.spdm.ativmob.service;
 
 import java.math.BigInteger;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -173,33 +176,38 @@ public class AtivMobService {
         }
     }
     
-	private SugestaoPedido buildSugestaoPedidoDTOToSugestaoPedido(EventDTO sugestaoPedidoDTO) {
-		SugestaoPedido sugestaoPedido = new SugestaoPedido();
-		sugestaoPedido.setStoreCNPJ(sugestaoPedidoDTO.getStoreCNPJ());
-		sugestaoPedido.setEventId(sugestaoPedidoDTO.getEvent_id());
-		sugestaoPedido.setEventCode(sugestaoPedidoDTO.getEvent_code());
-		sugestaoPedido.setEventTitle(sugestaoPedidoDTO.getEvent_title());
-		sugestaoPedido.setEventDth(sugestaoPedidoDTO.getEvent_dth());
-		sugestaoPedido.setOrderNumber(sugestaoPedidoDTO.getOrder_number());
-		sugestaoPedido.setInvoiceNumber(sugestaoPedidoDTO.getInvoice_number());
-		sugestaoPedido.setAgentCode(sugestaoPedidoDTO.getAgent_code());
-		sugestaoPedido.setAgentName(sugestaoPedidoDTO.getAgent_name());
-		sugestaoPedido.setLat(sugestaoPedidoDTO.getLat());
-		sugestaoPedido.setLng(sugestaoPedidoDTO.getLng());
-		sugestaoPedido.setCodigoRoteiro(sugestaoPedidoDTO.getCodigo_roteiro());
-		sugestaoPedido.setLinkRastreamento(sugestaoPedidoDTO.getLink_rastreamento());
-		sugestaoPedido.setRazaoSocialDest(sugestaoPedidoDTO.getRazao_social_dest());
-		sugestaoPedido.setNomeFantasiaDest(sugestaoPedidoDTO.getNome_fantasia_dest());
-		
-		if (sugestaoPedidoDTO.getCodigo_destino() != null && sugestaoPedidoDTO.getCodigo_destino() != "") {
-			sugestaoPedido.setCodigoDestino(new BigInteger(sugestaoPedidoDTO.getCodigo_destino()));
-		} else {
-			sugestaoPedido.setCodigoDestino(null);
+	private SugestaoPedido buildSugestaoPedidoDTOToSugestaoPedido(EventDTO sugestaoPedidoDTO) throws Exception {
+		try {
+			SugestaoPedido sugestaoPedido = new SugestaoPedido();
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+			sugestaoPedido.setStoreCNPJ(sugestaoPedidoDTO.getStoreCNPJ());
+			sugestaoPedido.setEventId(sugestaoPedidoDTO.getEvent_id());
+			sugestaoPedido.setEventCode(sugestaoPedidoDTO.getEvent_code());
+			sugestaoPedido.setEventTitle(sugestaoPedidoDTO.getEvent_title());
+			sugestaoPedido.setEventDth(formatter.parse(sugestaoPedidoDTO.getEvent_dth()));
+			sugestaoPedido.setOrderNumber(sugestaoPedidoDTO.getOrder_number());
+			sugestaoPedido.setInvoiceNumber(sugestaoPedidoDTO.getInvoice_number());
+			sugestaoPedido.setAgentCode(sugestaoPedidoDTO.getAgent_code());
+			sugestaoPedido.setAgentName(sugestaoPedidoDTO.getAgent_name());
+			sugestaoPedido.setLat(sugestaoPedidoDTO.getLat());
+			sugestaoPedido.setLng(sugestaoPedidoDTO.getLng());
+			sugestaoPedido.setCodigoRoteiro(sugestaoPedidoDTO.getCodigo_roteiro());
+			sugestaoPedido.setLinkRastreamento(sugestaoPedidoDTO.getLink_rastreamento());
+			sugestaoPedido.setRazaoSocialDest(sugestaoPedidoDTO.getRazao_social_dest());
+			sugestaoPedido.setNomeFantasiaDest(sugestaoPedidoDTO.getNome_fantasia_dest());
+			
+			if (sugestaoPedidoDTO.getCodigo_destino() != null && sugestaoPedidoDTO.getCodigo_destino() != "") {
+				sugestaoPedido.setCodigoDestino(new BigInteger(sugestaoPedidoDTO.getCodigo_destino()));
+			} else {
+				sugestaoPedido.setCodigoDestino(null);
+			}
+			
+			sugestaoPedido.setStatus("Pendente");
+			
+		    return sugestaoPedido;
+		} catch (Exception e) {
+			throw e;
 		}
-		
-		sugestaoPedido.setStatus("Pendente");
-		
-	    return sugestaoPedido;
     }
 	
 	private Item buildItemDTOToItem(BigInteger idSugestaoPedido, FormDTO itemDTO) {
