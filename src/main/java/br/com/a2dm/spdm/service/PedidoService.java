@@ -1022,6 +1022,7 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 		PedidoDTO pedidoDTO = new PedidoDTO();
 		pedidoDTO.setIdCliente(element.getCliente().getIdCliente());
 		pedidoDTO.setDataPedido(element.getDatPedido());
+		pedidoDTO.setCodigoPedidoIntegracao(element.getIdCodigoPedidoIntegracao());
 		pedidoDTO.setIdOpcaoEntrega(element.getIdOpcaoEntrega());
 		pedidoDTO.setObservacao(element.getObsPedido());
 		pedidoDTO.setProdutos(new ArrayList<>());

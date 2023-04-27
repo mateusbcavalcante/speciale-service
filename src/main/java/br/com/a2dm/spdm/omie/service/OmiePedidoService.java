@@ -90,7 +90,7 @@ public class OmiePedidoService {
 			pedidoDTO.setCodParcelas(cliente.getCodParcelas());
 			this.removerCaracteresEspeciais(pedidoDTO);
 			this.validarAtivo(cliente);
-			this.validarDuplicidade(pedidoDTO);
+//			this.validarDuplicidade(pedidoDTO);
 			
 			if (!isAdmin(pedidoDTO)) {
 				this.validarFeriado(pedidoDTO);
