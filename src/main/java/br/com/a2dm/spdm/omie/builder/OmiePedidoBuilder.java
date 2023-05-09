@@ -130,6 +130,7 @@ public class OmiePedidoBuilder {
 		produtoDTO.setIdProduto(new BigInteger(produto.getString("codigo_produto")));
 		produtoDTO.setQtdSolicitada(new BigInteger(produto.getString("quantidade")));
 		produtoDTO.setValorUnitario(produto.getDouble("valor_unitario"));
+		produtoDTO.setUnidade(produto.getString("unidade"));
 		
 		Map<String, OmieCaracteristicaProduto> caracteristicas = null;
 		caracteristicas = OmieProdutosRepository.getInstance().obterCaracteristicasProduto(produtoDTO.getIdProduto());
@@ -202,7 +203,7 @@ public class OmiePedidoBuilder {
 													produtoDTO.getDesProduto(),
 													produtoDTO.getQtdSolicitada(),
 													"V",
-													"UN",
+													produtoDTO.getUnidade(),
 													"0",
 													produtoDTO.getValorUnitario());
 		return new DetPayload(ide, produto);
