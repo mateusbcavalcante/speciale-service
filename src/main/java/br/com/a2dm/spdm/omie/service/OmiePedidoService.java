@@ -134,8 +134,6 @@ public class OmiePedidoService {
 		cliente = ClienteService.getInstancia().get(cliente, 0);
 		PedidoDTO pedidoDTO = OmiePedidoRepository.getInstance().pesquisarPedidoCliente(pedidoDTOReq.getIdCliente(), cliente, null, DateUtils.formatDate(pedidoDTOReq.getDataPedido(), "yyyy-MM-dd"));
 		
-		System.out.println(pedidoDTO.getFlgAtivo());
-		
 		if (pedidoDTO != null && 
 				pedidoDTO.getFlgAtivo() == "S" &&
 				(pedidoDTOReq.getCodigoPedidoIntegracao() == null) || (pedidoDTOReq.getCodigoPedidoIntegracao() != null && pedidoDTOReq.getCodigoPedidoIntegracao().longValue() != pedidoDTO.getCodigoPedidoIntegracao().longValue())) {
