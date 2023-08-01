@@ -20,6 +20,9 @@ import javax.persistence.TemporalType;
 import org.hibernate.annotations.Proxy;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import br.com.a2dm.brcmn.entity.Usuario;
 
 @Entity
 @Table(name = "tb_nao_conformidade", schema="ped")
@@ -34,14 +37,13 @@ public class NaoConformidade implements Serializable {
     @Column(name = "id_nao_conformidade")
     private BigInteger idNaoConformidade;
     
-    @Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "dat_cadastro")
-	private Date datCadastro;
-
-    @Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "dat_alteracao")
-	private Date datAlteracao;
+    @Column(name = "lote")
+    private BigInteger lote;
     
+	@Temporal(TemporalType.DATE)
+	@Column(name = "data")
+	private Date data;
+   
     @Column(name = "id_cliente")
 	private BigInteger idCliente;
 	
@@ -68,11 +70,32 @@ public class NaoConformidade implements Serializable {
     @Column(name = "observacao")
     private String observacao;
     
-    @Column(name = "lote")
-    private BigInteger lote;
-    
     @Column(name = "ativo")
     private boolean ativo;
+    
+    @Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "dat_cadastro")
+	private Date datCadastro;
+    
+    @Column(name = "id_usuario_cad")
+	private BigInteger idUsuarioCad;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_usuario_cad", insertable = false, updatable = false)
+	@JsonIgnoreProperties
+	private Usuario usuarioCad;
+
+    @Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "dat_alteracao")
+	private Date datAlteracao;
+    
+    @Column(name = "id_usuario_alt")
+	private BigInteger idUsuarioAlt;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_usuario_alt", insertable = false, updatable = false)
+	@JsonIgnoreProperties
+	private Usuario usuarioAlt;
 
 	public BigInteger getIdNaoConformidade() {
 		return idNaoConformidade;
@@ -82,20 +105,20 @@ public class NaoConformidade implements Serializable {
 		this.idNaoConformidade = idNaoConformidade;
 	}
 
-	public Date getDatCadastro() {
-		return datCadastro;
+	public BigInteger getLote() {
+		return lote;
 	}
 
-	public void setDatCadastro(Date datCadastro) {
-		this.datCadastro = datCadastro;
+	public void setLote(BigInteger lote) {
+		this.lote = lote;
 	}
 
-	public Date getDatAlteracao() {
-		return datAlteracao;
+	public Date getData() {
+		return data;
 	}
 
-	public void setDatAlteracao(Date datAlteracao) {
-		this.datAlteracao = datAlteracao;
+	public void setData(Date data) {
+		this.data = data;
 	}
 
 	public BigInteger getIdCliente() {
@@ -162,14 +185,6 @@ public class NaoConformidade implements Serializable {
 		this.observacao = observacao;
 	}
 
-	public BigInteger getLote() {
-		return lote;
-	}
-
-	public void setLote(BigInteger lote) {
-		this.lote = lote;
-	}
-
 	public boolean isAtivo() {
 		return ativo;
 	}
@@ -177,5 +192,52 @@ public class NaoConformidade implements Serializable {
 	public void setAtivo(boolean ativo) {
 		this.ativo = ativo;
 	}
-	
+
+	public Date getDatCadastro() {
+		return datCadastro;
+	}
+
+	public void setDatCadastro(Date datCadastro) {
+		this.datCadastro = datCadastro;
+	}
+
+	public BigInteger getIdUsuarioCad() {
+		return idUsuarioCad;
+	}
+
+	public void setIdUsuarioCad(BigInteger idUsuarioCad) {
+		this.idUsuarioCad = idUsuarioCad;
+	}
+
+	public Usuario getUsuarioCad() {
+		return usuarioCad;
+	}
+
+	public void setUsuarioCad(Usuario usuarioCad) {
+		this.usuarioCad = usuarioCad;
+	}
+
+	public Date getDatAlteracao() {
+		return datAlteracao;
+	}
+
+	public void setDatAlteracao(Date datAlteracao) {
+		this.datAlteracao = datAlteracao;
+	}
+
+	public BigInteger getIdUsuarioAlt() {
+		return idUsuarioAlt;
+	}
+
+	public void setIdUsuarioAlt(BigInteger idUsuarioAlt) {
+		this.idUsuarioAlt = idUsuarioAlt;
+	}
+
+	public Usuario getUsuarioAlt() {
+		return usuarioAlt;
+	}
+
+	public void setUsuarioAlt(Usuario usuarioAlt) {
+		this.usuarioAlt = usuarioAlt;
+	}
 }
