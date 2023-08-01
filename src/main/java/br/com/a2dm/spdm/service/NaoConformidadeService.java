@@ -1,6 +1,9 @@
 package br.com.a2dm.spdm.service;
 
-import java.util.Calendar;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,9 +14,8 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
 
-import br.com.a2dm.brcmn.entity.Usuario;
-import br.com.a2dm.brcmn.entity.log.UsuarioLog;
-import br.com.a2dm.brcmn.service.log.UsuarioServiceLog;
+import br.com.a2dm.brcmn.entity.Parametro;
+import br.com.a2dm.brcmn.service.ParametroService;
 import br.com.a2dm.brcmn.util.A2DMHbNgc;
 import br.com.a2dm.brcmn.util.HibernateUtil;
 import br.com.a2dm.brcmn.util.RestritorHb;
@@ -133,6 +135,76 @@ public class NaoConformidadeService extends A2DMHbNgc<NaoConformidade>
 		vo.setDatAlteracao(new Date());
 		
 		sessao.merge(vo);
+		return vo;
+	}
+	
+	public NaoConformidade salvarImagem(NaoConformidade vo) throws Exception
+	{
+		Session sessao = HibernateUtil.getSession();
+		sessao.setFlushMode(FlushMode.COMMIT);
+		Transaction tx = sessao.beginTransaction();
+		try
+		{
+			vo = salvarImagem(sessao, vo);
+			tx.commit();
+			return vo;
+		}
+		catch (Exception e)
+		{
+			tx.rollback();
+			throw e;
+		}
+		finally
+		{
+			sessao.close();
+		}
+	}
+	
+	public NaoConformidade salvarImagem(Session sessao, NaoConformidade vo) throws Exception
+	{
+		//DIRETORIO DE ARMAZENAMENTO DA IMAGEM
+		Parametro parametro = new Parametro();
+		parametro.setDescricao("PATH_IMG_NAO_CONFORMIDADE");
+		parametro = ParametroService.getInstancia().get(sessao, parametro, 0);
+		
+		String nomeArquivo = parametro.getValor() + "NC" + vo.getIdNaoConformidade();
+		String dsReal = "NC" + vo.getIdNaoConformidade();
+		
+//		NaoConformidade naoConformidade = new NaoConformidade();
+//		naoConformidade.setIdNaoConformidade(vo.getIdNaoConformidade());
+//		naoConformidade = this.get(sessao, naoConformidade, 0);
+//				
+//		if(naoConformidade != null)
+//		{
+//			estabelecimentoImagem.setDsImagem(vo.getDsImagem());
+//			estabelecimentoImagem.setDsTipo(vo.getDsTipo());
+//			estabelecimentoImagem.setVlTamanho(vo.getVlTamanho());
+//			estabelecimentoImagem.setDsImagemCompleta(dsReal);
+//			
+//			super.alterar(sessao, estabelecimentoImagem);
+//		}
+//		else
+//		{
+//			vo.setDsImagemCompleta(dsReal);
+//			super.inserir(sessao, vo);
+//		}
+//		
+		//SALVAR IMAGEM NO DIRETORIO				
+		try (InputStream is = vo.getFile().getInputStream();
+				OutputStream out = new FileOutputStream(nomeArquivo+".jpg"))
+		{
+			int read = 0;
+			byte[] bytes = new byte[2*1024*1024];
+
+			while ((read = is.read(bytes)) != -1) {
+				out.write(bytes, 0, read);
+			}
+		}
+		catch (IOException e)
+		{
+			throw e;
+		}
+						
 		return vo;
 	}
 		

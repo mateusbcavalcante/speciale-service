@@ -16,6 +16,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+import javax.servlet.http.Part;
 
 import org.hibernate.annotations.Proxy;
 
@@ -96,6 +98,12 @@ public class NaoConformidade implements Serializable {
 	@JoinColumn(name = "id_usuario_alt", insertable = false, updatable = false)
 	@JsonIgnoreProperties
 	private Usuario usuarioAlt;
+	
+	@Transient
+	private Part file;
+	
+	@Transient
+	private byte[] dataFile;
 
 	public BigInteger getIdNaoConformidade() {
 		return idNaoConformidade;
@@ -239,5 +247,21 @@ public class NaoConformidade implements Serializable {
 
 	public void setUsuarioAlt(Usuario usuarioAlt) {
 		this.usuarioAlt = usuarioAlt;
+	}
+
+	public Part getFile() {
+		return file;
+	}
+
+	public void setFile(Part file) {
+		this.file = file;
+	}
+
+	public byte[] getDataFile() {
+		return dataFile;
+	}
+
+	public void setDataFile(byte[] dataFile) {
+		this.dataFile = dataFile;
 	}
 }
