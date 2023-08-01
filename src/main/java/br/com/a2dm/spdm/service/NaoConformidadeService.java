@@ -169,26 +169,7 @@ public class NaoConformidadeService extends A2DMHbNgc<NaoConformidade>
 		
 		String nomeArquivo = parametro.getValor() + "NC" + vo.getIdNaoConformidade();
 		String dsReal = "NC" + vo.getIdNaoConformidade();
-		
-//		NaoConformidade naoConformidade = new NaoConformidade();
-//		naoConformidade.setIdNaoConformidade(vo.getIdNaoConformidade());
-//		naoConformidade = this.get(sessao, naoConformidade, 0);
-//				
-//		if(naoConformidade != null)
-//		{
-//			estabelecimentoImagem.setDsImagem(vo.getDsImagem());
-//			estabelecimentoImagem.setDsTipo(vo.getDsTipo());
-//			estabelecimentoImagem.setVlTamanho(vo.getVlTamanho());
-//			estabelecimentoImagem.setDsImagemCompleta(dsReal);
-//			
-//			super.alterar(sessao, estabelecimentoImagem);
-//		}
-//		else
-//		{
-//			vo.setDsImagemCompleta(dsReal);
-//			super.inserir(sessao, vo);
-//		}
-//		
+
 		//SALVAR IMAGEM NO DIRETORIO				
 		try (InputStream is = vo.getFile().getInputStream();
 				OutputStream out = new FileOutputStream(nomeArquivo+".jpg"))
