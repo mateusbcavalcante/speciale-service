@@ -1000,6 +1000,12 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 		}
 	}
 	
+	public PedidoDTO inserirSugestaoPedido(Pedido pedido) throws OmieServiceException {
+		PedidoDTO pedidoDTO = buildPedido(pedido);
+		pedidoDTO.setAdmin(true);
+		return this.inserirPedidoDTO(pedidoDTO);
+	}
+	
 	public PedidoDTO inserirPedido(Pedido pedido) throws OmieServiceException {
 		PedidoDTO pedidoDTO = buildPedido(pedido);
 		return this.inserirPedidoDTO(pedidoDTO);
