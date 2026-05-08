@@ -83,12 +83,6 @@ public class ClienteProduto implements Serializable
 	@Column(name = "flg_favorito")
 	private String flgfavorito;
 	
-	@Column(name = "valor_unidade")
-	private Double vlrUnidade;
-	
-	@Column(name = "valor_quilo")
-	private Double vlrQuilo;
-	
 	@Transient
 	private String vlrUnidadeFormatado;
 	
@@ -208,22 +202,6 @@ public class ClienteProduto implements Serializable
 
 	public void setProduto(Produto produto) {
 		this.produto = produto;
-	}
-
-	public Double getVlrUnidade() {
-		return vlrUnidade;
-	}
-
-	public void setVlrUnidade(Double vlrUnidade) {
-		this.vlrUnidade = vlrUnidade;
-	}
-
-	public Double getVlrQuilo() {
-		return vlrQuilo;
-	}
-
-	public void setVlrQuilo(Double vlrQuilo) {
-		this.vlrQuilo = vlrQuilo;
 	}
 
 	public String getVlrUnidadeFormatado() {

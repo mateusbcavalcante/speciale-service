@@ -58,13 +58,18 @@ public class OmiePedidoRepository {
 	
 	protected PedidoDTO cadastrarPedido(PedidoDTO pedidoDTO, ClienteIntegracaoDTO clienteIntegracaoDTO) throws OmieRepositoryException {
 		try {
+			System.out.println("Início - Construindo o pedido");
 			PedidoPayload pedidoOmie = new OmiePedidoBuilder().buildPedido(pedidoDTO, clienteIntegracaoDTO);
+			System.out.println("Fim - Construindo o pedido");
 			OmieApiClient apiClient = new OmieApiClient();
 			String jsonRequest = JsonUtils.toJson(pedidoOmie);
 			System.out.print(jsonRequest);
+			System.out.println("Início - Enviando pedido pra OMIE");
 			ApiClientResponse response = apiClient.post("/produtos/pedido/", "IncluirPedido", pedidoOmie);
+			System.out.println("Fim - Enviando pedido pra OMIE");
 			JSONObject json = JsonUtils.parse(response.getBody());
 			BigInteger numeroPedido = new BigInteger(json.getString("numero_pedido"));
+			System.out.println("Pedido realizado com sucesso: " + numeroPedido);
 			pedidoDTO.setIdPedido(numeroPedido);
 			return pedidoDTO;
 		} catch (Exception e) {

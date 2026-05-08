@@ -224,7 +224,7 @@ public class OmiePedidoBuilder {
 	}
 	
 	protected InformacoesAdicionaisPayload buildInformacoesAdicionaisPedido(PedidoDTO pedidoDTO) throws JSONException {
-		return new InformacoesAdicionaisPayload("1.01.02", 1617989193, "S", "N", pedidoDTO.getCodVend());
+		return new InformacoesAdicionaisPayload("1.01.02", 1617989193L, "S", "N", pedidoDTO.getCodVend());
 	}
 	
 	protected ObservacoesPayload buildObservacoesPedido(PedidoDTO pedidoDTO) throws JSONException {

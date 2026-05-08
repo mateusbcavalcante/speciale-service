@@ -26,7 +26,7 @@ public class OmieTabelasPrecosRepository {
 		try {
 			OmieApiClient apiClient = new OmieApiClient();
 			ApiClientResponse response = apiClient.post("/produtos/tabelaprecos/", "ListarTabelasPreco", new OmieTabelaPrecoAll(new BigInteger(nPagina.toString()), 
-					                                                                                                            new BigInteger("500")));
+					                                                                                                            new BigInteger("100")));
 			return new OmieTabelasPrecosBuilder().buildTabelasPrecos(response.getBody());
 		} catch (Exception e) {
 			throw new OmieRepositoryException(String.format("Erro ao listar tabelas de preços."), e);

@@ -36,8 +36,12 @@ public class OmiePedidoService {
 		try {
 			Cliente cliente = new Cliente();
 			cliente.setIdCliente(idCliente);
+			System.out.println("Início - Obtendo cliente local");
 			cliente = ClienteService.getInstancia().get(cliente, 0);
+			System.out.println("Fim - Obtendo cliente local");
+			System.out.println("Início - Pesquisando pedido na OMIE");
 			PedidoDTO pedidoDTO = OmiePedidoRepository.getInstance().pesquisarPedidoCliente(idCliente, cliente, idPedido, dataPedido);
+			System.out.println("Fim - Pesquisando pedido na OMIE");
 
 			if (pedidoDTO == null) {
 				throw new OmieRepositoryException("Não existe pedido para o(s) filtro(s) informado(s).");
@@ -53,7 +57,9 @@ public class OmiePedidoService {
 		try {
 			Cliente cliente = new Cliente();
 			cliente.setIdCliente(pedidoDTO.getIdCliente());
+			System.out.println("Início - Obtendo o cliente na base local");
 			cliente = ClienteService.getInstancia().get(cliente, 0);
+			System.out.println("Fim - Obtendo o cliente na base local");
 			pedidoDTO.setIdExternoOmie(cliente.getIdExternoOmie());
 			pedidoDTO.setCodVend(cliente.getCodVendedor());
 			pedidoDTO.setCodParcelas(cliente.getCodParcelas());
@@ -62,6 +68,7 @@ public class OmiePedidoService {
 				this.setUnidadeProduto(produto);
 			}
 
+			System.out.println("Início - Realizando validações");
 			this.removerCaracteresEspeciais(pedidoDTO);
 			this.validarAtivo(cliente);
 			this.validarDuplicidade(pedidoDTO);
@@ -72,11 +79,11 @@ public class OmiePedidoService {
 				this.validarHorarioLimite(cliente, pedidoDTO);
 				this.validarLimitePaes(pedidoDTO);
 			}
+			System.out.println("Fim - Realizando validações");
 
-			ClienteIntegracaoDTO clienteIntegracaoDTO = OmieClienteService.getInstance()
-					.pesquisarCliente(cliente.getIdExternoOmie());
-
-			System.out.println("PEDIDO: " + pedidoDTO.toString());
+			System.out.println("Início - Pesquisando cliente na OMIE");
+			ClienteIntegracaoDTO clienteIntegracaoDTO = OmieClienteService.getInstance().pesquisarCliente(cliente.getIdExternoOmie());
+			System.out.println("Fim - Pesquisando cliente na OMIE");
 
 			return OmiePedidoRepository.getInstance().cadastrarPedidoCliente(pedidoDTO, clienteIntegracaoDTO);
 		} catch (Exception e) {

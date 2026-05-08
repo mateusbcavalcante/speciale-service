@@ -90,27 +90,29 @@ public class OmieClienteService {
 			String nomeTabelaPreco = "TP " + clienteWebhookPayload.getEvent().getNome_fantasia();
 			TabelaPrecoPayload tabelaPreco = OmieTabelaPrecoService.getInstance().obterTabelaPreco(nomeTabelaPreco);
 			
-			Cliente cliente = new Cliente();
-			cliente.setIdExternoOmie(clienteWebhookPayload.getEvent().getCodigo_cliente_omie());
-
-			cliente = ClienteService.getInstancia().get(cliente, 0);
-
-			if (cliente == null) {
-				cliente = new Cliente();
+			if (tabelaPreco != null) {				
+				Cliente cliente = new Cliente();
+				cliente.setIdExternoOmie(clienteWebhookPayload.getEvent().getCodigo_cliente_omie());
 				
-				cliente.setFlgAtivo("S");
-				cliente.setDesCliente(clienteWebhookPayload.getEvent().getNome_fantasia());
-
-				List<Cliente> clientes = ClienteService.getInstancia().pesquisar(cliente, 0);
-
-				if (clientes == null
-						|| clientes.size() <= 0) {
-					inserirCliente(clienteWebhookPayload, tabelaPreco);
-				} else if (clientes.size() == 1) {
-					alterarCliente(clienteWebhookPayload, clientes.get(0), tabelaPreco);
+				cliente = ClienteService.getInstancia().get(cliente, 0);
+				
+				if (cliente == null) {
+					cliente = new Cliente();
+					
+					cliente.setFlgAtivo("S");
+					cliente.setDesCliente(clienteWebhookPayload.getEvent().getNome_fantasia());
+					
+					List<Cliente> clientes = ClienteService.getInstancia().pesquisar(cliente, 0);
+					
+					if (clientes == null
+							|| clientes.size() <= 0) {
+						inserirCliente(clienteWebhookPayload, tabelaPreco);
+					} else if (clientes.size() == 1) {
+						alterarCliente(clienteWebhookPayload, clientes.get(0), tabelaPreco);
+					}
+				} else {
+					alterarCliente(clienteWebhookPayload, cliente, tabelaPreco);
 				}
-			} else {
-				alterarCliente(clienteWebhookPayload, cliente, tabelaPreco);
 			}
 		} catch (Exception e) {
 			throw new OmieServiceException(e);

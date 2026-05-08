@@ -96,7 +96,7 @@ public class ClienteService extends A2DMHbNgc<Cliente>
 	@Override
 	public Cliente alterar(Session sessao, Cliente vo) throws Exception
 	{
-		validarAlterar(sessao, vo);
+//		validarAlterar(sessao, vo);En
 		sessao.merge(vo);		
 		return vo;
 	}
