@@ -11,6 +11,7 @@ import br.com.a2dm.brcmn.dto.ProdutoDTO;
 import br.com.a2dm.spdm.api.ApiClientResponse;
 import br.com.a2dm.spdm.omie.api.OmieApiClient;
 import br.com.a2dm.spdm.omie.builder.OmieProdutosBuilder;
+import br.com.a2dm.spdm.omie.payload.ConsultarProdutoPayload;
 
 public class OmieProdutosRepository {
 
@@ -38,6 +39,17 @@ public class OmieProdutosRepository {
 		}
 	}
 	
+	public ProdutoDTO consultarProduto(BigInteger codigoProduto) throws OmieRepositoryException {
+		try {
+			ConsultarProdutoPayload payload = new ConsultarProdutoPayload(codigoProduto);
+			OmieApiClient apiClient = new OmieApiClient();
+			ApiClientResponse response = apiClient.post("/geral/produtos/", "ConsultarProduto", payload);
+			return new OmieProdutosBuilder().buildConsultarProduto(response.getBody());
+		} catch (Exception e) {
+			throw new OmieRepositoryException(String.format("Erro ao consultar produto Omie: %s", codigoProduto), e);
+		}
+	}
+
 	public Map<String, OmieCaracteristicaProduto> obterCaracteristicasProduto(BigInteger codProduto) throws OmieRepositoryException {
 		try {
 			OmieProduto produto = new OmieProduto();

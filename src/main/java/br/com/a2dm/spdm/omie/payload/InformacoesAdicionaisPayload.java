@@ -9,15 +9,22 @@ public class InformacoesAdicionaisPayload {
 	private String consumidor_final;
 	private String enviar_email;
 	private BigInteger codVend;
+	private String numero_pedido_cliente;
 
 	public InformacoesAdicionaisPayload(String codigo_categoria, long codigo_conta_corrente, String consumidor_final,
 			String enviar_email, BigInteger codVend) {
+		this(codigo_categoria, codigo_conta_corrente, consumidor_final, enviar_email, codVend, null);
+	}
+
+	public InformacoesAdicionaisPayload(String codigo_categoria, long codigo_conta_corrente, String consumidor_final,
+			String enviar_email, BigInteger codVend, String numero_pedido_cliente) {
 		super();
 		this.codigo_categoria = codigo_categoria;
 		this.codigo_conta_corrente = codigo_conta_corrente;
 		this.consumidor_final = consumidor_final;
 		this.enviar_email = enviar_email;
 		this.codVend = codVend;
+		this.numero_pedido_cliente = numero_pedido_cliente;
 	}
 
 	public String getCodigo_categoria() {
@@ -58,5 +65,13 @@ public class InformacoesAdicionaisPayload {
 
 	public void setCodVend(BigInteger codVend) {
 		this.codVend = codVend;
+	}
+
+	public String getNumero_pedido_cliente() {
+		return numero_pedido_cliente;
+	}
+
+	public void setNumero_pedido_cliente(String numero_pedido_cliente) {
+		this.numero_pedido_cliente = numero_pedido_cliente;
 	}
 }

@@ -32,6 +32,10 @@ public class PedidoProdutoService extends A2DMHbNgc<PedidoProduto>
 	public static final int JOIN_PRODUTO = 4;
 	
 	public static final int JOIN_PEDIDO = 8;
+
+	public static final int JOIN_FAMILIA = 16;
+
+	public static final int JOIN_RECEITA = 32;
 	
 	@SuppressWarnings("rawtypes")
 	private static Map filtroPropriedade = new HashMap();
@@ -83,6 +87,14 @@ public class PedidoProdutoService extends A2DMHbNgc<PedidoProduto>
 	    {
 			criteria.createAlias("pedido", "pedido");
 	    }
+
+		if ((join & JOIN_FAMILIA) != 0) {
+			criteria.createAlias("familia", "familia", JoinType.LEFT_OUTER_JOIN);
+		}
+
+		if ((join & JOIN_RECEITA) != 0) {
+			criteria.createAlias("receita", "receita", JoinType.LEFT_OUTER_JOIN);
+		}
 		
 		return criteria;
 	}	

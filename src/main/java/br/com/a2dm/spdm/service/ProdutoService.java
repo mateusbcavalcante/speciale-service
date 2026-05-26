@@ -1,5 +1,8 @@
 package br.com.a2dm.spdm.service;
 
+import static br.com.a2dm.brcmn.domain.OmieCaracteristicaProduto.LOTE_MINIMO;
+import static br.com.a2dm.brcmn.domain.OmieCaracteristicaProduto.QTD_MULTIPLO;
+
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,12 +20,19 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
 
+import br.com.a2dm.brcmn.domain.OmieCaracteristicaProduto;
+import br.com.a2dm.brcmn.dto.ProdutoDTO;
 import br.com.a2dm.brcmn.util.A2DMHbNgc;
 import br.com.a2dm.brcmn.util.HibernateUtil;
 import br.com.a2dm.brcmn.util.RestritorHb;
 import br.com.a2dm.brcmn.util.jsf.JSFUtil;
+import br.com.a2dm.spdm.entity.Familia;
+import br.com.a2dm.spdm.entity.PedidoProduto;
 import br.com.a2dm.spdm.entity.Produto;
 import br.com.a2dm.spdm.entity.Receita;
+import br.com.a2dm.spdm.omie.repository.OmieProdutosRepository;
+import br.com.a2dm.spdm.omie.service.OmieProdutoEstruturaService;
+import br.com.a2dm.spdm.omie.service.OmieProdutoService;
 
 public class ProdutoService extends A2DMHbNgc<Produto>
 {
@@ -61,6 +71,7 @@ public class ProdutoService extends A2DMHbNgc<Produto>
 		adicionarFiltro("desProduto", RestritorHb.RESTRITOR_EQ, "filtroMap.desProduto");
 		adicionarFiltro("flgAtivo", RestritorHb.RESTRITOR_EQ, "flgAtivo");
 		adicionarFiltro("idReceita", RestritorHb.RESTRITOR_EQ, "idReceita");
+		adicionarFiltro("idExterno", RestritorHb.RESTRITOR_EQ, "idExterno");
 		adicionarFiltro("listaClienteProduto.flgAtivo", RestritorHb.RESTRITOR_EQ, "filtroMap.flgAtivoClienteProduto");
 		adicionarFiltro("listaClienteProduto.idCliente", RestritorHb.RESTRITOR_EQ, "filtroMap.idCliente");
 	}
@@ -230,10 +241,12 @@ public class ProdutoService extends A2DMHbNgc<Produto>
 	    		produtoResult.setReceita(new Receita());
 	    		produtoResult.setIdProduto((BigInteger) resultado.get(i)[j++]);
 	    		produtoResult.setDesProduto((String) resultado.get(i)[j++]);
-	    		produtoResult.setQtdMassaCrua((BigInteger) resultado.get(i)[j++]);
+	    		BigInteger qtdMassaCrua = (BigInteger) resultado.get(i)[j++];
+	    		produtoResult.setQtdMassaCrua(qtdMassaCrua != null ? qtdMassaCrua : BigInteger.ZERO);
 	    		produtoResult.setDatPedido((Date) resultado.get(i)[j++]);
 	    		produtoResult.getReceita().setDesReceita((String) resultado.get(i)[j++]);
-	    		produtoResult.setQtdSolicitada((BigInteger) resultado.get(i)[j++]);
+	    		BigInteger qtdSolicitada = (BigInteger) resultado.get(i)[j++];
+	    		produtoResult.setQtdSolicitada(qtdSolicitada != null ? qtdSolicitada : BigInteger.ZERO);
 	    		
 	            retorno.add(produtoResult);
 	    	}
@@ -242,6 +255,62 @@ public class ProdutoService extends A2DMHbNgc<Produto>
 		this.atualizarPrioridadeProducaoDia(sessao, retorno, produto.getDatPedido());
 	      
 	    return retorno;
+	}
+
+	public List<Produto> pesquisarProducaoDiaConsolidado(Produto produto) throws Exception {
+		Session sessao = HibernateUtil.getSession();
+		sessao.setFlushMode(FlushMode.COMMIT);
+		try {
+			return pesquisarProducaoDiaConsolidado(sessao, produto);
+		} finally {
+			sessao.close();
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Produto> pesquisarProducaoDiaConsolidado(Session sessao, Produto produto) throws Exception {
+		Criteria criteria = sessao.createCriteria(PedidoProduto.class, "pp");
+
+		ProjectionList projection = Projections.projectionList();
+		projection.add(Projections.groupProperty("familia.idFamilia"));
+		projection.add(Projections.groupProperty("familia.desFamilia"));
+		projection.add(Projections.groupProperty("produto.idProduto"));
+		projection.add(Projections.groupProperty("produto.desProduto"));
+		projection.add(Projections.groupProperty("produto.flgIntegral"));
+		projection.add(Projections.groupProperty("pp.unidade"));
+		projection.add(Projections.sum("pp.qtdSolicitada"));
+
+		criteria.createAlias("pp.pedido", "pedido");
+		criteria.createAlias("pp.produto", "produto");
+		criteria.createAlias("pp.familia", "familia", JoinType.LEFT_OUTER_JOIN);
+
+		criteria.add(Restrictions.eq("pedido.flgAtivo", "S"));
+		criteria.add(Restrictions.eq("pp.flgAtivo", "S"));
+		criteria.add(Restrictions.eq("pedido.datPedido", produto.getDatPedido()));
+
+		criteria.addOrder(Order.asc("familia.desFamilia"));
+		criteria.addOrder(Order.asc("produto.desProduto"));
+
+		criteria.setProjection(projection);
+		List<Object[]> resultado = criteria.list();
+		List<Produto> retorno = new ArrayList<>();
+
+		if (resultado != null) {
+			for (Object[] row : resultado) {
+				int j = 0;
+				Produto item = new Produto();
+				item.setFamilia(new Familia());
+				item.getFamilia().setIdFamilia((BigInteger) row[j++]);
+				item.getFamilia().setDesFamilia((String) row[j++]);
+				item.setIdProduto((BigInteger) row[j++]);
+				item.setDesProduto((String) row[j++]);
+				item.setFlgIntegral((String) row[j++]);
+				item.setUnidade((String) row[j++]);
+				item.setQtdSolicitada((BigInteger) row[j++]);
+				retorno.add(item);
+			}
+		}
+		return retorno;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -392,6 +461,165 @@ public class ProdutoService extends A2DMHbNgc<Produto>
 		{
 			sessao.close();
 		}
+	}
+
+	/**
+	 * Resolve produto local a partir do código Omie (id_externo) ou da PK local (id_produto).
+	 */
+	public Produto obterProdutoLocalPorCodigoOmie(Session sessao, BigInteger codigoProdutoOmie) throws Exception {
+		if (codigoProdutoOmie == null) {
+			return null;
+		}
+
+		Produto filtroPk = new Produto();
+		filtroPk.setIdProduto(codigoProdutoOmie);
+		Produto produto = this.get(sessao, filtroPk, 0);
+		if (produto != null) {
+			return produto;
+		}
+
+		Produto filtroExterno = new Produto();
+		filtroExterno.setIdExterno(codigoProdutoOmie);
+		filtroExterno.setFlgAtivo("S");
+		return this.get(sessao, filtroExterno, 0);
+	}
+
+	/**
+	 * Busca produto local ou importa da Omie e grava em tb_produto quando não existir.
+	 */
+	public Produto obterOuSincronizarProdutoLocal(Session sessao, ProdutoDTO dadosPedido, BigInteger idUsuario)
+			throws Exception {
+		if (dadosPedido == null || dadosPedido.getIdProduto() == null) {
+			throw new Exception("Código do produto Omie não informado.");
+		}
+
+		Produto produto = obterProdutoLocalPorCodigoOmie(sessao, dadosPedido.getIdProduto());
+		if (produto != null) {
+			return produto;
+		}
+
+		return inserirProdutoFromOmie(sessao, dadosPedido, idUsuario);
+	}
+
+	private Produto inserirProdutoFromOmie(Session sessao, ProdutoDTO dadosPedido, BigInteger idUsuario) throws Exception {
+		BigInteger codigoOmie = dadosPedido.getIdProduto();
+		ProdutoDTO dadosOmie = null;
+
+		try {
+			dadosOmie = OmieProdutoService.getInstance().consultarProduto(codigoOmie);
+		} catch (Exception e) {
+			System.out.println("Aviso: não foi possível consultar produto " + codigoOmie + " na Omie: " + e.getMessage());
+		}
+
+		ProdutoDTO merged = mergeProdutoDto(dadosPedido, dadosOmie);
+		enriquecerCaracteristicasOmie(merged);
+		enriquecerUnidadeOmie(merged);
+
+		Produto produto = new Produto();
+		produto.setIdExterno(codigoOmie);
+		produto.setDesProduto(resolverDescricaoProduto(merged, codigoOmie));
+		produto.setFlgIntegral(resolverFlgIntegral(produto.getDesProduto()));
+		produto.setIdReceita(obterReceitaPadrao(sessao));
+		produto.setQtdLoteMinimo(merged.getQtdLoteMinimo() != null ? merged.getQtdLoteMinimo() : BigInteger.ONE);
+		produto.setQtdMultiplo(merged.getQtdMultiplo() != null ? merged.getQtdMultiplo() : BigInteger.ONE);
+		produto.setQtdMassaCrua(BigInteger.ZERO);
+		produto.setFlgAtivo("S");
+		produto.setFlgSinc("S");
+		produto.setDatCadastro(new Date());
+		produto.setIdUsuarioCad(idUsuario);
+		produto.setIdFamilia(FamiliaService.getInstancia().obterOuSalvarPorIdExterno(sessao,
+				merged.getCodigoFamiliaOmie(), merged.getDescricaoFamilia()));
+
+		sessao.save(produto);
+		return produto;
+	}
+
+	private ProdutoDTO mergeProdutoDto(ProdutoDTO dadosPedido, ProdutoDTO dadosOmie) {
+		ProdutoDTO merged = dadosOmie != null ? dadosOmie : new ProdutoDTO();
+		merged.setIdProduto(dadosPedido.getIdProduto());
+
+		if (dadosPedido.getDesProduto() != null && !dadosPedido.getDesProduto().trim().isEmpty()) {
+			merged.setDesProduto(dadosPedido.getDesProduto());
+		}
+		if (dadosPedido.getQtdLoteMinimo() != null) {
+			merged.setQtdLoteMinimo(dadosPedido.getQtdLoteMinimo());
+		}
+		if (dadosPedido.getQtdMultiplo() != null) {
+			merged.setQtdMultiplo(dadosPedido.getQtdMultiplo());
+		}
+		if (dadosPedido.getUnidade() != null && !dadosPedido.getUnidade().trim().isEmpty()) {
+			merged.setUnidade(dadosPedido.getUnidade());
+		}
+		if (dadosPedido.getValorUnitario() != null) {
+			merged.setValorUnitario(dadosPedido.getValorUnitario());
+		}
+		if (dadosPedido.getCodigoFamiliaOmie() != null) {
+			merged.setCodigoFamiliaOmie(dadosPedido.getCodigoFamiliaOmie());
+		}
+		if (dadosPedido.getDescricaoFamilia() != null && !dadosPedido.getDescricaoFamilia().trim().isEmpty()) {
+			merged.setDescricaoFamilia(dadosPedido.getDescricaoFamilia());
+		}
+		return merged;
+	}
+
+	private void enriquecerCaracteristicasOmie(ProdutoDTO produtoDTO) throws Exception {
+		Map<String, OmieCaracteristicaProduto> caracteristicas = OmieProdutosRepository.getInstance()
+				.obterCaracteristicasProduto(produtoDTO.getIdProduto());
+		if (caracteristicas == null || caracteristicas.isEmpty()) {
+			return;
+		}
+
+		OmieCaracteristicaProduto loteMinimo = caracteristicas.get(LOTE_MINIMO.toLowerCase());
+		if (loteMinimo != null && produtoDTO.getQtdLoteMinimo() == null) {
+			produtoDTO.setQtdLoteMinimo(loteMinimo.conteudoToBigInteger());
+		}
+
+		OmieCaracteristicaProduto qtdeMultiplo = caracteristicas.get(QTD_MULTIPLO.toLowerCase());
+		if (qtdeMultiplo != null && produtoDTO.getQtdMultiplo() == null) {
+			produtoDTO.setQtdMultiplo(qtdeMultiplo.conteudoToBigInteger());
+		}
+	}
+
+	private void enriquecerUnidadeOmie(ProdutoDTO produtoDTO) {
+		if (produtoDTO.getUnidade() != null && !produtoDTO.getUnidade().trim().isEmpty()) {
+			return;
+		}
+		try {
+			String unidade = OmieProdutoEstruturaService.getInstance()
+					.obterProdutoEstrutura(produtoDTO.getIdProduto()).getIdentDTO().getUnidProduto();
+			if (unidade != null && !unidade.trim().isEmpty()) {
+				produtoDTO.setUnidade(unidade);
+			}
+		} catch (Exception e) {
+			System.out.println("Aviso: não foi possível obter unidade do produto " + produtoDTO.getIdProduto()
+					+ " na Omie: " + e.getMessage());
+		}
+	}
+
+	private String resolverDescricaoProduto(ProdutoDTO produtoDTO, BigInteger codigoOmie) {
+		if (produtoDTO.getDesProduto() != null && !produtoDTO.getDesProduto().trim().isEmpty()) {
+			return produtoDTO.getDesProduto().trim();
+		}
+		return "Produto Omie " + codigoOmie;
+	}
+
+	private String resolverFlgIntegral(String desProduto) {
+		if (desProduto != null && desProduto.toLowerCase().contains("integral")) {
+			return "S";
+		}
+		return "N";
+	}
+
+	private BigInteger obterReceitaPadrao(Session sessao) throws Exception {
+		Criteria criteria = sessao.createCriteria(Receita.class);
+		criteria.add(Restrictions.eq("flgAtivo", "S"));
+		criteria.addOrder(Order.asc("idReceita"));
+		criteria.setMaxResults(1);
+		Receita receita = (Receita) criteria.uniqueResult();
+		if (receita == null) {
+			throw new Exception("Não há receita ativa cadastrada para importar o produto da Omie.");
+		}
+		return receita.getIdReceita();
 	}
 
 	public void atualizarIdExterno(Session sessao, Produto produto) throws Exception 

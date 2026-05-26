@@ -57,6 +57,14 @@ public class Produto implements Serializable {
 	@JsonIgnore
 	private Receita receita;
 
+	@Column(name = "id_familia")
+	private BigInteger idFamilia;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_familia", insertable = false, updatable = false)
+	@JsonIgnore
+	private Familia familia;
+
 	@Column(name = "qtd_lot_minimo")
 	private BigInteger qtdLoteMinimo;
 
@@ -112,6 +120,9 @@ public class Produto implements Serializable {
 	@Column(name = "flg_sinc")
 	private String flgSinc;
 
+	@Column(name = "flg_integral")
+	private String flgIntegral;
+
 	@Transient
 	private HashMap<String, Object> filtroMap;
 
@@ -160,6 +171,12 @@ public class Produto implements Serializable {
 	@Transient
 	private String unidade;
 
+	@Transient
+	private BigInteger codigoFamiliaOmie;
+
+	@Transient
+	private String descricaoFamilia;
+
 	public BigInteger getIdProduto() {
 		return idProduto;
 	}
@@ -190,6 +207,22 @@ public class Produto implements Serializable {
 
 	public void setReceita(Receita receita) {
 		this.receita = receita;
+	}
+
+	public BigInteger getIdFamilia() {
+		return idFamilia;
+	}
+
+	public void setIdFamilia(BigInteger idFamilia) {
+		this.idFamilia = idFamilia;
+	}
+
+	public Familia getFamilia() {
+		return familia;
+	}
+
+	public void setFamilia(Familia familia) {
+		this.familia = familia;
 	}
 
 	public BigInteger getQtdLoteMinimo() {
@@ -352,6 +385,18 @@ public class Produto implements Serializable {
 		this.flgSinc = flgSinc;
 	}
 
+	public String getFlgIntegral() {
+		return flgIntegral;
+	}
+
+	public void setFlgIntegral(String flgIntegral) {
+		this.flgIntegral = flgIntegral;
+	}
+
+	public boolean isIntegral() {
+		return flgIntegral != null && flgIntegral.equalsIgnoreCase("S");
+	}
+
 	public BigInteger getPrioridade3() {
 		return prioridade3;
 	}
@@ -438,6 +483,22 @@ public class Produto implements Serializable {
 
 	public void setUnidade(String unidade) {
 		this.unidade = unidade;
+	}
+
+	public BigInteger getCodigoFamiliaOmie() {
+		return codigoFamiliaOmie;
+	}
+
+	public void setCodigoFamiliaOmie(BigInteger codigoFamiliaOmie) {
+		this.codigoFamiliaOmie = codigoFamiliaOmie;
+	}
+
+	public String getDescricaoFamilia() {
+		return descricaoFamilia;
+	}
+
+	public void setDescricaoFamilia(String descricaoFamilia) {
+		this.descricaoFamilia = descricaoFamilia;
 	}
 	
 }

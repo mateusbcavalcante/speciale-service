@@ -140,6 +140,12 @@ public class Pedido implements Serializable
 	
 	@Transient
 	private Date datUltimoPedido;
+
+	@Transient
+	private String numeroPedidoCliente;
+
+	@Transient
+	private boolean clienteSupermercado;
 	
 	public BigInteger getIdPedido() {
 		return idPedido;
@@ -363,5 +369,21 @@ public class Pedido implements Serializable
 
 	public void setDatUltimoPedido(Date datUltimoPedido) {
 		this.datUltimoPedido = datUltimoPedido;
+	}
+
+	public String getNumeroPedidoCliente() {
+		return numeroPedidoCliente;
+	}
+
+	public void setNumeroPedidoCliente(String numeroPedidoCliente) {
+		this.numeroPedidoCliente = numeroPedidoCliente;
+	}
+
+	public boolean isClienteSupermercado() {
+		return clienteSupermercado;
+	}
+
+	public void setClienteSupermercado(boolean clienteSupermercado) {
+		this.clienteSupermercado = clienteSupermercado;
 	}
 }

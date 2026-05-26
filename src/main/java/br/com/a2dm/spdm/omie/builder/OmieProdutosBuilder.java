@@ -44,6 +44,44 @@ public class OmieProdutosBuilder {
 		}
 	}
 	
+	public ProdutoDTO buildConsultarProduto(String json) {
+		try {
+			JSONObject jsonObject = JsonUtils.parse(json);
+			ProdutoDTO produtoDTO = new ProdutoDTO();
+
+			if (jsonObject.has("codigo_produto") && !jsonObject.getString("codigo_produto").isEmpty()) {
+				produtoDTO.setIdProduto(new BigInteger(jsonObject.getString("codigo_produto")));
+			}
+
+			if (jsonObject.has("descricao")) {
+				produtoDTO.setDesProduto(jsonObject.getString("descricao"));
+			} else if (jsonObject.has("cDescricao")) {
+				produtoDTO.setDesProduto(jsonObject.getString("cDescricao"));
+			}
+
+			if (jsonObject.has("unidade")) {
+				produtoDTO.setUnidade(jsonObject.getString("unidade"));
+			}
+
+			if (jsonObject.has("valor_unitario")) {
+				produtoDTO.setValorUnitario(jsonObject.getDouble("valor_unitario"));
+			}
+
+			if (jsonObject.has("codigo_familia") && !jsonObject.getString("codigo_familia").isEmpty()) {
+				produtoDTO.setCodigoFamiliaOmie(new BigInteger(jsonObject.getString("codigo_familia")));
+			}
+
+			if (jsonObject.has("descricao_familia")) {
+				produtoDTO.setDescricaoFamilia(jsonObject.getString("descricao_familia"));
+			}
+
+			produtoDTO.setFlgAtivo("S");
+			return produtoDTO;
+		} catch (Exception e) {
+			throw new OmieBuilderException(e);
+		}
+	}
+
 	public Map<String,OmieCaracteristicaProduto> buildProdutoCaracteristicas(String json){
 		try {
 			

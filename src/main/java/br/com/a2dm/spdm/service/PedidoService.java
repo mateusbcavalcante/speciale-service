@@ -345,14 +345,7 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 		{
 			for (Produto produto : vo.getListaProduto())
 			{
-				PedidoProduto pedidoProduto = new PedidoProduto();
-				pedidoProduto.setIdPedido(vo.getIdPedido());
-				pedidoProduto.setIdProduto(produto.getIdProduto());
-				pedidoProduto.setQtdSolicitada(produto.getQtdSolicitada());
-				pedidoProduto.setFlgAtivo("S");
-				pedidoProduto.setDatCadastro(new Date());
-				pedidoProduto.setIdUsuarioCad(idUsuario);
-				
+				PedidoProduto pedidoProduto = montarPedidoProduto(sessao, vo.getIdPedido(), produto, idUsuario);
 				PedidoProdutoService.getInstancia().inserir(sessao, pedidoProduto);
 			}
 		}
@@ -924,8 +917,9 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 					
 					listaPedidoProduto = PedidoProdutoService.getInstancia().pesquisardoPedidoProdutos(sessao, pedidoProduto);
 				} else {
-					listaPedidoProduto = PedidoProdutoService.getInstancia().pesquisar(sessao, pedidoProduto, PedidoProdutoService.JOIN_PEDIDO
-																											| PedidoProdutoService.JOIN_PRODUTO);
+					listaPedidoProduto = PedidoProdutoService.getInstancia().pesquisar(sessao, pedidoProduto,
+							PedidoProdutoService.JOIN_PEDIDO | PedidoProdutoService.JOIN_PRODUTO
+									| PedidoProdutoService.JOIN_FAMILIA | PedidoProdutoService.JOIN_RECEITA);
 				}
 				
 				element.setListaPedidoProduto(listaPedidoProduto);
@@ -1012,7 +1006,13 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 	}
 	
 	public PedidoDTO inserirPedidoDTO(PedidoDTO pedidoDTO) throws OmieServiceException {
-		return OmiePedidoService.getInstance().cadastrarPedido(pedidoDTO);
+		PedidoDTO pedidoOmie = OmiePedidoService.getInstance().cadastrarPedido(pedidoDTO);
+		try {
+			this.persistirPedidoPostgreSQL(pedidoOmie);
+		} catch (Exception e) {
+			throw new OmieServiceException("Pedido registrado na Omie, mas falhou ao salvar no banco local: " + e.getMessage(), e);
+		}
+		return pedidoOmie;
 	}
 	
 	public PedidoDTO alterarPedido(Pedido pedido) throws OmieServiceException {
@@ -1024,6 +1024,95 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 		return OmiePedidoService.getInstance().alterarPedido(pedidoDTO);
 	}
 
+	private PedidoProduto montarPedidoProduto(Session sessao, BigInteger idPedido, Produto produto, BigInteger idUsuario)
+			throws Exception {
+		return montarPedidoProduto(sessao, idPedido, toProdutoDto(produto), idUsuario);
+	}
+
+	private ProdutoDTO toProdutoDto(Produto produto) {
+		ProdutoDTO produtoDTO = new ProdutoDTO();
+		produtoDTO.setIdProduto(produto.getIdProduto());
+		produtoDTO.setDesProduto(produto.getDesProduto());
+		produtoDTO.setQtdSolicitada(produto.getQtdSolicitada());
+		produtoDTO.setQtdLoteMinimo(produto.getQtdLoteMinimo());
+		produtoDTO.setQtdMultiplo(produto.getQtdMultiplo());
+		produtoDTO.setUnidade(produto.getUnidade());
+		produtoDTO.setFlgAtivo(produto.getFlgAtivo());
+		produtoDTO.setCodigoFamiliaOmie(produto.getCodigoFamiliaOmie());
+		produtoDTO.setDescricaoFamilia(produto.getDescricaoFamilia());
+		return produtoDTO;
+	}
+
+	private PedidoProduto montarPedidoProduto(Session sessao, BigInteger idPedido, ProdutoDTO produtoDTO,
+			BigInteger idUsuario) throws Exception {
+		Produto produtoBd = ProdutoService.getInstancia().obterOuSincronizarProdutoLocal(sessao, produtoDTO, idUsuario);
+
+		PedidoProduto pedidoProduto = new PedidoProduto();
+		pedidoProduto.setIdPedido(idPedido);
+		pedidoProduto.setIdProduto(produtoBd.getIdProduto());
+		pedidoProduto.setQtdSolicitada(produtoDTO.getQtdSolicitada());
+		pedidoProduto.setFlgAtivo("S");
+		pedidoProduto.setDatCadastro(new Date());
+		pedidoProduto.setIdUsuarioCad(idUsuario);
+		pedidoProduto.setUnidade(produtoDTO.getUnidade());
+		pedidoProduto.setIdReceita(produtoBd.getIdReceita());
+		pedidoProduto.setIdFamilia(FamiliaService.getInstancia().obterOuSalvarPorIdExterno(sessao,
+				produtoDTO.getCodigoFamiliaOmie(), produtoDTO.getDescricaoFamilia()));
+		return pedidoProduto;
+	}
+
+	public void persistirPedidoPostgreSQL(PedidoDTO pedidoDTO) throws Exception {
+		Session sessao = HibernateUtil.getSession();
+		sessao.setFlushMode(FlushMode.COMMIT);
+		Transaction tx = sessao.beginTransaction();
+		try {
+			Pedido pedido = new Pedido();
+			pedido.setIdCliente(pedidoDTO.getIdCliente());
+			pedido.setDatPedido(pedidoDTO.getDataPedido());
+			pedido.setObsPedido(pedidoDTO.getObservacao());
+			pedido.setIdOpcaoEntrega(pedidoDTO.getIdOpcaoEntrega());
+			pedido.setFlgAtivo("S");
+			pedido.setDatCadastro(new Date());
+			pedido.setPlataforma("OMIE");
+
+			BigInteger idUsuario = new BigInteger("1");
+			if (util != null && util.getUsuarioLogado() != null) {
+				idUsuario = util.getUsuarioLogado().getIdUsuario();
+			}
+			pedido.setIdUsuarioCad(idUsuario);
+
+			List<ProdutoDTO> produtos = new ArrayList<>();
+			if (pedidoDTO.getProdutos() != null) {
+				for (ProdutoDTO produtoDTO : pedidoDTO.getProdutos()) {
+					if (produtoDTO.getFlgAtivo() == null || produtoDTO.getFlgAtivo().equalsIgnoreCase("S")) {
+						produtos.add(produtoDTO);
+					}
+				}
+			}
+			inserirPedidoPostgreSQL(sessao, pedido, produtos, idUsuario);
+			tx.commit();
+		} catch (Exception e) {
+			tx.rollback();
+			throw e;
+		} finally {
+			sessao.close();
+		}
+	}
+
+	private Pedido inserirPedidoPostgreSQL(Session sessao, Pedido vo, List<ProdutoDTO> produtos, BigInteger idUsuario)
+			throws Exception {
+		sessao.save(vo);
+		if (produtos != null) {
+			for (ProdutoDTO produtoDTO : produtos) {
+				if (produtoDTO.getFlgAtivo() == null || produtoDTO.getFlgAtivo().equalsIgnoreCase("S")) {
+					PedidoProduto pedidoProduto = montarPedidoProduto(sessao, vo.getIdPedido(), produtoDTO, idUsuario);
+					PedidoProdutoService.getInstancia().inserir(sessao, pedidoProduto);
+				}
+			}
+		}
+		return vo;
+	}
+
 	private PedidoDTO buildPedido(Pedido element) {
 		PedidoDTO pedidoDTO = new PedidoDTO();
 		pedidoDTO.setIdCliente(element.getCliente().getIdCliente());
@@ -1031,6 +1120,7 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 		pedidoDTO.setCodigoPedidoIntegracao(element.getIdCodigoPedidoIntegracao());
 		pedidoDTO.setIdOpcaoEntrega(element.getIdOpcaoEntrega());
 		pedidoDTO.setObservacao(element.getObsPedido());
+		pedidoDTO.setNumeroPedidoCliente(element.getNumeroPedidoCliente());
 		pedidoDTO.setProdutos(new ArrayList<>());
 		
 		for (Produto produto: element.getCliente().getListaProduto()) {
@@ -1040,6 +1130,9 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 			produtoDTO.setQtdSolicitada(produto.getQtdSolicitada());
 			produtoDTO.setFlgAtivo(produto.getFlgAtivo());
 			produtoDTO.setValorUnitario(produto.getValorUnitario());
+			produtoDTO.setUnidade(produto.getUnidade());
+			produtoDTO.setCodigoFamiliaOmie(produto.getCodigoFamiliaOmie());
+			produtoDTO.setDescricaoFamilia(produto.getDescricaoFamilia());
 			
 			pedidoDTO.getProdutos().add(produtoDTO);
 		}

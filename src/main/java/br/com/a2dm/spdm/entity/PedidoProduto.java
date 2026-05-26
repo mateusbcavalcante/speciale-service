@@ -87,6 +87,23 @@ public class PedidoProduto implements Serializable
 	
 	@Column(name = "flg_ativo")
 	private String flgAtivo;
+
+	@Column(name = "id_familia")
+	private BigInteger idFamilia;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_familia", insertable = false, updatable = false)
+	private Familia familia;
+
+	@Column(name = "id_receita")
+	private BigInteger idReceita;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_receita", insertable = false, updatable = false)
+	private Receita receita;
+
+	@Column(name = "unidade")
+	private String unidade;
 	
 	@Transient
 	private HashMap<String, Object> filtroMap;
@@ -201,5 +218,45 @@ public class PedidoProduto implements Serializable
 
 	public void setProduto(Produto produto) {
 		this.produto = produto;
+	}
+
+	public BigInteger getIdFamilia() {
+		return idFamilia;
+	}
+
+	public void setIdFamilia(BigInteger idFamilia) {
+		this.idFamilia = idFamilia;
+	}
+
+	public Familia getFamilia() {
+		return familia;
+	}
+
+	public void setFamilia(Familia familia) {
+		this.familia = familia;
+	}
+
+	public BigInteger getIdReceita() {
+		return idReceita;
+	}
+
+	public void setIdReceita(BigInteger idReceita) {
+		this.idReceita = idReceita;
+	}
+
+	public Receita getReceita() {
+		return receita;
+	}
+
+	public void setReceita(Receita receita) {
+		this.receita = receita;
+	}
+
+	public String getUnidade() {
+		return unidade;
+	}
+
+	public void setUnidade(String unidade) {
+		this.unidade = unidade;
 	}
 }

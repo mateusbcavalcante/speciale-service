@@ -11,7 +11,7 @@ public class OmieApiClient {
 
 	private static final String OMIE_ENDPOINT = "https://app.omie.com.br/api/v1";
 	private static final String OMIE_APP_KEY = "1141021192311";
-	private static final String OMIE_APP_SECRET = "49dc223c6e5a2b3bbfdd6e80490f9e09";
+	private static final String OMIE_APP_SECRET = "9335201cdbae2799c91c694202832b9c";
 	private ApiClient apiClient;
 
 	public OmieApiClient() {

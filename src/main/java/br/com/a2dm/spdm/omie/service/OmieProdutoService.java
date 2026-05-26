@@ -10,6 +10,7 @@ import java.util.Map;
 import br.com.a2dm.brcmn.domain.OmieCaracteristicaProduto;
 import br.com.a2dm.brcmn.dto.ProdutoDTO;
 import br.com.a2dm.spdm.entity.Cliente;
+import br.com.a2dm.spdm.entity.Produto;
 import br.com.a2dm.spdm.omie.repository.OmieProdutosRepository;
 import br.com.a2dm.spdm.service.ClienteService;;
 
@@ -38,6 +39,23 @@ public class OmieProdutoService {
 		}
 	}
 	
+	public ProdutoDTO consultarProduto(BigInteger codigoProduto) throws OmieServiceException {
+		try {
+			return OmieProdutosRepository.getInstance().consultarProduto(codigoProduto);
+		} catch (Exception e) {
+			throw new OmieServiceException(e);
+		}
+	}
+
+	public void enriquecerFamiliaProduto(Produto produto) throws OmieServiceException {
+		if (produto == null || produto.getIdProduto() == null) {
+			return;
+		}
+		ProdutoDTO produtoOmie = consultarProduto(produto.getIdProduto());
+		produto.setCodigoFamiliaOmie(produtoOmie.getCodigoFamiliaOmie());
+		produto.setDescricaoFamilia(produtoOmie.getDescricaoFamilia());
+	}
+
 	public List<ProdutoDTO> listarProdutosPorTabelaPreco(BigInteger idTabelaPreco) throws OmieServiceException {
 		try {
 			List<ProdutoDTO> produtos = OmieProdutosRepository.getInstance().listarProdutosPorTabelaPreco(idTabelaPreco);

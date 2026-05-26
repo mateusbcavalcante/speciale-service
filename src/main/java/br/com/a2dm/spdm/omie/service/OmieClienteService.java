@@ -12,6 +12,7 @@ import br.com.a2dm.spdm.entity.Cliente;
 import br.com.a2dm.spdm.omie.payload.ClienteWebhookPayload;
 import br.com.a2dm.spdm.omie.payload.TabelaPrecoPayload;
 import br.com.a2dm.spdm.omie.payload.TagPayload;
+import br.com.a2dm.spdm.omie.repository.OmieClienteCaractRepository;
 import br.com.a2dm.spdm.omie.repository.OmieClientesRepository;
 import br.com.a2dm.spdm.service.ClienteService;
 
@@ -57,6 +58,17 @@ public class OmieClienteService {
 	public ClienteIntegracaoDTO pesquisarCliente(BigInteger idExternoOmie) throws OmieServiceException {
 		try {
 			return OmieClientesRepository.getInstance().pesquisarCliente(idExternoOmie);
+		} catch (Exception e) {
+			throw new OmieServiceException(e);
+		}
+	}
+
+	public ClienteIntegracaoDTO pesquisarClienteComCaracteristicas(BigInteger idExternoOmie) throws OmieServiceException {
+		try {
+			ClienteIntegracaoDTO clienteIntegracaoDTO = pesquisarCliente(idExternoOmie);
+			clienteIntegracaoDTO.setCaracteristicas(
+					OmieClienteCaractRepository.getInstance().obterCaracteristicasCliente(idExternoOmie));
+			return clienteIntegracaoDTO;
 		} catch (Exception e) {
 			throw new OmieServiceException(e);
 		}

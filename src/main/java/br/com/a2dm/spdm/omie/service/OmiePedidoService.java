@@ -82,7 +82,8 @@ public class OmiePedidoService {
 			System.out.println("Fim - Realizando validações");
 
 			System.out.println("Início - Pesquisando cliente na OMIE");
-			ClienteIntegracaoDTO clienteIntegracaoDTO = OmieClienteService.getInstance().pesquisarCliente(cliente.getIdExternoOmie());
+			ClienteIntegracaoDTO clienteIntegracaoDTO = OmieClienteService.getInstance()
+					.pesquisarClienteComCaracteristicas(cliente.getIdExternoOmie());
 			System.out.println("Fim - Pesquisando cliente na OMIE");
 
 			return OmiePedidoRepository.getInstance().cadastrarPedidoCliente(pedidoDTO, clienteIntegracaoDTO);
@@ -120,7 +121,7 @@ public class OmiePedidoService {
 			}
 
 			ClienteIntegracaoDTO clienteIntegracaoDTO = OmieClienteService.getInstance()
-					.pesquisarCliente(cliente.getIdExternoOmie());
+					.pesquisarClienteComCaracteristicas(cliente.getIdExternoOmie());
 
 			return OmiePedidoRepository.getInstance().alterarPedidoCliente(pedidoDTO, clienteIntegracaoDTO);
 		} catch (Exception e) {

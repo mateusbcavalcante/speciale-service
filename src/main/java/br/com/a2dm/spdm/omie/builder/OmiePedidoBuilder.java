@@ -23,6 +23,7 @@ import br.com.a2dm.spdm.omie.payload.DetPayload;
 import br.com.a2dm.spdm.omie.payload.FretePayload;
 import br.com.a2dm.spdm.omie.payload.IdePayload;
 import br.com.a2dm.spdm.omie.payload.InativarPayloadPedido;
+import br.com.a2dm.spdm.omie.payload.InfAdicPayload;
 import br.com.a2dm.spdm.omie.payload.InformacoesAdicionaisPayload;
 import br.com.a2dm.spdm.omie.payload.ObservacoesPayload;
 import br.com.a2dm.spdm.omie.payload.PedidoPayload;
@@ -33,6 +34,14 @@ import br.com.a2dm.spdm.utils.DateUtils;
 import br.com.a2dm.spdm.utils.JsonUtils;
 
 public class OmiePedidoBuilder {
+
+	private static final String CFOP_CONSIGNADO = "5917";
+	private static final String CFOP_CE = "5.401";
+	private static final String CFOP_FORA_CE = "6.401";
+	private static final long CODIGO_CONTA_CORRENTE = 8312013530L;
+	private static final String CODIGO_CATEGORIA_PADRAO = "1.01.02";
+	private static final String CODIGO_CATEGORIA_HAMBURGUERIAS = "1.01.01";
+	private static final long CODIGO_VENDEDOR_HAMBURGUERIAS = 1620030938L;
 
 	public OmiePedidoBuilder() {
 		
@@ -175,16 +184,16 @@ public class OmiePedidoBuilder {
 	}
 	
 	protected List<DetPayload> buildProdutos(PedidoDTO pedidoDTO, ClienteIntegracaoDTO clienteIntegracaoDTO) throws JSONException {
-		
-		String cfop = "5.401";
-		if (!this.isEstadoCeara(clienteIntegracaoDTO)) {
-			cfop = "6.401";
+		boolean consignado = clienteIntegracaoDTO.isConsignado();
+		String cfop = consignado ? CFOP_CONSIGNADO : CFOP_CE;
+		if (!consignado && !this.isEstadoCeara(clienteIntegracaoDTO)) {
+			cfop = CFOP_FORA_CE;
 		}
 		
 		List<DetPayload> dets = new ArrayList<>();
 		if (pedidoDTO.getProdutos() != null && !pedidoDTO.getProdutos().isEmpty()) {
 			for (ProdutoDTO produtoDTO : pedidoDTO.getProdutos()) {
-				dets.add(buildProdutoPedido(produtoDTO, cfop));				
+				dets.add(buildProdutoPedido(produtoDTO, cfop, consignado));				
 			}
 		}
 		return dets;
@@ -194,7 +203,7 @@ public class OmiePedidoBuilder {
 		return clienteIntegracaoDTO.getEstado().equalsIgnoreCase("CE");
 	}
 	
-	protected DetPayload buildProdutoPedido(ProdutoDTO produtoDTO, String cfop) throws JSONException {
+	protected DetPayload buildProdutoPedido(ProdutoDTO produtoDTO, String cfop, boolean consignado) throws JSONException {
 		IdePayload ide = new IdePayload(produtoDTO.getIdProduto(), buildAcaoItem(produtoDTO));
 		
 		ProdutoPayload produto = new ProdutoPayload(cfop,
@@ -206,7 +215,8 @@ public class OmiePedidoBuilder {
 													produtoDTO.getUnidade(),
 													"0",
 													produtoDTO.getValorUnitario());
-		return new DetPayload(ide, produto);
+		InfAdicPayload infAdic = consignado ? new InfAdicPayload("N") : null;
+		return new DetPayload(ide, produto, infAdic);
 	}
 
 	private String buildAcaoItem(ProdutoDTO produtoDTO) {
@@ -224,7 +234,13 @@ public class OmiePedidoBuilder {
 	}
 	
 	protected InformacoesAdicionaisPayload buildInformacoesAdicionaisPedido(PedidoDTO pedidoDTO) throws JSONException {
-		return new InformacoesAdicionaisPayload("1.01.02", 1617989193L, "S", "N", pedidoDTO.getCodVend());
+		String codigoCategoria = CODIGO_CATEGORIA_PADRAO;
+		if (pedidoDTO.getCodVend() != null
+				&& pedidoDTO.getCodVend().longValue() == CODIGO_VENDEDOR_HAMBURGUERIAS) {
+			codigoCategoria = CODIGO_CATEGORIA_HAMBURGUERIAS;
+		}
+		return new InformacoesAdicionaisPayload(codigoCategoria, CODIGO_CONTA_CORRENTE, "S", "N",
+				pedidoDTO.getCodVend(), pedidoDTO.getNumeroPedidoCliente());
 	}
 	
 	protected ObservacoesPayload buildObservacoesPedido(PedidoDTO pedidoDTO) throws JSONException {
