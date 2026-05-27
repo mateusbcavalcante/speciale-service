@@ -1007,11 +1007,11 @@ public class PedidoService extends A2DMHbNgc<Pedido>
 	
 	public PedidoDTO inserirPedidoDTO(PedidoDTO pedidoDTO) throws OmieServiceException {
 		PedidoDTO pedidoOmie = OmiePedidoService.getInstance().cadastrarPedido(pedidoDTO);
-		try {
-			this.persistirPedidoPostgreSQL(pedidoOmie);
-		} catch (Exception e) {
-			throw new OmieServiceException("Pedido registrado na Omie, mas falhou ao salvar no banco local: " + e.getMessage(), e);
-		}
+//		try {
+//			this.persistirPedidoPostgreSQL(pedidoOmie);
+//		} catch (Exception e) {
+//			throw new OmieServiceException("Pedido registrado na Omie, mas falhou ao salvar no banco local: " + e.getMessage(), e);
+//		}
 		return pedidoOmie;
 	}
 	
