@@ -85,6 +85,22 @@ public class OmieTabelaPrecoService {
 		}
 	}
 	
+	public TabelaPrecoPayload obterTabelaPrecoPorCodigo(BigInteger nCodTabPreco) throws OmieServiceException {
+		if (nCodTabPreco == null) {
+			return null;
+		}
+
+		List<TabelaPrecoPayload> listTabelaPreco = listarTabelasPrecos();
+		if (listTabelaPreco != null) {
+			for (TabelaPrecoPayload tabela : listTabelaPreco) {
+				if (tabela.getnCodTabPreco() != null && tabela.getnCodTabPreco().compareTo(nCodTabPreco) == 0) {
+					return tabela;
+				}
+			}
+		}
+		return null;
+	}
+
 	public TabelaPrecoPayload obterTabelaPreco(String tabelaPreco) throws OmieServiceException {
 		List<TabelaPrecoPayload> listTabelaPrecoFiltrada = new ArrayList<>();
 		List<TabelaPrecoPayload> listTabelaPreco = listarTabelasPrecos();

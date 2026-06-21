@@ -12,6 +12,7 @@ import br.com.a2dm.spdm.api.ApiClientResponse;
 import br.com.a2dm.spdm.omie.api.OmieApiClient;
 import br.com.a2dm.spdm.omie.builder.OmieProdutosBuilder;
 import br.com.a2dm.spdm.omie.payload.ConsultarProdutoPayload;
+import br.com.a2dm.spdm.omie.payload.ItemTabelaOmiePayload;
 
 public class OmieProdutosRepository {
 
@@ -39,6 +40,19 @@ public class OmieProdutosRepository {
 		}
 	}
 	
+	public List<ItemTabelaOmiePayload> listarItensTabelaPreco(BigInteger idTabelaPreco) throws OmieRepositoryException {
+		try {
+			OmieTabelaPreco tabelaPreco = new OmieTabelaPreco();
+			tabelaPreco.setnCodTabPreco(idTabelaPreco.toString());
+			OmieApiClient apiClient = new OmieApiClient();
+			ApiClientResponse response = apiClient.post("/produtos/tabelaprecos/", "ListarTabelaItens", tabelaPreco);
+			return new OmieProdutosBuilder().buildItensTabela(response.getBody());
+		} catch (Exception e) {
+			throw new OmieRepositoryException(
+					String.format("Erro ao listar itens da tabela de preço: %s", idTabelaPreco.toString()), e);
+		}
+	}
+
 	public ProdutoDTO consultarProduto(BigInteger codigoProduto) throws OmieRepositoryException {
 		try {
 			ConsultarProdutoPayload payload = new ConsultarProdutoPayload(codigoProduto);

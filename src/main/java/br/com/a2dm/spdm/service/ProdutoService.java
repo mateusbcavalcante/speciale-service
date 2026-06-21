@@ -485,6 +485,63 @@ public class ProdutoService extends A2DMHbNgc<Produto>
 	}
 
 	/**
+	 * Sincroniza um produto recebido via webhook da Omie (inclusão, alteração ou inativação lógica).
+	 * Retorna a ação local executada (constantes de WebhookLog).
+	 */
+	public String sincronizarDoWebhook(BigInteger codigoOmie, String descricao, String unidade, Double valorUnitario,
+			BigInteger codigoFamiliaOmie, boolean inativar, BigInteger idUsuario) throws Exception {
+		Session sessao = HibernateUtil.getSession();
+		sessao.setFlushMode(FlushMode.COMMIT);
+		Transaction tx = sessao.beginTransaction();
+		try {
+			Produto produto = obterProdutoLocalPorCodigoOmie(sessao, codigoOmie);
+			String acao;
+
+			if (produto == null) {
+				if (inativar) {
+					tx.commit();
+					return "INATIVACAO";
+				}
+
+				ProdutoDTO dados = new ProdutoDTO();
+				dados.setIdProduto(codigoOmie);
+				dados.setDesProduto(descricao);
+				dados.setUnidade(unidade);
+				dados.setValorUnitario(valorUnitario);
+				dados.setCodigoFamiliaOmie(codigoFamiliaOmie);
+
+				obterOuSincronizarProdutoLocal(sessao, dados, idUsuario);
+				acao = "INCLUSAO";
+			} else {
+				if (inativar) {
+					produto.setFlgAtivo("N");
+					acao = "INATIVACAO";
+				} else {
+					if (descricao != null && !descricao.trim().isEmpty()) {
+						produto.setDesProduto(descricao.trim());
+					}
+					produto.setFlgAtivo("S");
+					acao = "ALTERACAO";
+				}
+
+				produto.setIdExterno(codigoOmie);
+				produto.setFlgSinc("S");
+				produto.setIdUsuarioAlt(idUsuario);
+				produto.setDatAlteracao(new Date());
+				sessao.merge(produto);
+			}
+
+			tx.commit();
+			return acao;
+		} catch (Exception e) {
+			tx.rollback();
+			throw e;
+		} finally {
+			sessao.close();
+		}
+	}
+
+	/**
 	 * Busca produto local ou importa da Omie e grava em tb_produto quando não existir.
 	 */
 	public Produto obterOuSincronizarProdutoLocal(Session sessao, ProdutoDTO dadosPedido, BigInteger idUsuario)
