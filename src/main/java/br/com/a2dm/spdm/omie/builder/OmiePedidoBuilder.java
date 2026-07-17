@@ -37,11 +37,14 @@ public class OmiePedidoBuilder {
 
 	private static final String CFOP_CONSIGNADO = "5917";
 	private static final String CFOP_CE = "5.401";
-	private static final String CFOP_FORA_CE = "6.401";
-	private static final long CODIGO_CONTA_CORRENTE = 8312013530L;
+	private static final String CFOP_FORA_CE = "6.401"; 
+	private static final long CODIGO_CONTA_CORRENTE = 8960782088L;
 	private static final String CODIGO_CATEGORIA_PADRAO = "1.01.02";
 	private static final String CODIGO_CATEGORIA_HAMBURGUERIAS = "1.01.01";
 	private static final long CODIGO_VENDEDOR_HAMBURGUERIAS = 1620030938L;
+	private static final String UNIDADE_PCT = "PCT";
+	private static final String ESPECIE_VOLUMES_CAIXAS = "CAIXAS";
+	private static final int QTD_POR_CAIXA = 12;
 
 	public OmiePedidoBuilder() {
 		
@@ -162,7 +165,7 @@ public class OmiePedidoBuilder {
 		try {
 			return new PedidoPayload(buildCabecalhoPedido(pedidoDTO),
 					          		 buildProdutos(pedidoDTO, clienteIntegracaoDTO),
-					                 buildFretePedido(pedidoDTO),
+					                 buildFretePedido(pedidoDTO, clienteIntegracaoDTO),
 					                 buildObservacoesPedido(pedidoDTO),
 					                 buildInformacoesAdicionaisPedido(pedidoDTO));
 		} catch (Exception e) {
@@ -229,8 +232,41 @@ public class OmiePedidoBuilder {
 		return acaoItem;
 	}
 	
-	protected FretePayload buildFretePedido(PedidoDTO pedidoDTO) throws JSONException {
-		return new FretePayload(getOpcaoFrete(pedidoDTO));
+	protected FretePayload buildFretePedido(PedidoDTO pedidoDTO, ClienteIntegracaoDTO clienteIntegracaoDTO)
+			throws JSONException {
+		String modalidade = getOpcaoFrete(pedidoDTO);
+
+		if (clienteIntegracaoDTO != null && !clienteIntegracaoDTO.isSupermercado() && temProdutoPorCaixa(pedidoDTO)) {
+			return new FretePayload(modalidade, calcularQuantidadeVolumes(pedidoDTO), ESPECIE_VOLUMES_CAIXAS);
+		}
+		return new FretePayload(modalidade);
+	}
+
+	private boolean temProdutoPorCaixa(PedidoDTO pedidoDTO) {
+		if (pedidoDTO.getProdutos() == null) {
+			return false;
+		}
+		for (ProdutoDTO produto : pedidoDTO.getProdutos()) {
+			if (isUnidadePct(produto)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private Integer calcularQuantidadeVolumes(PedidoDTO pedidoDTO) {
+		BigInteger total = BigInteger.ZERO;
+		for (ProdutoDTO produto : pedidoDTO.getProdutos()) {
+			if (isUnidadePct(produto) && produto.getQtdSolicitada() != null) {
+				total = total.add(produto.getQtdSolicitada());
+			}
+		}
+		return total.intValue() / QTD_POR_CAIXA;
+	}
+
+	private boolean isUnidadePct(ProdutoDTO produto) {
+		return produto != null && produto.getUnidade() != null
+				&& UNIDADE_PCT.equalsIgnoreCase(produto.getUnidade());
 	}
 	
 	protected InformacoesAdicionaisPayload buildInformacoesAdicionaisPedido(PedidoDTO pedidoDTO) throws JSONException {
